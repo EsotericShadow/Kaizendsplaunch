@@ -75,7 +75,7 @@ class Snare(Instrument):
             ph = np.cumsum(f) / sr + rng.uniform()
             tone += lv * np.sin(2 * np.pi * ph) * exp_decay(n, self.tone_decay / (1 + 0.4 * k), sr, 0.0003)
         nz = rng.uniform(-1, 1, n)
-        nz = eq(nz, [("highpass", 1600, 0, 0.7), ("peak", 5200, 4.0, 1.0), ("lowpass", 12000, 0, 0.7)], sr)
+        nz = eq(nz, [("highpass", 1600, 0, 0.7), ("peak", 5200, 4.0, 1.0), ("lowpass", 9500, 0, 0.7)], sr)
         nd = self.noise_decay * (0.75 + 0.4 * v) * (1 + rng.normal(0, 0.05))
         nz *= exp_decay(n, nd, sr, 0.0004)
         y = self.tone_level * tone + self.noise_level * nz * (0.6 + 0.4 * v)
@@ -167,7 +167,7 @@ class HiHat(Instrument):
             g[k + nr:] = 0
             env *= g
         # high-pass after the envelope so the onset click carries no low end
-        y = eq(x * env, [("highpass", 6500, 0, 0.7), ("highpass", 6500, 0, 0.7)], sr)
+        y = eq(x * env, [("highpass", 6500, 0, 0.7), ("highpass", 6500, 0, 0.7), ("lowpass", 14000, 0, 0.7)], sr)
         y *= fade_curve(n, 0, int(0.004 * sr))
         y /= max(np.abs(y).max(), 1e-9)
         return y * self.level * (0.25 + 0.75 * v)

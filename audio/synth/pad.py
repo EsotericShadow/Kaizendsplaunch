@@ -68,17 +68,19 @@ class JunoPad(Instrument):
         f0 = float(midi_to_hz(pitch))
         freq = f0 * 2 ** (_drift(n, sr, rng, p["drift"]) / 1200)
         width = 0.5 + p["pwm_depth"] * np.sin(2 * np.pi * p["pwm_rate"] * t + rng.uniform(0, 2 * np.pi))
-        fmax = self.fmax
-        x = (p["saw"] * saw(freq, n, sr, rng.uniform(), fmax) +
-             p["pulse"] * pulse(freq, n, sr, width, rng.uniform(), fmax) +
-             p["sub"] * square(freq / 2, n, sr, rng.uniform(), fmax) +
-             p["noise"] * rng.uniform(-1, 1, n))
-        x = biquad(x, "highpass", p["hpf"], sr, 0.6)
         lfo = np.sin(2 * np.pi * p["lfo_rate"] * t + rng.uniform(0, 2 * np.pi))
         v = float(np.clip(vel, 0.05, 1.0))
         octs = (p["env_amount"] * (0.6 + 0.4 * v) * f_env + p["keytrack"] * (pitch - 60) / 12
                 + p["lfo_oct"] * lfo)
         cutoff = np.minimum(p["cutoff"] * 2 ** octs, 0.45 * sr)
+        # harmonics more than 2.5 octaves above the highest cutoff sit below -60 dB
+        # after the 24 dB/oct ladder, so they are not synthesised at all
+        fmax = min(self.fmax, max(6000.0, 5.66 * float(cutoff.max())))
+        x = (p["saw"] * saw(freq, n, sr, rng.uniform(), fmax) +
+             p["pulse"] * pulse(freq, n, sr, width, rng.uniform(), fmax) +
+             p["sub"] * square(freq / 2, n, sr, rng.uniform(), fmax) +
+             p["noise"] * rng.uniform(-1, 1, n))
+        x = biquad(x, "highpass", p["hpf"], sr, 0.6)
         x2 = upsample(x, os_)
         c2 = np.interp(np.arange(len(x2)) / os_, np.arange(n), cutoff)
         y = pad_to(decimate(ladder(x2, c2, p["res"], p["drive"], 0.5, sr * os_), os_), n)

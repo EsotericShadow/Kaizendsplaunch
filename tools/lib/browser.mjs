@@ -56,6 +56,7 @@ export async function launchBrowser({ kind = "chrome", executablePath, extraArgs
     timeout: 60_000,
   });
   browser.__pid = findPidByArg(marker);
+  browser.__marker = marker;
   return browser;
 }
 
@@ -85,11 +86,12 @@ export async function closeBrowser(browser, timeoutMs = 10_000) {
 }
 
 export function killBrowser(browser) {
-  if (browser.__pid) {
-    try {
-      process.kill(browser.__pid, "SIGKILL");
-    } catch {}
-  }
+  if (!browser.__pid) return;
+  try {
+    // Only if the PID still belongs to this browser (PIDs are reused after a process exits).
+    const cmd = fs.readFileSync(`/proc/${browser.__pid}/cmdline`, "utf8");
+    if (cmd.includes(browser.__marker)) process.kill(browser.__pid, "SIGKILL");
+  } catch {}
 }
 
 /** Promise with a timeout and a readable label. */
@@ -150,7 +152,7 @@ export async function openComposition(browser, {
     if (m.type() === "error" || m.type() === "warning") log(`${tag} console.${m.type()}: ${m.text()}`);
   });
   page.on("response", (r) => {
-    if (r.status() >= 400) errors.push(`HTTP ${r.status()} ${r.url()}`);
+    if (r.status() >= 400 && !r.url().endsWith("/favicon.ico")) errors.push(`HTTP ${r.status()} ${r.url()}`);
   });
   page.on("requestfailed", (r) => {
     const f = r.failure();

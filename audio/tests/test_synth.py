@@ -65,6 +65,20 @@ def test_saw_aliasing():
     record("pulse alias energy at 1.78 kHz, additive at 2x (dB)", round(a4, 1), a4 < -90)
 
 
+def test_epiano_fm_aliasing():
+    """EP voices render at 2x. Compare against an 8x render: the difference is
+    aliasing plus decimation-filter differences, relative to the signal."""
+    worst = -300.0
+    for p in (60, 84, 96):
+        a = EPiano(seed=5, oversample=2).voice(p, 1.0, 0.8, {})
+        b = EPiano(seed=5, oversample=8).voice(p, 1.0, 0.8, {})
+        n = min(len(a), len(b))
+        d = 10 * math.log10(np.sum((a[:n] - b[:n]) ** 2) / np.sum(b[:n] ** 2))
+        print(f"      EP note {p}: 2x vs 8x difference {d:.1f} dB")
+        worst = max(worst, d)
+    record("EP FM worst 2x-vs-8x difference (dB rel. signal)", round(worst, 1), worst < -40)
+
+
 def test_guitar_tuning():
     g = Guitar(humanize=0)
     worst = 0.0
@@ -85,10 +99,14 @@ def test_instruments_dc_and_peaks():
     worst_dc, worst_pk = 0.0, -200.0
     voices = [(Guitar(), 52), (Guitar(tone="clean_amp"), 64), (EPiano(), 60), (JunoPad(), 55), (Bass(), 36),
               (Bass(kind="sub"), 31), (Kick(), 36), (Snare(), 38), (Clap(), 39), (HiHat(), 42), (HiHat(), 46)]
+    rows = []
     for inst, p in voices:
         v = inst.post(inst.voice(p, 1.0, 1.0, {}))
-        worst_dc = max(worst_dc, float(np.abs(np.mean(v, axis=0)).max()))
-        worst_pk = max(worst_pk, meter.true_peak(v))
+        dc, tp = float(np.abs(np.mean(v, axis=0)).max()), meter.true_peak(v)
+        rows.append(f"{inst.name}{'/' + inst.tone if hasattr(inst, 'tone') else ''} {tp:.1f} dBTP, DC {dc:.0e}")
+        worst_dc = max(worst_dc, dc)
+        worst_pk = max(worst_pk, tp)
+    print("      " + "; ".join(rows))
     record("worst DC offset of any voice at full velocity", f"{worst_dc:.1e}", worst_dc < 1e-3)
     record("worst true peak of any single voice (dBTP)", round(worst_pk, 2), worst_pk < 0.0)
 

@@ -362,10 +362,13 @@ export function freezeGsap(gsap, master) {
 }
 
 /**
- * Warn about constructs that measured as seek-order dependent in Chromium 141:
- * a CSS mask on (or around) a compositor layer. <canvas> and <video> are always compositor
- * layers; will-change: transform and 3D transforms make one too. The compositor rasterizes
- * the mask with a scale that depends on earlier frames.
+ * Warn (console.warn, shown by the renderer) about constructs that measured as seek-order
+ * dependent in Chromium 141. Both come from compositor layers, whose raster scale depends on
+ * earlier frames. <canvas>, <video> and <iframe> are always compositor layers; will-change and
+ * 3D transforms make one too.
+ *   Rule 1: a CSS mask-image on, or around, a compositor layer.
+ *   Rule 2: a tweened scale / 3D transform on an element that contains a canvas or video.
+ * Called once when the composition is ready. Returns the list of problems.
  */
 export function lintDeterminism(root = document, timeline = null) {
   const problems = [];

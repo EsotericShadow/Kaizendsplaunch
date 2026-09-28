@@ -2,7 +2,7 @@
 // Throughput benchmark for the render pipeline.
 //
 //   node tools/bench.mjs [--comp tools/demo/index.html] [--to 5] [--workers 1,2,3,4] [--variants]
-//                        [--capture-only]
+//                        [--capture-only] [--chunk s] [--repeat n] [--only "w3 default,w3 jpeg q95"]
 //
 // Each configuration runs `node tools/render.mjs` end to end (browser launch, page load, capture,
 // x264, concat) and records wall time, frames/s and the output SHA-256. Results go to
@@ -27,6 +27,7 @@ const { values: v } = parseArgs({
     "capture-only": { type: "boolean" },
     repeat: { type: "string", default: "1" },
     chunk: { type: "string" },
+    only: { type: "string" },
   },
 });
 
@@ -97,6 +98,11 @@ if (v.variants) {
   configs.push({ name: "w3 chunk 1s", args: ["--workers", "3", "--chunk", "1"] });
   configs.push({ name: "w3 fresh-page", args: ["--workers", "3", "--fresh-page"] });
   configs.push({ name: "w3 preview", args: ["--workers", "3", "--preview"] });
+}
+
+if (v.only) {
+  const keep = new Set(v.only.split(","));
+  for (let i = configs.length - 1; i >= 0; i--) if (!keep.has(configs[i].name)) configs.splice(i, 1);
 }
 
 const results = [];

@@ -1,0 +1,7 @@
+numpy>=1.24
+scipy>=1.11
+soundfile>=0.12
+pillow>=10
+imageio-ffmpeg>=0.5
+# Optional but strongly recommended: JIT for the per-sample kernels (about 100x faster).
+numba>=0.60

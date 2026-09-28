@@ -41,9 +41,10 @@ class Bass(Instrument):
         if self.kind == "sub":
             y = np.tanh(1.8 * sub) / np.tanh(1.8)  # adds odd harmonics, keeps peak at 1
         else:
-            osc = 0.6 * saw(freq, n, sr, ph, 12000.0) + 0.4 * square(freq, n, sr, ph, 12000.0)
             fenv = np.exp(-t / (self.decay * (0.7 + 0.6 * v)))
             cutoff = self.cutoff * 2 ** (self.env_oct * (0.5 + 0.5 * v) * fenv + (pitch - 36) / 24)
+            fmax = min(12000.0, max(4000.0, 5.66 * float(cutoff.max())))
+            osc = 0.6 * saw(freq, n, sr, ph, fmax) + 0.4 * square(freq, n, sr, ph, fmax)
             x2 = upsample(osc, os_)
             c2 = np.interp(np.arange(len(x2)) / os_, np.arange(n), np.minimum(cutoff, 0.45 * sr))
             y = pad_to(decimate(ladder(x2, c2, self.res, 1.5, 0.6, sr * os_), os_), n)

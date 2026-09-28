@@ -3,11 +3,20 @@ docs/brief/
 
 # Dependencies and build outputs
 node_modules/
+/assets/
 build/
 frames/
 out/
+renders/
 *.log
 .DS_Store
+
+# Render pipeline work files (chunk folders sit next to --out) and media outputs
+.chunks-*/
+*.part.mp4
+*.mp4
+*.mov
+*.webm
 
 # Python
 __pycache__/

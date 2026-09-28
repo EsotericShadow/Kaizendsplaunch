@@ -236,7 +236,7 @@ export async function render(rawOpts) {
     const baseDone = doneFrames.n;
     const renderStart = Date.now();
     let lastPrint = 0;
-    const stats = { retries: 0, captureMs: 0, seekMs: 0 };
+    const stats = { retries: 0 };
     const progress = (force = false) => {
       const now = Date.now();
       if (!force && now - lastPrint < 2000) return;
@@ -339,7 +339,7 @@ export async function render(rawOpts) {
               s = null;
             }
           } catch (e) {
-            if (aborted) return;
+            if (aborted || fatal) return; // another worker already stopped the render
             if (e.fatal) {
               fatal = e;
               return;
@@ -524,6 +524,7 @@ export async function checkDeterminism(rawOpts) {
   try {
     const { meta } = await probeComposition(o);
     o.viewport = { width: meta.width, height: meta.height };
+    const clip = o.scale === 1 ? null : { x: 0, y: 0, width: meta.width, height: meta.height, scale: o.scale };
     const fps = Number(o.fps || meta.fps);
     const times = parseTimes(o.times || "count:6", 0, meta.duration).map((t) => Math.round(t * fps) / fps);
     const A = await openSession(o, "[A]");
@@ -531,11 +532,13 @@ export async function checkDeterminism(rawOpts) {
     const B = await openSession(o, "[B]");
     sessions.push(B);
     const hash = (b) => crypto.createHash("sha256").update(b).digest("hex");
+    const shot = async (S, t) => hash(await seekAndCapture(S.page, S.cdp, t, { format: "png", clip }));
     const a = {}, b = {}, a2 = {};
-    for (const t of times) a[t] = hash(await seekAndCapture(A.page, A.cdp, t, { format: "png" }));
-    for (const t of [...times].reverse()) b[t] = hash(await seekAndCapture(B.page, B.cdp, t, { format: "png" }));
-    const shuffled = [...times].sort((x, y) => ((x * 7919) % 1) - ((y * 7919) % 1) || y - x);
-    for (const t of shuffled) a2[t] = hash(await seekAndCapture(A.page, A.cdp, t, { format: "png" }));
+    for (const t of times) a[t] = await shot(A, t);
+    for (const t of [...times].reverse()) b[t] = await shot(B, t);
+    // Revisit in a scrambled order (deterministic permutation: sort by a hash of the time).
+    const shuffled = [...times].sort((x, y) => ((x * 7919.123) % 1) - ((y * 7919.123) % 1) || y - x);
+    for (const t of shuffled) a2[t] = await shot(A, t);
     const rows = times.map((t) => ({ t, frame: Math.round(t * fps), ok: a[t] === b[t] && a[t] === a2[t], hash: a[t].slice(0, 16), other: b[t] === a[t] ? "" : b[t].slice(0, 16) }));
     return { ok: rows.every((r) => r.ok), rows };
   } finally {

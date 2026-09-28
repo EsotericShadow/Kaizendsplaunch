@@ -313,8 +313,17 @@ def chroma(x, sr=SR, fmin=55.0, fmax=5000.0, n_fft=16384, hop=4096, a4=440.0):
     return ch / max(ch.max(), 1e-12)
 
 
-def key_estimate(x, sr=SR):
+def key_estimate(x, sr=SR, bass_weight=0.0):
+    """Krumhansl-Kessler key match on the mean chroma (55 Hz-5 kHz). bass_weight
+    > 0 adds a 30-250 Hz chroma, which helps when the bass carries the roots
+    but hurts when drums are tuned off-key. Treat the result as a tonal-centre
+    candidate: relative major/minor and pedal-tone confusions are common (the
+    demo, in G major with an F# pedal, reads as B minor). Check the runner-up."""
     ch = chroma(x, sr)
+    if bass_weight:
+        cb = chroma(x, sr, fmin=30.0, fmax=250.0)
+        ch = ch + bass_weight * cb
+        ch = ch / max(ch.max(), 1e-12)
     best = []
     for tonic in range(12):
         for mode, prof in (("major", _KK_MAJOR), ("minor", _KK_MINOR)):

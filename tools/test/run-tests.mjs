@@ -174,11 +174,11 @@ test("audio-mux", async () => {
 test("resume", async () => {
   const out = path.join(OUT, "testcard-resume.mp4");
   const workDir = path.join(OUT, ".chunks-resume");
-  await render({ comp: TESTCARD, out, from: 0, to: 2, workers: 2, keep: true, workDir });
+  await render({ comp: TESTCARD, out, from: 0, to: 2, workers: 2, keep: true, workDir, chunkSeconds: 1 });
   const h1 = sha(out);
   const chunks = fs.readdirSync(workDir).filter((f) => /^chunk-.*\.mp4$/.test(f) && !f.includes(".part"));
   fs.rmSync(path.join(workDir, chunks[1]));
-  const r = await render({ comp: TESTCARD, out, from: 0, to: 2, workers: 2, resume: true, workDir });
+  const r = await render({ comp: TESTCARD, out, from: 0, to: 2, workers: 2, resume: true, workDir, chunkSeconds: 1 });
   const h2 = sha(out);
   if (h1 !== h2) throw new Error(`resumed output differs: ${h1.slice(0, 12)} vs ${h2.slice(0, 12)}`);
   return `re-rendered 1 of ${chunks.length} chunks; output byte-identical (${h1.slice(0, 12)})`;
