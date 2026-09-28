@@ -73,6 +73,35 @@ ZONE_LEVEL = {(0.0, 8.0): -1.7, (8.0, 16.0): -1.5, (16.0, 36.0): -1.7, (46.0, 50
 ABSOLUTE = ("fx", "bells", "clips")
 FADE = (84.50, 86.00)
 
+# ----------------------------------------------------------------- vertical cutdown plan (treatment 9)
+PLANS = {
+    "main": {"faders": FADERS, "zones": ZONES, "zone_level": ZONE_LEVEL, "fade": FADE},
+    "vertical": {
+        "faders": {
+            # guitar constant over the engine blocks (0-14) so every block keeps the dry take's loudness
+            "gtr": [(0.0, 3.2), (14.0, 5.2), (20.0, 5.7), (22.0, 3.6)],
+            "pad": [(0.0, 0.0), (14.0, 3.5), (17.0, 3.5), (20.0, 4.0), (22.0, -6.0)],
+            "ep": [(0.0, 0.5)],
+            "lead": [(0.0, 10.0)],
+            "pluck": [(0.0, 0.0)],
+            "bells": [(0.0, 0.0)],
+            "bass": [(0.0, -3.0), (14.0, -2.5), (22.0, -7.0)],
+            "drums": [(0.0, 1.0), (14.0, 2.0), (20.0, 1.0), (22.0, -4.0)],
+            "fx": [(0.0, 0.0)],
+        },
+        "zones": [(0.0, 14.0), (14.0, 17.0), (17.0, 20.0), (20.0, 22.0), (22.0, 24.0), (24.0, 28.0)],
+        "zone_level": {(0.0, 14.0): -1.7, (14.0, 17.0): -1.6, (17.0, 20.0): -1.2, (22.0, 24.0): -1.2,
+                       (24.0, 28.0): -0.6},
+        "fade": (27.00, 28.00),
+    },
+}
+
+
+def use_plan(name):
+    global FADERS, ZONES, ZONE_LEVEL, FADE
+    p = PLANS[name]
+    FADERS, ZONES, ZONE_LEVEL, FADE = p["faders"], p["zones"], p["zone_level"], p["fade"]
+
 
 def fader_curve(n, plan, ramp=0.020):
     g = np.zeros(n)
@@ -129,7 +158,8 @@ def short_term_at(x, t):
     return lufs(x[a:smp(t)])
 
 
-def build_stems(film, cues, faders=FADERS):
+def build_stems(film, cues, faders=None):
+    faders = faders or FADERS
     n = film.n
     stems = {}
     gain_gtr = np.load(film.p("edit", "gain_gtr.npy"))
@@ -171,10 +201,11 @@ def master_gain_for(stems, tcurve, lufs_target, iters=4):
     return g, (rel + ab * db(-g))
 
 
-def zone_trims(film, stems, lufs_target=MASTER_LUFS, zones=ZONES, budget=GR_BUDGET, iters=8):
+def zone_trims(film, stems, lufs_target=MASTER_LUFS, zones=None, budget=GR_BUDGET, iters=8):
     """Per-zone trims (dB, <= 0) so no zone needs more than `budget` dB of
     true-peak limiting at the master gain that meets the loudness target."""
     n = film.n
+    zones = zones or ZONES
     trims = {z: ZONE_LEVEL.get(z, 0.0) for z in zones}
     ceil_pre = CEILING + budget
     for it in range(iters):
@@ -200,7 +231,8 @@ def trim_curve(n, trims, ramp=0.020):
     return fader_curve(n, plan, ramp)
 
 
-def master(film, stems, silences, fade=FADE, lufs_target=MASTER_LUFS):
+def master(film, stems, silences, fade=None, lufs_target=MASTER_LUFS):
+    fade = fade or FADE
     n = film.n
     trims = zone_trims(film, stems, lufs_target)
     tcurve = trim_curve(n, trims)
@@ -275,6 +307,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--film", default="main")
     a = ap.parse_args()
+    use_plan(a.film)
     film = Film(a.film)
     cues = film.cues
     stems = build_stems(film, cues)

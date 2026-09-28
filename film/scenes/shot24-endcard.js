@@ -120,7 +120,7 @@ export default {
         // One slow 1 px ring pulse from the primary button at 78.00.
         const u = (t - 78.0) / 1.4;
         if (u >= 0 && u < 1 && buyBox) {
-          const grow = 22 * (1 - (1 - u) * (1 - u));
+          const grow = 10 * (1 - (1 - u) * (1 - u));
           setStyle(pulse, "visibility", "");
           setStyle(pulse, "left", px(buyBox.x - grow));
           setStyle(pulse, "top", px(buyBox.y - grow));

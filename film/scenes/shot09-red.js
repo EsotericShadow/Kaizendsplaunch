@@ -41,20 +41,6 @@ export default {
       };
     };
 
-    // While pushed in, the plate reaches under the bottom-left footnote: a low scrim keeps it legible.
-    const scrimL = ctx.layer("scrim", 15);
-    util.el("div", {
-      parent: scrimL,
-      style: { position: "absolute", left: "0px", top: "990px", width: "1920px", height: "90px", background: "linear-gradient(to bottom, rgba(5,5,6,0), rgba(5,5,6,0.8) 45%, rgba(5,5,6,0.8))" },
-    });
-    const shot = buildTourShot(ctx, spec, { camera, extras });
-    return {
-      render(t) {
-        shot.render(t);
-        const k = t >= spec.t0 && t < spec.t1 ? util.clamp((camera(t).scale - P.scale) / 0.2) : 0;
-        util.show(scrimL, k > 0);
-        util.setStyle(scrimL, "opacity", String(+k.toFixed(4)));
-      },
-    };
+    return buildTourShot(ctx, spec, { camera, extras });
   },
 };

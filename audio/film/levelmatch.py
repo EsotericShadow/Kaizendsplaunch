@@ -133,13 +133,28 @@ def ffmpeg_crosscheck(x, label):
 
 
 def makeup_gains(cues, gtr_rows):
-    """Constant gains for renders outside the matched bars (steady state)."""
-    by_bar = {r["bar"]: r["gain_db"] for r in gtr_rows}
+    """Constant gains for each guitar render outside the matched bars: the mean
+    gain of its matched bars that start after its gesture has ended (steady
+    state at the final knob values), else its last matched bar."""
     out = {}
-    if 3 in by_bar and 4 in by_bar:
-        out["R01"] = round(0.5 * (by_bar[3] + by_bar[4]), 3)
-    if 12 in by_bar:
-        out["R03"] = by_bar[12]
+    for rid in sorted({r["render"] for r in gtr_rows if r["render"]}):
+        rows = [r for r in gtr_rows if r["render"] == rid]
+        ges = [g for g in cues["gestures"] if g["render"] == rid]
+        t_end = max((float(g["t1"]) for g in ges), default=-1.0)
+        steady = [r for r in rows if r["t0"] >= t_end - 1e-9]
+        use = steady or rows[-1:]
+        out[rid] = round(float(np.mean([r["gain_db"] for r in use])), 3)
+    return out
+
+
+def spans(t0, t1):
+    """Split [t0, t1) at bar lines: [(bar, a, b), ...] (bar = 1-based bar of a)."""
+    out = []
+    a = t0
+    while a < t1 - 1e-9:
+        b = min(t1, (np.floor(a / 2.0 + 1e-9) + 1) * 2.0)
+        out.append((int(np.floor(a / 2.0 + 1e-9)) + 1, float(a), float(b)))
+        a = b
     return out
 
 
@@ -185,9 +200,8 @@ def main():
     gtr_rows = []
     lm = cues["levelmatch"]["sections"]
     for (t0, t1, ref_name) in lm:
-        b0 = int(round(t0 / 2)) + 1
-        b1 = int(round(t1 / 2))
-        bars = [(b, bar_t(b), bar_t(b) + 2.0) for b in range(b0, b1 + 1)]
+        bars = spans(float(t0), float(t1))
+        b0, b1 = bars[0][0], bars[-1][0]
         if ref_name == "dry":
             prev = 0.0 if b0 == 1 else None
             if prev is None:
@@ -224,8 +238,9 @@ def main():
         res["footnote_shots_2_3"] = "LEVEL MATCHED" if res["bars_1_4_pass"] else None
         res["footnote_tour"] = "SAME TAKE · LEVEL MATCHED" if res["bars_9_18_pass"] else "SAME TAKE"
     else:
-        vb = sorted(set(r["bar"] for r in out["bars"] if r["stem"] == "gtr"))
-        res = {"guitar_bars_pass": ok(vb), "bars": vb}
+        gb = [r for r in out["bars"] if r["stem"] == "gtr"]
+        pb = [r for r in out["bars"] if r["stem"] == "pad"]
+        res = {"guitar_bars_1_7_pass": all(r["pass"] for r in gb), "pad_width_spans_pass": all(r["pass"] for r in pb)}
     out["result"] = res
     # ffmpeg cross-check on the processed, matched guitar over the tour (or the vertical's engine bars)
     lo, hi = (16.0, 36.0) if a.film == "main" else (0.0, 14.0)

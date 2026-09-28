@@ -52,10 +52,14 @@ export function radialGlow(parent, { cx, cy, w, h = w, stops = null, color = [18
   return n;
 }
 
-/** Scene grain: the site tile at 5% overlay (G0), in its own layer. */
+/**
+ * Scene grain: the site tile at 5% overlay (G0), in its own layer. The blend sits on the layer, so
+ * it composites against the picture below (a blend inside the layer would only see the layer).
+ */
 export function sceneGrain(ctx, lib, { z = 90, opacity = 0.05 } = {}) {
   const L = ctx.layer("grain", z);
-  const grain = lib.createGrain(L, { opacity });
+  Object.assign(L.style, { mixBlendMode: "overlay", opacity: String(opacity) });
+  const grain = lib.createGrain(L, { opacity: 1, blend: "normal" });
   return { layer: L, grain };
 }
 

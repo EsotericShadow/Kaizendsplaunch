@@ -23,7 +23,8 @@ export default {
       style: { position: "absolute", left: "1388.5px", top: "468.5px", width: "3px", height: "3px", borderRadius: "50%", background: "#f6f4ef" },
     });
     const grainL = ctx.layer("grain", 90);
-    const grain = lib.createGrain(grainL, { opacity: 0.05 });
+    Object.assign(grainL.style, { mixBlendMode: "overlay", opacity: "0.05" });
+    const grain = lib.createGrain(grainL, { opacity: 1, blend: "normal" });
 
     return {
       render(t) {
