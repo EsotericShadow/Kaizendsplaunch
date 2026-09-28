@@ -34,14 +34,14 @@ from synth.effects import _forward_min, _release
 
 FADERS = {
     # level-matched guitar edit (0 dB = dry take loudness, about -23.2 LUFS dual mono)
-    "gtr": [(0.0, 3.2), (8.0, 4.0), (16.0, 5.5), (36.0, 5.5), (42.0, 3.5), (50.0, 5.2), (54.0, 5.2), (58.0, 5.7),
+    "gtr": [(0.0, 3.2), (8.0, 4.0), (16.0, 5.5), (36.0, 5.5), (42.0, 2.0), (50.0, 5.2), (54.0, 5.2), (58.0, 5.7),
             (62.0, 5.7), (70.0, 3.2)],
     # pad: 0 dB = its offer-peak level; breakdown -4, bed -12, end card -18 (treatment 7.5, 7.6)
-    "pad": [(0.0, 0.0), (36.0, -1.0), (50.0, 3.5), (54.0, 3.5), (58.0, 5.0), (62.0, -9.0), (70.0, -9.0),
+    "pad": [(0.0, 0.0), (36.0, -1.0), (50.0, 3.5), (54.0, 3.5), (58.0, 4.0), (62.0, -9.0), (70.0, -9.0),
             (74.0, -15.0), (78.0, -6.0)],
-    "ep": [(0.0, 1.5)],
-    "lead": [(0.0, 7.0)],
-    "pluck": [(0.0, 1.0)],
+    "ep": [(0.0, 0.5)],
+    "lead": [(0.0, 10.0)],
+    "pluck": [(0.0, 0.0)],
     "bells": [(0.0, 0.0)],
     "bass": [(0.0, 0.0), (8.0, -3.0), (36.0, -5.0), (48.0, -4.0), (50.0, -2.5), (62.0, -7.0), (74.0, -8.0)],
     "drums": [(0.0, 0.0), (8.0, 1.0), (36.0, -3.0), (48.0, 0.0), (50.0, 2.0), (58.0, 1.0), (62.0, -2.0),
@@ -53,7 +53,8 @@ DUCKED = ("pad", "bass", "drums")          # the bed under the product clips
 DUCK_DB = -6.0
 PROCESSED = ("gtr", "pad", "ep", "lead", "pluck")
 DRY = ("bells", "bass", "drums", "fx")
-MASTER_LUFS, CEILING, MAX_GR = -14.3, -1.0, 1.0      # -14 LUFS +-0.5 (QC); aim 0.3 LU under for headroom
+MASTER_LUFS, CEILING, MAX_GR = -14.4, -1.1, 1.0      # -14 LUFS +-0.5 and -1.0 dBTP (QC gates); aimed 0.4 LU under
+                                                     # and 0.1 dB under so 24-bit rounding and meters agree
 # Headroom zones: if a zone's pre-limiter true peak would need more than
 # GR_BUDGET dB of limiting, the whole zone (every stem) is trimmed by the
 # excess, constant over the zone (a bus fader move at bar lines; the tour is
@@ -62,6 +63,14 @@ MASTER_LUFS, CEILING, MAX_GR = -14.3, -1.0, 1.0      # -14 LUFS +-0.5 (QC); aim 
 ZONES = [(0.0, 8.0), (8.0, 16.0), (16.0, 36.0), (36.0, 46.0), (46.0, 50.0), (50.0, 54.0), (54.0, 58.0),
          (58.0, 62.0), (62.0, 70.0), (70.0, 78.0), (78.0, 86.0)]
 GR_BUDGET = 0.85
+# Designed bus level per zone (dB, all stems): shapes the arc (7.8) on top of the
+# per-stem faders. The absolute-level stems (clips at -18 LUFS, bells at -24
+# dBFS, FX risers in dBFS) are compensated for the master gain so they land at
+# their specified level in the master.
+ZONE_LEVEL = {(0.0, 8.0): -1.7, (8.0, 16.0): -1.5, (16.0, 36.0): -1.7, (46.0, 50.0): -1.5, (50.0, 54.0): -1.8,
+              (54.0, 58.0): -1.2,
+              (70.0, 78.0): -1.2, (78.0, 86.0): -0.6}
+ABSOLUTE = ("fx", "bells", "clips")
 FADE = (84.50, 86.00)
 
 
@@ -149,17 +158,28 @@ def build_stems(film, cues, faders=FADERS):
     return stems
 
 
+def master_gain_for(stems, tcurve, lufs_target, iters=4):
+    """Master gain meeting the loudness target when the ABSOLUTE stems are
+    pre-compensated by the same gain (they must not move)."""
+    n = len(tcurve)
+    design = db(-trim_curve(n, {z: ZONE_LEVEL.get(z, 0.0) for z in ZONES}))
+    rel = sum(v for k, v in stems.items() if k not in ABSOLUTE) * db(tcurve)[:, None]
+    ab = sum((v for k, v in stems.items() if k in ABSOLUTE), np.zeros_like(rel)) * (db(tcurve) * design)[:, None]
+    g = lufs_target - lufs(rel + ab)
+    for _ in range(iters):
+        g = g + (lufs_target - lufs((rel + ab * db(-g)) * db(g)))
+    return g, (rel + ab * db(-g))
+
+
 def zone_trims(film, stems, lufs_target=MASTER_LUFS, zones=ZONES, budget=GR_BUDGET, iters=8):
     """Per-zone trims (dB, <= 0) so no zone needs more than `budget` dB of
     true-peak limiting at the master gain that meets the loudness target."""
     n = film.n
-    pre = sum(stems.values())
-    trims = {z: 0.0 for z in zones}
+    trims = {z: ZONE_LEVEL.get(z, 0.0) for z in zones}
     ceil_pre = CEILING + budget
     for it in range(iters):
         tc = trim_curve(n, trims)
-        x = pre * db(tc)[:, None]
-        g = lufs_target - lufs(x)
+        g, x = master_gain_for(stems, tc, lufs_target)
         env = meter.true_peak_envelope(x * db(g), SR)
         changed = False
         for z in zones:
@@ -183,11 +203,16 @@ def trim_curve(n, trims, ramp=0.020):
 def master(film, stems, silences, fade=FADE, lufs_target=MASTER_LUFS):
     n = film.n
     trims = zone_trims(film, stems, lufs_target)
-    tc = db(trim_curve(n, trims))
-    stems = {k: v * tc[:, None] for k, v in stems.items()}
+    tcurve = trim_curve(n, trims)
+    g_master, _ = master_gain_for(stems, tcurve, lufs_target)
+    tc = db(tcurve)
+    design = db(-trim_curve(n, {z: ZONE_LEVEL.get(z, 0.0) for z in ZONES}))     # absolute stems ignore the design
+    stems = {k: v * tc[:, None] * ((db(-g_master) * design)[:, None] if k in ABSOLUTE else 1.0)
+             for k, v in stems.items()}
     pre = sum(stems.values())
-    g_master = lufs_target - lufs(pre)
-    info = {"zone_trims_db": {f"{a:g}-{b:g}": round(v, 2) for (a, b), v in trims.items()}}
+    info = {"zone_levels_db": {f"{a:g}-{b:g}": round(v, 2) for (a, b), v in trims.items()},
+            "zone_levels_design_db": {f"{a:g}-{b:g}": v for (a, b), v in ZONE_LEVEL.items()},
+            "absolute_stems_compensated_db": round(-g_master, 3)}
     for it in range(4):
         x = pre * db(g_master)
         y, g_lim, linfo = tp_limiter(x)
@@ -203,6 +228,7 @@ def master(film, stems, silences, fade=FADE, lufs_target=MASTER_LUFS):
         if abs(L - lufs_target) < 0.02:
             break
         g_master += lufs_target - L
+        pre = pre   # the ABSOLUTE stems keep their first compensation (differences < 0.05 dB)
     info.update(master_gain_db=round(g_master, 3), limiter=linfo, integrated_lufs=round(L, 3))
     total = db(g_master) * g_lim * fcurve
     out = {k: v * total[:, None] for k, v in stems.items()}

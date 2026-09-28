@@ -474,7 +474,8 @@ def make_bass():
 
 def main_bass(n):
     y = render_split(make_bass, main_bass_events(), n)
-    return peak_control(eq(y, [("lowpass", 2500, 0, 0.7)], SR), 5.0, 3.0, 80.0)
+    return peak_control(eq(y, [("lowshelf", 75, -3.5, 0.7), ("peak", 140, 2.0, 1.0), ("lowpass", 2500, 0, 0.7)], SR),
+                        5.0, 3.0, 80.0)
 
 
 # ----------------------------------------------------------------- drums
@@ -589,7 +590,7 @@ DRUM_KITS = {
     "crash": lambda: MonoCrash(707, level=0.3),
 }
 DRUM_EQ = {
-    "kick": [("peak", 60, 1.0, 1.0), ("peak", 350, -2.0, 1.0), ("lowpass", 9000, 0, 0.7)],
+    "kick": [("lowshelf", 75, -3.5, 0.7), ("peak", 110, 1.0, 1.0), ("peak", 350, -2.0, 1.0), ("lowpass", 9000, 0, 0.7)],
     "snare": [("highpass", 90, 0, 0.7), ("peak", 200, 1.0, 1.2), ("peak", 5200, -2.5, 1.0), ("lowpass", 10000, 0, 0.7)],
     "chh": [("highshelf", 10000, -3.0, 0.7)],
     "rim": [],
@@ -597,7 +598,7 @@ DRUM_EQ = {
     "crash": [],
 }
 # transient control per drum (dB off the top of each sub-stem, 1.5 ms look-ahead)
-DRUM_PEAK = {"kick": 4.5, "snare": 4.5}
+DRUM_PEAK = {"kick": 6.0, "snare": 6.0}
 # balance inside the DRUMS stem (dB)
 DRUM_BAL = {"kick": -10.0, "snare": -12.0, "chh": -14.0, "rim": -18.0, "shaker": -21.0, "crash": -14.0}
 

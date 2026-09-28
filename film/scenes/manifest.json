@@ -1,4 +1,20 @@
 {
   "note": "Scene modules in play order, relative to this folder. Each exports default { id, t0, t1, build(ctx) }; see film/README.md.",
-  "scenes": []
+  "scenes": [
+    "shot01-05-hero.js",
+    "shot01-cold-open.js",
+    "shot01-03-scope-group.js",
+    "shot02-mix-turn.js",
+    "shot03-tagline.js",
+    "shot04-stop.js",
+    "shot05-title.js",
+    "shot06-lineup.js",
+    "shot07-green.js",
+    "shot08-blue.js",
+    "shot09-red.js",
+    "shot10-purple.js",
+    "shot11-black.js",
+    "shot07-11-tour-frame.js",
+    "shot01-11-grain.js"
+  ]
 }

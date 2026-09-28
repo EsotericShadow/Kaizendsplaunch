@@ -162,7 +162,7 @@ def fold_pad(x):
     return x[:, 0] * math.sqrt(2.0)   # undo the -3 dB centre pan law
 
 
-PAD_EQ = [("highpass", 150, 0, 0.707), ("highpass", 110, 0, 0.707), ("peak", 320, -1.5, 0.9), ("highshelf", 6000, -2.0, 0.7)]
+PAD_EQ = [("highpass", 125, 0, 0.707), ("highpass", 100, 0, 0.707), ("peak", 320, -1.5, 0.9), ("highshelf", 6000, -2.0, 0.7)]
 
 
 # ----------------------------------------------------------------- FM bell / pluck
@@ -306,16 +306,16 @@ def ceiling_control(x, ceiling_db, lookahead_ms=2.0, release_ms=70.0):
     return x * g
 
 
-def comp_pedal(x, threshold_below_peak_db=14.0, ratio=4.0, attack_ms=3.0, release_ms=140.0):
+def comp_pedal(x, threshold_below_peak_db=14.0, ratio=4.0, attack_ms=3.0, release_ms=140.0, attack_ctrl_db=6.0):
     """Guitar compressor pedal on a mono source (peak detector, soft knee),
-    followed by a 3 dB peak control for the pick attack."""
+    followed by a peak control for the pick attack."""
     from synth.effects import compressor
     x = np.asarray(x, dtype=np.float64)
     pk = 20 * np.log10(max(np.abs(x).max(), 1e-12))
     y = compressor(np.stack([x, x], 1), threshold_db=pk - threshold_below_peak_db, ratio=ratio,
                    attack_ms=attack_ms, release_ms=release_ms, knee_db=6.0, sidechain_hp=0,
                    detector="peak")[:, 0]
-    return peak_control(y, 3.0)
+    return peak_control(y, attack_ctrl_db)
 
 
 # ----------------------------------------------------------------- FX (mono)

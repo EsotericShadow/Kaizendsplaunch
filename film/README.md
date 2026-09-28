@@ -154,8 +154,8 @@ and rewrites `/data/available.json`. Direct `node tools/render.mjs` calls work t
 `tools/verify_plate.py` measures every knob, the mix knob, the COLOR thumb and the readouts against
 the real plugin captures (`public/engines/<e>-on.png`), the earlier Pillow rebuild and the site's v2
 composites. It writes a JSON report and blend images next to the stills. Against the real captures,
-knobs, mix and thumb land within about 2 px on the 1400 px plate. Readout baselines land within
-1 px, and their right edges within 3 px. The v2 composites place controls by their own
+knobs, mix and thumb land within about 2 px on the 1400 px plate, and readouts within 1 px
+vertically and 2 px at their right edge. The v2 composites place controls by their own
 measurements and differ by up to 12 px, so they are not used as the reference.
 
 ## Open points

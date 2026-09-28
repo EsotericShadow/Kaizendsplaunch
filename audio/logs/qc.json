@@ -1,0 +1,881 @@
+{
+  "film": "main",
+  "gates": {
+    "1_source_stems_mono_correlation_1": {
+      "pass": true,
+      "stems": {
+        "gtr": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        },
+        "pad": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        },
+        "ep": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        },
+        "lead": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        },
+        "pluck": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        },
+        "bells": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        },
+        "bass": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        },
+        "drums": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        },
+        "fx": {
+          "channels": 1,
+          "samplerate": 48000,
+          "subtype": "FLOAT",
+          "frames": 4128000,
+          "duration_s": 86.0,
+          "correlation_dual_mono": 1.0,
+          "finite": true
+        }
+      },
+      "note": "every source stem is a 1-channel file; choro-render copies mono to both inputs"
+    },
+    "2_level_match": {
+      "pass": true,
+      "result": {
+        "bars_1_4_pass": true,
+        "bars_9_18_pass": true,
+        "bars_28_31_pass": true,
+        "footnote_shots_2_3": "LEVEL MATCHED",
+        "footnote_tour": "SAME TAKE \u00b7 LEVEL MATCHED"
+      },
+      "worst_residual_lu": 0.008,
+      "ffmpeg_crosscheck": {
+        "file": "gtr edit after level gain, 16.0-36.0 s",
+        "meter_py_lufs": -23.585,
+        "ffmpeg_ebur128_lufs": -23.6,
+        "delta_lu": 0.015
+      }
+    },
+    "3_render_meta": {
+      "pass": true,
+      "renders": {
+        "R01": {
+          "pass": true,
+          "core": "Lagrange 3rd",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R02": {
+          "pass": true,
+          "core": "Lagrange 3rd",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R03": {
+          "pass": true,
+          "core": "Cubic",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R04": {
+          "pass": true,
+          "core": "Tape",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R05": {
+          "pass": true,
+          "core": "Orbit",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R06": {
+          "pass": true,
+          "core": "Linear Ensemble",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R07": {
+          "pass": true,
+          "core": "Lagrange 5th",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R08": {
+          "pass": true,
+          "core": "Orbit",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R09": {
+          "pass": true,
+          "core": "Linear Ensemble",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R09ref": {
+          "pass": true,
+          "core": "Linear Ensemble",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R10": {
+          "pass": true,
+          "core": "Tape",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R11": {
+          "pass": true,
+          "core": "Thiran Allpass",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        },
+        "R12": {
+          "pass": true,
+          "core": "Orbit",
+          "checks": {
+            "engine": true,
+            "core": true,
+            "hq_final": true,
+            "block_128": true,
+            "tail_3": true,
+            "preroll": true,
+            "license_unlocked": true,
+            "finite": true,
+            "no_over_full_scale": true,
+            "knobs_within_one_grid_step": true
+          }
+        }
+      }
+    },
+    "4_purple_swoosh": {
+      "render": "R05",
+      "preroll": 7.75,
+      "swoosh_t": 29.18,
+      "window": [
+        28.75,
+        29.5
+      ],
+      "pass": true,
+      "chosen_detail": {
+        "preroll": 7.75,
+        "arrivals": [
+          {
+            "t": 27.34,
+            "step": 0.519,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.18,
+            "step": 0.493,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.44,
+            "step": 0.124,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.32,
+            "step": 0.117,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.58,
+            "step": 0.15,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.36,
+            "step": 0.5,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.36,
+            "step": 0.582,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": true,
+        "swoosh_t": 29.18,
+        "other_main_events_in_section": 0
+      }
+    },
+    "10_master": {
+      "integrated_lufs": -14.413,
+      "target": -14.0,
+      "tolerance": 0.5,
+      "true_peak_dbtp": -1.1,
+      "ceiling": -1.0,
+      "sample_peak_dbfs": -1.1,
+      "clipped_runs_3_samples_at_fs": 0,
+      "samples_at_or_over_full_scale": 0,
+      "non_finite": 0,
+      "limiter_max_gain_reduction_db": 0.826,
+      "format": {
+        "samplerate": 48000,
+        "channels": 2,
+        "subtype": "PCM_24",
+        "frames": 4128000,
+        "duration_s": 86.0
+      },
+      "ffmpeg_ebur128": {
+        "ebur128_I": -14.4,
+        "ebur128_LRA": 6.5,
+        "ebur128_TP": -1.1,
+        "loudnorm_I": -14.45,
+        "loudnorm_TP": -1.1,
+        "loudnorm_LRA": 6.5
+      },
+      "pass": true
+    }
+  },
+  "checks": {
+    "mono_fold": {
+      "integrated_lufs_stereo": -14.413,
+      "integrated_lufs_mono_fold": -15.449,
+      "drop_lu": 1.036,
+      "correlation_overall": 0.6676,
+      "sections": [
+        {
+          "name": "cold-open",
+          "t0": 0.0,
+          "t1": 2.0,
+          "drop_lu": 0.0,
+          "correlation": 1.0
+        },
+        {
+          "name": "mix-turn",
+          "t0": 2.0,
+          "t1": 3.0,
+          "drop_lu": 0.41,
+          "correlation": 0.785
+        },
+        {
+          "name": "tagline",
+          "t0": 3.0,
+          "t1": 7.85,
+          "drop_lu": 1.57,
+          "correlation": 0.422
+        },
+        {
+          "name": "title",
+          "t0": 8.0,
+          "t1": 12.0,
+          "drop_lu": 1.05,
+          "correlation": 0.732
+        },
+        {
+          "name": "lineup",
+          "t0": 12.0,
+          "t1": 16.0,
+          "drop_lu": 1.0,
+          "correlation": 0.744
+        },
+        {
+          "name": "green",
+          "t0": 16.0,
+          "t1": 20.0,
+          "drop_lu": 1.03,
+          "correlation": 0.709
+        },
+        {
+          "name": "blue",
+          "t0": 20.0,
+          "t1": 24.0,
+          "drop_lu": 0.41,
+          "correlation": 0.884
+        },
+        {
+          "name": "red",
+          "t0": 24.0,
+          "t1": 28.0,
+          "drop_lu": 1.05,
+          "correlation": 0.696
+        },
+        {
+          "name": "purple",
+          "t0": 28.0,
+          "t1": 32.0,
+          "drop_lu": 0.33,
+          "correlation": 0.901
+        },
+        {
+          "name": "black",
+          "t0": 32.0,
+          "t1": 36.0,
+          "drop_lu": 1.41,
+          "correlation": 0.601
+        },
+        {
+          "name": "cores",
+          "t0": 36.0,
+          "t1": 40.0,
+          "drop_lu": 1.43,
+          "correlation": 0.589
+        },
+        {
+          "name": "create",
+          "t0": 40.0,
+          "t1": 46.0,
+          "drop_lu": 1.72,
+          "correlation": 0.471
+        },
+        {
+          "name": "looks",
+          "t0": 46.0,
+          "t1": 49.85,
+          "drop_lu": 0.89,
+          "correlation": 0.67
+        },
+        {
+          "name": "free",
+          "t0": 50.0,
+          "t1": 54.0,
+          "drop_lu": 0.72,
+          "correlation": 0.789
+        },
+        {
+          "name": "trial",
+          "t0": 54.0,
+          "t1": 58.0,
+          "drop_lu": 1.46,
+          "correlation": 0.536
+        },
+        {
+          "name": "price",
+          "t0": 58.0,
+          "t1": 62.0,
+          "drop_lu": 1.37,
+          "correlation": 0.508
+        },
+        {
+          "name": "fold",
+          "t0": 62.0,
+          "t1": 64.5,
+          "drop_lu": 0.18,
+          "correlation": 0.956
+        },
+        {
+          "name": "echolalia",
+          "t0": 64.5,
+          "t1": 67.0,
+          "drop_lu": 1.43,
+          "correlation": 0.484
+        },
+        {
+          "name": "stovetop",
+          "t0": 67.0,
+          "t1": 69.5,
+          "drop_lu": 0.15,
+          "correlation": 0.964
+        },
+        {
+          "name": "payoff",
+          "t0": 70.0,
+          "t1": 74.0,
+          "drop_lu": 1.7,
+          "correlation": 0.356
+        },
+        {
+          "name": "endcard",
+          "t0": 74.0,
+          "t1": 78.0,
+          "drop_lu": 1.68,
+          "correlation": 0.451
+        },
+        {
+          "name": "hold",
+          "t0": 78.0,
+          "t1": 86.0,
+          "drop_lu": 1.43,
+          "correlation": 0.513
+        }
+      ],
+      "worst_section_drop_lu": 1.72
+    },
+    "digital_silences": {
+      "pass": true,
+      "windows": [
+        {
+          "t0": 7.85,
+          "t1": 8.0,
+          "max_abs": 0.0,
+          "exact_zero": true
+        },
+        {
+          "t0": 49.85,
+          "t1": 50.0,
+          "max_abs": 0.0,
+          "exact_zero": true
+        },
+        {
+          "t0": 69.5,
+          "t1": 70.0,
+          "max_abs": 0.0,
+          "exact_zero": true
+        }
+      ]
+    },
+    "joins_click_scan": {
+      "method": "Join/cut click check. High-pass (> 5 kHz) energy in the 2 ms window at\n    t, relative to the loudest 2 ms HF burst in the surrounding +-100 ms outside\n    +-4 ms of t (dB; <= 0 means nothing at the join sticks out above the\n    natural transients around it). For a cut into silence only the material\n    before is the reference, for a hard start only the material after. Also\n    returns the absolute HF burst level at the join (dBFS).",
+      "events": [
+        {
+          "t": 7.85,
+          "kind": "cut",
+          "master": {
+            "rel_db": -3.9,
+            "abs_dbfs": -19.5
+          },
+          "gtr": {
+            "rel_db": -11.2,
+            "abs_dbfs": -53.1
+          }
+        },
+        {
+          "t": 8.0,
+          "kind": "start",
+          "master": {
+            "rel_db": -2.4,
+            "abs_dbfs": -33.9
+          },
+          "gtr": {
+            "rel_db": -85.5,
+            "abs_dbfs": -121.1
+          }
+        },
+        {
+          "t": 16.0,
+          "kind": "join",
+          "master": {
+            "rel_db": 0.9,
+            "abs_dbfs": -31.8
+          },
+          "gtr": {
+            "rel_db": -10.5,
+            "abs_dbfs": -46.6
+          }
+        },
+        {
+          "t": 20.0,
+          "kind": "join",
+          "master": {
+            "rel_db": 0.5,
+            "abs_dbfs": -29.6
+          },
+          "gtr": {
+            "rel_db": -8.1,
+            "abs_dbfs": -45.9
+          }
+        },
+        {
+          "t": 24.0,
+          "kind": "join",
+          "master": {
+            "rel_db": 0.9,
+            "abs_dbfs": -29.8
+          },
+          "gtr": {
+            "rel_db": -10.7,
+            "abs_dbfs": -47.1
+          }
+        },
+        {
+          "t": 28.0,
+          "kind": "join",
+          "master": {
+            "rel_db": 1.0,
+            "abs_dbfs": -29.3
+          },
+          "gtr": {
+            "rel_db": -5.6,
+            "abs_dbfs": -43.0
+          }
+        },
+        {
+          "t": 32.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -0.4,
+            "abs_dbfs": -30.0
+          },
+          "gtr": {
+            "rel_db": -10.4,
+            "abs_dbfs": -47.2
+          }
+        },
+        {
+          "t": 36.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -14.3,
+            "abs_dbfs": -57.1
+          },
+          "gtr": {
+            "rel_db": -89.4,
+            "abs_dbfs": -132.1
+          },
+          "pad": {
+            "rel_db": -43.2,
+            "abs_dbfs": -142.1
+          }
+        },
+        {
+          "t": 40.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -14.8,
+            "abs_dbfs": -53.5
+          },
+          "pad": {
+            "rel_db": -32.6,
+            "abs_dbfs": -79.4
+          }
+        },
+        {
+          "t": 49.85,
+          "kind": "cut",
+          "master": {
+            "rel_db": -11.6,
+            "abs_dbfs": -25.8
+          },
+          "gtr": {
+            "rel_db": -19.0,
+            "abs_dbfs": -62.4
+          },
+          "pad": {
+            "rel_db": -52.4,
+            "abs_dbfs": -94.8
+          }
+        },
+        {
+          "t": 50.0,
+          "kind": "start",
+          "master": {
+            "rel_db": -4.8,
+            "abs_dbfs": -33.9
+          },
+          "gtr": {
+            "rel_db": -10.1,
+            "abs_dbfs": -47.3
+          },
+          "pad": {
+            "rel_db": -42.0,
+            "abs_dbfs": -122.4
+          }
+        },
+        {
+          "t": 54.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -1.5,
+            "abs_dbfs": -32.4
+          },
+          "gtr": {
+            "rel_db": -11.7,
+            "abs_dbfs": -49.4
+          },
+          "pad": {
+            "rel_db": -44.1,
+            "abs_dbfs": -83.2
+          },
+          "ep": {
+            "rel_db": -20.1,
+            "abs_dbfs": -70.2
+          }
+        },
+        {
+          "t": 58.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -0.4,
+            "abs_dbfs": -30.7
+          },
+          "gtr": {
+            "rel_db": -9.3,
+            "abs_dbfs": -49.1
+          },
+          "pad": {
+            "rel_db": -37.8,
+            "abs_dbfs": -83.9
+          },
+          "ep": {
+            "rel_db": -7.8,
+            "abs_dbfs": -61.3
+          },
+          "lead": {
+            "rel_db": null,
+            "abs_dbfs": null
+          },
+          "pluck": {
+            "rel_db": -2.2,
+            "abs_dbfs": -35.6
+          }
+        },
+        {
+          "t": 62.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -2.7,
+            "abs_dbfs": -34.8
+          },
+          "gtr": {
+            "rel_db": -82.1,
+            "abs_dbfs": -132.3
+          },
+          "pad": {
+            "rel_db": -14.7,
+            "abs_dbfs": -65.9
+          },
+          "lead": {
+            "rel_db": -52.1,
+            "abs_dbfs": -96.2
+          },
+          "pluck": {
+            "rel_db": -24.6,
+            "abs_dbfs": -60.3
+          }
+        },
+        {
+          "t": 69.5,
+          "kind": "cut",
+          "master": {
+            "rel_db": -52.8,
+            "abs_dbfs": -101.4
+          },
+          "pad": {
+            "rel_db": -48.1,
+            "abs_dbfs": -101.8
+          }
+        },
+        {
+          "t": 70.0,
+          "kind": "start",
+          "master": {
+            "rel_db": -10.4,
+            "abs_dbfs": -49.8
+          },
+          "gtr": {
+            "rel_db": -10.4,
+            "abs_dbfs": -49.8
+          }
+        },
+        {
+          "t": 74.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -5.5,
+            "abs_dbfs": -45.6
+          },
+          "gtr": {
+            "rel_db": -5.5,
+            "abs_dbfs": -45.6
+          },
+          "pad": {
+            "rel_db": -47.9,
+            "abs_dbfs": -165.9
+          }
+        }
+      ],
+      "worst_master_rel_db": 1.0
+    },
+    "p_block_identical": {
+      "pass": true,
+      "pastes": [
+        16.0,
+        20.0,
+        24.0,
+        28.0,
+        32.0,
+        50.0,
+        58.0
+      ]
+    },
+    "stems_sum_to_mix": {
+      "max_abs_diff": 6.332993507385254e-08
+    },
+    "master_24bit_vs_float_max_diff": 1.189762883768708e-07
+  },
+  "pass": true
+}
