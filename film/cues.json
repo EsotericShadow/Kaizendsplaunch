@@ -12,7 +12,7 @@
     "R02": {"stem": "gtr",   "engine": "green",  "hq": 0, "knobs": {"rate": 0.60, "depth": 20, "offset": 90,  "width": 130, "color": 35, "mix": 45}, "role": "Green tour, Depth gesture"},
     "R03": {"stem": "gtr",   "engine": "blue",   "hq": 0, "knobs": {"rate": 0.80, "depth": 15, "offset": 0,   "width": 140, "color": 45, "mix": 40}, "role": "Blue tour, Offset gesture; trial card guitar"},
     "R04": {"stem": "gtr",   "engine": "red",    "hq": 0, "knobs": {"rate": 0.55, "depth": 35, "offset": 90,  "width": 120, "color": 30, "mix": 50}, "role": "Red tour, BBD then Tape at 26.00"},
-    "R05": {"stem": "gtr",   "engine": "purple", "hq": 1, "knobs": {"rate": 0.12, "depth": 60, "offset": 90,  "width": 140, "color": 25, "mix": 35}, "role": "Purple tour (Orbit), Rate gesture; preroll chosen by swoosh sweep"},
+    "R05": {"stem": "gtr", "engine": "purple", "hq": 1, "knobs": {"rate": 0.12, "depth": 60, "offset": 90, "width": 140, "color": 25, "mix": 35}, "role": "Purple tour (Orbit), Rate gesture; preroll chosen by swoosh sweep", "preroll_sweep": {"range": [0.0, 8.25], "step": 0.25, "window": [28.75, 29.5], "section_start": 28.0, "clear_until": 30.0}, "preroll": 7.75, "swoosh_t": 29.18},
     "R06": {"stem": "gtr",   "engine": "black",  "hq": 1, "knobs": {"rate": 0.50, "depth": 30, "offset": 120, "width": 170, "color": 20, "mix": 55}, "role": "Black tour (Ensemble), Color gesture"},
     "R07": {"stem": "pad",   "engine": "green",  "hq": 1, "knobs": {"rate": 0.45, "depth": 30, "offset": 100, "width": 150, "color": 55, "mix": 50}, "role": "Pad, Green (b) Lagrange 5th"},
     "R08": {"stem": "pad",   "engine": "purple", "hq": 1, "knobs": {"rate": 0.12, "depth": 60, "offset": 90,  "width": 140, "color": 25, "mix": 35}, "role": "Pad, Purple (a) Orbit, free card"},
@@ -65,9 +65,9 @@
     {"t0": 50.00, "t1": 54.00, "shot": 16, "name": "free",        "audio": {"gtr": "R01", "pad": "R08"}},
     {"t0": 54.00, "t1": 58.00, "shot": 17, "name": "trial",       "audio": {"gtr": "R03", "ep": "R10", "pad": "R09"}},
     {"t0": 58.00, "t1": 62.00, "shot": 18, "name": "price",       "audio": {"gtr": "R01", "ep": "R10", "pad": "R09", "lead": "R11", "pluck": "R12"}},
-    {"t0": 62.00, "t1": 64.50, "shot": 19, "name": "fold",        "audio": {"pad": "R07", "clip": "fold-motion-sound 1.00-3.25"}},
-    {"t0": 64.50, "t1": 67.00, "shot": 20, "name": "echolalia",   "audio": {"pad": "R07", "clip": "time-sound-preview 9.50-11.75"}},
-    {"t0": 67.00, "t1": 69.50, "shot": 21, "name": "stovetop",    "audio": {"pad": "R07", "clip": "slow-drip-after 2.5 s"}},
+    {"t0": 62.0, "t1": 64.5, "shot": 19, "name": "fold", "audio": {"pad": "R07", "clip": "fold-motion-sound 1.00-3.25"}, "clip_src": "public/fold/fold-motion-sound.mp4", "clip_in": 1.0, "clip_out": 3.25, "clip_at": 62.25, "clip_fades_s": [0.04, 0.04], "clip_gain_db": -0.64, "clip_lufs": -18.0},
+    {"t0": 64.5, "t1": 67.0, "shot": 20, "name": "echolalia", "audio": {"pad": "R07", "clip": "time-sound-preview 9.50-11.75"}, "clip_src": "public/film/echolalia/time-sound-preview.mp4", "clip_in": 9.5, "clip_out": 11.75, "clip_at": 64.75, "clip_fades_s": [0.04, 0.04], "clip_gain_db": -1.12, "clip_lufs": -18.0},
+    {"t0": 67.0, "t1": 69.5, "shot": 21, "name": "stovetop", "audio": {"pad": "R07", "clip": "slow-drip-after 3.00-5.50"}, "clip_src": "public/stovetop/slow-drip-after.wav", "clip_in": 3.005, "clip_out": 5.505, "clip_at": 67.0, "clip_fades_s": [0.04, 0.12], "clip_gain_db": -2.55, "clip_lufs": -18.0},
     {"t0": 69.50, "t1": 70.00, "shot": 22, "name": "silence",     "audio": {}},
     {"t0": 70.00, "t1": 74.00, "shot": 23, "name": "payoff",      "audio": {"gtr": "R01"}},
     {"t0": 74.00, "t1": 78.00, "shot": 24, "name": "endcard",     "audio": {"gtr": "R01", "pad": "R07"}},
@@ -89,7 +89,7 @@
     ]
   },
 
-  "levelmatch": {"sections": [[0, 8, "dry"], [16, 36, "dry"], [54, 62, "R09ref"]], "tolerance_lu": 0.3, "log": "audio/logs/level-match.json"},
+  "levelmatch": {"sections": [[0, 8, "dry"], [16, 36, "dry"], [54, 62, "R09ref"]], "tolerance_lu": 0.3, "log": "audio/logs/level-match.json", "result": {"bars_1_4_pass": true, "bars_9_18_pass": true, "bars_28_31_pass": true, "footnote_shots_2_3": "LEVEL MATCHED", "footnote_tour": "SAME TAKE · LEVEL MATCHED"}},
 
   "master": {"lufs": -14.0, "lufs_tol": 0.5, "true_peak_dbtp": -1.0}
 }

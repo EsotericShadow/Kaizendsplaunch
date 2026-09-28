@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Still Life component gallery</title>
+<link rel="stylesheet" href="/film/lib/base.css">
+</head>
+<body>
+<script src="/__node_modules/gsap/dist/gsap.min.js"></script>
+<script type="module">
+  // A test composition for every film/lib component. Pages (gallery seconds):
+  //   0-1  lineup: five plates at 0.24 (treatment 8.3 lineup states) + Create at 0.30, hero behind
+  //   1-3.5  each engine at 1.0: Green (a), Blue (a), Red (a), Purple (a), Black (b), 0.5 s each
+  //   3.5-4  white Create plate at 1.0
+  //   4-5  MIX turn (film 2.0-3.0, R01) with the ring, pill flip and the scope opening
+  //   5-6  Red HQ flip (film 25.7-26.7, R04): switch 17 -> 0, lit plate fade, knob sheet cross-fade
+  //   6-7  Black COLOR thumb (film 33.8-34.8, R06) with the ring
+  //   7-8  smear Green -> Blue (film 19.6-20.6)
+  // Right column: ChorusType in all four laws (plus Black's ensemble) and a G3b hairline.
+  // Bottom strip: scope group (shot 1 layout), end-card format row with the VST logo, lockup.
+  import * as lib from "/film/lib/index.js";
+  const { util, type } = lib;
+  const { show } = util;
+
+  const cues = await lib.loadCues("/film/cues.json");
+  const stage = lib.stage.makeStage(document.body);
+
+  const DURATION = 8;
+  const PAGES = [
+    { t0: 0, t1: 1, kind: "lineup", film: (t) => 16 + t },
+    { t0: 1, t1: 1.5, kind: "plate", engine: "green", render: "R02", at: 16.1, label: "GREEN (A)" },
+    { t0: 1.5, t1: 2, kind: "plate", engine: "blue", render: "R03", at: 20.1, label: "BLUE (A)" },
+    { t0: 2, t1: 2.5, kind: "plate", engine: "red", render: "R04", at: 24.1, label: "RED (A)" },
+    { t0: 2.5, t1: 3, kind: "plate", engine: "purple", render: "R05", at: 28.1, label: "PURPLE (A)" },
+    { t0: 3, t1: 3.5, kind: "plate", engine: "black", render: "R06", at: 32.1, label: "BLACK (B)" },
+    { t0: 3.5, t1: 4, kind: "white", label: "CREATE" },
+    { t0: 4, t1: 5, kind: "gesture", engine: "green", render: "R01", film0: 2.0, param: "mix", label: "MIX TURN" },
+    { t0: 5, t1: 6, kind: "gesture", engine: "red", render: "R04", film0: 25.7, param: "hq", label: "RED HQ" },
+    { t0: 6, t1: 7, kind: "gesture", engine: "black", render: "R06", film0: 33.8, param: "color", label: "COLOR" },
+    { t0: 7, t1: 8, kind: "smear", film0: 19.6, label: "SMEAR" },
+  ];
+  const pageAt = (t) => PAGES.find((p) => t >= p.t0 && t < p.t1) || PAGES[PAGES.length - 1];
+
+  const scene = {
+    id: "gallery",
+    t0: 0,
+    t1: DURATION,
+    async build(ctx) {
+      const heroL = ctx.layer("hero", 0);
+      const plateL = ctx.layer("plates", 10);
+      const ringL = ctx.layer("rings", 20);
+      const typeL = ctx.layer("type", 30);
+      const grainL = ctx.layer("grain", 40);
+      const topL = ctx.layer("top", 50); // format row: above grain, untouched
+      for (const L of [heroL, plateL, ringL, typeL, grainL, topL]) show(L, true);
+
+      // Hero behind the lineup page.
+      const hero = lib.createHero(heroL, { width: 1920, height: 1080 });
+      hero.canvas.style.opacity = "0.35";
+
+      // Lineup: five at 0.24 centred at x 240..1680, y 380; Create at 0.30.
+      const lineup = [
+        ["green", "R02", 16.1], ["blue", "R03", 20.1], ["red", "R04", 24.1], ["purple", "R05", 28.1], ["black", "R06", 32.1],
+      ].map(([e, r, at], i) => {
+        const p = lib.createPlate(cues.plateStateAt(r, at), { parent: plateL, scale: 0.24, cx: 240 + 360 * i, cy: 300 });
+        return p;
+      });
+      const CREATE = { engine: "white", rate: 1, depth: 50, offset: 90, width: 100, mix: 50, switchFrame: 0 };
+      const createTile = lib.createPlate(CREATE, { parent: plateL, scale: 0.3, cx: 960, cy: 560 });
+      const lineupLabels = ["GREEN", "BLUE", "RED", "PURPLE", "BLACK"].map((w, i) =>
+        type.mono(w, { parent: typeL, size: 18, color: type.HUE[w.toLowerCase()], x: 240 + 360 * i, baseline: 420, align: "center", tracking: 0.3 }),
+      );
+      const createLabel = type.mono("CREATE", { parent: typeL, size: 18, color: type.C.fg, x: 960, baseline: 690, align: "center", tracking: 0.3 });
+
+      // Big plates at 1.0, one per engine plus white.
+      const big = {};
+      for (const e of ["green", "blue", "red", "purple", "black", "white"]) {
+        big[e] = lib.createPlate(e, { parent: plateL, scale: 1, x: 0, y: 0 });
+      }
+      for (const pg of PAGES) {
+        if (pg.kind === "plate") big[pg.engine].require(cues.plateStateAt(pg.render, pg.at));
+        if (pg.kind === "gesture") big[pg.engine].requireRender(cues, pg.render, pg.film0, pg.film0 + (pg.t1 - pg.t0));
+      }
+      big.white.require(CREATE).setState(CREATE);
+
+      // Smear: Green out, Blue in, at the tour's 0.9 plate scale but placed higher.
+      const mkSmear = (engine, render, at) =>
+        new lib.SmearGroup(plateL, (parent) => {
+          const p = lib.createPlate(engine, { parent, scale: 0.6, x: 96, y: 60 });
+          p.requireRender(cues, render, 19.6, 20.6);
+          return p;
+        });
+      const smearOut = mkSmear("green", "R02", 19.9);
+      const smearIn = mkSmear("blue", "R03", 20.1);
+      const smearHead = [
+        new lib.SmearGroup(typeL, (parent) => type.headline({ parent, text: "Green. ", accent: "Sways.", size: 72, x: 960, baseline: 180 })),
+        new lib.SmearGroup(typeL, (parent) => type.headline({ parent, text: "Blue. ", accent: "Widens.", size: 72, x: 960, baseline: 180 })),
+      ];
+
+      const ring = lib.createRing(ringL);
+
+      // Right column: ChorusType laws.
+      const lawsBox = util.el("div", { parent: typeL, style: { position: "absolute", left: "0px", top: "0px" } });
+      const laws = [
+        { label: "SINE · GREEN R02", text: "Sways.", law: "SINE", engine: "green", render: "R02", film: (t) => 16 + t },
+        { label: "STEP · RED BBD R04", text: "Wavers.", law: "STEP", engine: "red", render: "R04", film: (t) => 24 + t },
+        { label: "WOW · RED TAPE R04", text: "Wavers.", law: "WOW", engine: "red", render: "R04", film: (t) => 26.5 + t },
+        { label: "ORBIT · PURPLE R05", text: "Orbits.", law: "ORBIT", engine: "purple", render: "R05", film: (t) => 28 + t },
+        { label: "SINE + ENSEMBLE · BLACK R06", text: "Multiplies.", law: "SINE", engine: "black", render: "R06", film: (t) => 32 + t },
+      ].map((d, i) => {
+        const y = 150 + i * 112;
+        type.mono(d.label, { parent: lawsBox, size: 13, x: 1450, baseline: y - 62, color: "rgba(246,244,239,0.5)" });
+        const h = type.headline({ parent: lawsBox, accent: d.text, size: 72, x: 1450, baseline: y });
+        const ct = lib.createChorusType(h.accent, { law: d.law, engine: d.engine });
+        return { ...d, ct };
+      });
+      // G3b hairline under a static accent.
+      const free = type.headline({ parent: lawsBox, text: "are ", accent: "free.", size: 56, x: 1450, baseline: 720 });
+      const hair = type.offerHairline({ parent: lawsBox, x: 1450 + 96, y: 736, width: 130, strands: [{ engine: "green" }, { engine: "purple" }] });
+
+      const pageLabel = type.mono("", { parent: typeL, size: 14, x: 1900, baseline: 36, align: "right", color: "rgba(246,244,239,0.6)" });
+
+      // Bottom strip: shot 1 scope group, format row, lockup.
+      const scope = lib.createScope(typeL, { cx: 200, cy: 872, size: 160 });
+      type.mono("STEREO FIELD", { parent: typeL, size: 13, x: 200, baseline: 975, align: "center" });
+      const pill = type.pill(["DRY", "CHOROBOROS"], { parent: typeL, x: 80, y: 1000, w: 240, h: 44 });
+      type.formatRow({ parent: topL, x0: 470, y: 800 });
+      type.lockup({ parent: typeL, x: 1640, y: 830, size: 44 });
+      ctx.preload(["/art/site/brand/platforms/vst-compatible.png"]);
+
+      const grain = lib.createGrain(grainL, { opacity: 0.05 });
+
+      return {
+        sequences: [hero.seq],
+        render(t) {
+          const pg = pageAt(t);
+          util.setText(pageLabel, `GALLERY · ${pg.label || "LINEUP"} · t ${t.toFixed(2)}`);
+
+          // Hero + lineup page.
+          const lineupOn = pg.kind === "lineup";
+          show(hero.canvas, lineupOn);
+          if (lineupOn) hero.draw(96 * t, { scale: 1 + 0.04 * t });
+          for (const p of lineup) show(p.el, lineupOn);
+          show(createTile.el, lineupOn);
+          for (const l of lineupLabels) show(l, lineupOn);
+          show(createLabel, lineupOn);
+
+          // Big plates.
+          for (const [e, p] of Object.entries(big)) {
+            let on = false;
+            if (pg.kind === "plate" && pg.engine === e) {
+              on = true;
+              p.setState(cues.plateStateAt(pg.render, pg.at));
+            } else if (pg.kind === "gesture" && pg.engine === e) {
+              on = true;
+              p.setState(cues.plateStateAt(pg.render, pg.film0 + (t - pg.t0)));
+            } else if (pg.kind === "white" && e === "white") on = true;
+            show(p.el, on);
+          }
+
+          // Ring for gesture pages.
+          if (pg.kind === "gesture") {
+            const g = cues.gesture(pg.render, pg.param);
+            ring.renderGesture(pg.film0 + (t - pg.t0), g, big[pg.engine].controlScreenRect(pg.param));
+          } else ring.render(t, { t0: -1, t1: -1, rect: null });
+
+          // Smear page.
+          const smearOn = pg.kind === "smear";
+          for (const g of [smearOut, smearIn, ...smearHead]) show(g.root, smearOn);
+          if (smearOn) {
+            const ft = pg.film0 + (t - pg.t0);
+            const u = lib.smearU(ft, 20.0);
+            smearOut.setState(cues.plateStateAt("R02", ft));
+            smearIn.setState(cues.plateStateAt("R03", ft));
+            smearOut.render(u, "out");
+            smearIn.render(u, "in");
+            smearHead[0].render(u, "out");
+            smearHead[1].render(u, "in");
+          }
+
+          // ChorusType column (not on the lineup page, which needs the width).
+          show(lawsBox, !lineupOn);
+          for (const d of laws) d.ct.render(t, cues.settingsAt(d.render, d.film(t)));
+          hair.render(t, [cues.cyclesAt("R01", 50 + t), cues.cyclesAt("R08", 50 + t)]);
+
+          // Scope group follows the page's film time.
+          let ft = 16 + t;
+          let hue = type.HUE.green;
+          if (pg.kind === "gesture" || pg.kind === "smear") ft = pg.film0 + (t - pg.t0);
+          if (pg.engine) hue = type.HUE[pg.engine];
+          const render = cues.renderFor("gtr", ft);
+          const mix = render ? cues.valueAt(render, "mix", ft) : 0;
+          scope.draw(ft, { stem: "gtr", color: pg.kind === "gesture" && pg.param === "mix" ? "#f6f4ef" : hue });
+          pill.setActive(mix > 0 ? 1 : 0, mix > 0 ? type.HUE.green : type.C.fg);
+
+          grain.render(t, { frozen: false });
+        },
+      };
+    },
+  };
+
+  await lib.stage.runScenes({ stage, scenes: [scene], cues, lib, duration: DURATION, fps: 60 });
+</script>
+</body>
+</html>

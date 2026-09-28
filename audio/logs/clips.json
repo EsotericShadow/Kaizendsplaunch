@@ -1,0 +1,220 @@
+{
+  "target_lufs": -18.0,
+  "loudness_note": "BS.1770 loudness over each whole excerpt (shorter than the 3 s short-term window)",
+  "clips": {
+    "fold": {
+      "shot": 19,
+      "clip_in": 1.0,
+      "clip_out": 3.25,
+      "clip_at": 62.25,
+      "fade_in": 0.04,
+      "fade_out": 0.04,
+      "clip_src": "public/fold/fold-motion-sound.mp4",
+      "source_lufs": -17.36,
+      "gain_db": -0.64,
+      "lufs_after": -18.0,
+      "film_t0": 62.25,
+      "film_t1": 64.5
+    },
+    "echolalia": {
+      "shot": 20,
+      "clip_in": 9.5,
+      "clip_out": 11.75,
+      "clip_at": 64.75,
+      "fade_in": 0.04,
+      "fade_out": 0.04,
+      "clip_src": "public/film/echolalia/time-sound-preview.mp4",
+      "source_lufs": -16.88,
+      "gain_db": -1.12,
+      "lufs_after": -18.0,
+      "film_t0": 64.75,
+      "film_t1": 67.0
+    },
+    "stovetop": {
+      "shot": 21,
+      "clip_in": 3.005,
+      "clip_out": 5.505,
+      "clip_at": 67.0,
+      "fade_in": 0.04,
+      "fade_out": 0.12,
+      "clip_src": "public/stovetop/slow-drip-after.wav",
+      "source_lufs": -15.45,
+      "gain_db": -2.55,
+      "lufs_after": -18.0,
+      "film_t0": 67.0,
+      "film_t1": 69.5
+    }
+  },
+  "echolalia_bend_check": {
+    "method": "side-signal spectral peak tracks (8192-point STFT, 10 ms hop, parabolic peaks, 25 cent linking); glide = 120 ms run with fitted slope >= 330 cents/s",
+    "window_default": [
+      9.5,
+      11.75
+    ],
+    "rising_in_default": 57,
+    "falling_in_default": 64,
+    "median_rising_slope_cents_per_s": 425.0,
+    "per_quarter_second": [
+      {
+        "t0": 8.0,
+        "rising": 17,
+        "falling": 2
+      },
+      {
+        "t0": 8.25,
+        "rising": 21,
+        "falling": 3
+      },
+      {
+        "t0": 8.5,
+        "rising": 24,
+        "falling": 4
+      },
+      {
+        "t0": 8.75,
+        "rising": 25,
+        "falling": 0
+      },
+      {
+        "t0": 9.0,
+        "rising": 16,
+        "falling": 2
+      },
+      {
+        "t0": 9.25,
+        "rising": 19,
+        "falling": 3
+      },
+      {
+        "t0": 9.5,
+        "rising": 16,
+        "falling": 0
+      },
+      {
+        "t0": 9.75,
+        "rising": 13,
+        "falling": 1
+      },
+      {
+        "t0": 10.0,
+        "rising": 8,
+        "falling": 1
+      },
+      {
+        "t0": 10.25,
+        "rising": 10,
+        "falling": 2
+      },
+      {
+        "t0": 10.5,
+        "rising": 8,
+        "falling": 2
+      },
+      {
+        "t0": 10.75,
+        "rising": 1,
+        "falling": 1
+      },
+      {
+        "t0": 11.0,
+        "rising": 1,
+        "falling": 3
+      },
+      {
+        "t0": 11.25,
+        "rising": 0,
+        "falling": 21
+      },
+      {
+        "t0": 11.5,
+        "rising": 0,
+        "falling": 33
+      },
+      {
+        "t0": 11.75,
+        "rising": 7,
+        "falling": 15
+      },
+      {
+        "t0": 12.0,
+        "rising": 1,
+        "falling": 10
+      },
+      {
+        "t0": 12.25,
+        "rising": 2,
+        "falling": 4
+      },
+      {
+        "t0": 12.5,
+        "rising": 3,
+        "falling": 3
+      },
+      {
+        "t0": 12.75,
+        "rising": 1,
+        "falling": 1
+      }
+    ],
+    "chosen": [
+      9.5,
+      11.75
+    ],
+    "slid": false
+  },
+  "stovetop_downbeat": {
+    "method": "kick onsets: rise of the 120 Hz low-passed 5 ms RMS envelope over 10 ms, at each nominal 80 BPM bar line (3.0 s); score = rise dB + low-band peak dBFS",
+    "candidates": [
+      {
+        "bar_nominal": 3.0,
+        "onset_s": 3.045,
+        "rise_db": 25.3,
+        "low_peak_dbfs": -12.4,
+        "score": 12.9
+      },
+      {
+        "bar_nominal": 6.0,
+        "onset_s": 5.966,
+        "rise_db": 20.4,
+        "low_peak_dbfs": -21.1,
+        "score": -0.6
+      },
+      {
+        "bar_nominal": 9.0,
+        "onset_s": 9.066,
+        "rise_db": 16.7,
+        "low_peak_dbfs": -27.5,
+        "score": -10.9
+      },
+      {
+        "bar_nominal": 12.0,
+        "onset_s": 11.924,
+        "rise_db": 22.0,
+        "low_peak_dbfs": -20.5,
+        "score": 1.4
+      },
+      {
+        "bar_nominal": 15.0,
+        "onset_s": 15.039,
+        "rise_db": 15.5,
+        "low_peak_dbfs": -25.0,
+        "score": -9.6
+      },
+      {
+        "bar_nominal": 18.0,
+        "onset_s": 18.013,
+        "rise_db": 8.9,
+        "low_peak_dbfs": -23.1,
+        "score": -14.3
+      },
+      {
+        "bar_nominal": 21.0,
+        "onset_s": 21.034,
+        "rise_db": 11.1,
+        "low_peak_dbfs": -28.0,
+        "score": -16.9
+      }
+    ],
+    "chosen_downbeat_s": 3.045
+  }
+}

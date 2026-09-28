@@ -1,0 +1,2435 @@
+{
+  "R05_preroll_sweep": {
+    "method": "white-noise analysis input, Mix 100%, Wiener deconvolution 40 ms Hann / 20 ms hop; swoosh peak = a tap arriving at 0 ms (step in the zero-lag energy share; main tap step >= 0.25, minor tap 0.10-0.25); departures are the same test in reversed time",
+    "selection": "exactly one main-tap arrival in [section_start, clear_until) and it lies in the window; then fewest other main-tap arrivals/departures more than 0.3 s from it, fewest minor arrivals, closest to the window centre",
+    "window": [
+      28.75,
+      29.5
+    ],
+    "section_start": 28.0,
+    "clear_until": 30.0,
+    "candidates": [
+      {
+        "preroll": 0.0,
+        "arrivals": [
+          {
+            "t": 28.34,
+            "step": 0.189,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.7,
+            "step": 0.503,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.16,
+            "step": 0.464,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.6,
+            "step": 0.137,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.28,
+            "step": 0.505,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 0.25,
+        "arrivals": [
+          {
+            "t": 28.1,
+            "step": 0.182,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.46,
+            "step": 0.478,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.92,
+            "step": 0.479,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.36,
+            "step": 0.137,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.2,
+            "step": 0.47,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 2,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 0.5,
+        "arrivals": [
+          {
+            "t": 27.84,
+            "step": 0.19,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.2,
+            "step": 0.492,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.66,
+            "step": 0.503,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.24,
+            "step": 0.122,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.56,
+            "step": 0.104,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.02,
+            "step": 0.482,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.44,
+            "step": 0.147,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 2,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 0.75,
+        "arrivals": [
+          {
+            "t": 27.6,
+            "step": 0.199,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 27.96,
+            "step": 0.473,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.42,
+            "step": 0.46,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.86,
+            "step": 0.121,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.3,
+            "step": 0.107,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.78,
+            "step": 0.48,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.42,
+            "step": 0.32,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": true,
+        "swoosh_t": 29.42,
+        "other_main_events_in_section": 1
+      },
+      {
+        "preroll": 1.0,
+        "arrivals": [
+          {
+            "t": 27.34,
+            "step": 0.16,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 27.7,
+            "step": 0.492,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.16,
+            "step": 0.467,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 29.54,
+            "step": 0.109,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.6,
+            "step": 0.11,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.52,
+            "step": 0.491,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.4,
+            "step": 0.483,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 1,
+        "ok": true,
+        "swoosh_t": 29.16,
+        "other_main_events_in_section": 1
+      },
+      {
+        "preroll": 1.25,
+        "arrivals": [
+          {
+            "t": 27.1,
+            "step": 0.156,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 27.46,
+            "step": 0.456,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 28.92,
+            "step": 0.484,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.34,
+            "step": 0.149,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 28.8,
+            "step": 0.129,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.28,
+            "step": 0.493,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.36,
+            "step": 0.587,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": true,
+        "swoosh_t": 28.92,
+        "other_main_events_in_section": 1
+      },
+      {
+        "preroll": 1.5,
+        "arrivals": [
+          {
+            "t": 27.2,
+            "step": 0.492,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 28.66,
+            "step": 0.462,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.56,
+            "step": 0.125,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.02,
+            "step": 0.507,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.32,
+            "step": 0.589,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 1.75,
+        "arrivals": [
+          {
+            "t": 28.42,
+            "step": 0.468,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.44,
+            "step": 0.144,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.3,
+            "step": 0.109,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.78,
+            "step": 0.489,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.28,
+            "step": 0.596,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 2.0,
+        "arrivals": [
+          {
+            "t": 28.16,
+            "step": 0.48,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.4,
+            "step": 0.255,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.06,
+            "step": 0.105,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.52,
+            "step": 0.499,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.2,
+            "step": 0.583,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 2.25,
+        "arrivals": [
+          {
+            "t": 27.92,
+            "step": 0.466,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 28.32,
+            "step": 0.105,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.36,
+            "step": 0.248,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.8,
+            "step": 0.111,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.28,
+            "step": 0.481,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.04,
+            "step": 0.59,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 2.5,
+        "arrivals": [
+          {
+            "t": 27.66,
+            "step": 0.467,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.3,
+            "step": 0.224,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.56,
+            "step": 0.113,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.02,
+            "step": 0.481,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.8,
+            "step": 0.581,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 2.75,
+        "arrivals": [
+          {
+            "t": 27.42,
+            "step": 0.448,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.18,
+            "step": 0.243,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.3,
+            "step": 0.117,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 27.78,
+            "step": 0.514,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.54,
+            "step": 0.595,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 3.0,
+        "arrivals": [
+          {
+            "t": 27.16,
+            "step": 0.5,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 29.94,
+            "step": 0.228,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.52,
+            "step": 0.469,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.3,
+            "step": 0.573,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 3.25,
+        "arrivals": [
+          {
+            "t": 29.7,
+            "step": 0.245,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.42,
+            "step": 0.17,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.28,
+            "step": 0.506,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.04,
+            "step": 0.59,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.4,
+            "step": 0.138,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 3.5,
+        "arrivals": [
+          {
+            "t": 29.44,
+            "step": 0.239,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.38,
+            "step": 0.213,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.04,
+            "step": 0.223,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 28.8,
+            "step": 0.566,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.4,
+            "step": 0.142,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 3.75,
+        "arrivals": [
+          {
+            "t": 29.2,
+            "step": 0.25,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.34,
+            "step": 0.191,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.54,
+            "step": 0.57,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.36,
+            "step": 0.159,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": true,
+        "swoosh_t": 29.2,
+        "other_main_events_in_section": 1
+      },
+      {
+        "preroll": 4.0,
+        "arrivals": [
+          {
+            "t": 28.94,
+            "step": 0.227,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.42,
+            "step": 0.253,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.28,
+            "step": 0.57,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.3,
+            "step": 0.215,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 4.25,
+        "arrivals": [
+          {
+            "t": 28.7,
+            "step": 0.229,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.1,
+            "step": 0.173,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.38,
+            "step": 0.461,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.04,
+            "step": 0.594,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.26,
+            "step": 0.2,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 4.5,
+        "arrivals": [
+          {
+            "t": 28.44,
+            "step": 0.231,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.84,
+            "step": 0.193,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.32,
+            "step": 0.5,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.78,
+            "step": 0.615,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.16,
+            "step": 0.177,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 2,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 4.75,
+        "arrivals": [
+          {
+            "t": 28.2,
+            "step": 0.244,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.6,
+            "step": 0.168,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.24,
+            "step": 0.511,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.54,
+            "step": 0.555,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 29.96,
+            "step": 0.171,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.24,
+            "step": 0.108,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 2,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 5.0,
+        "arrivals": [
+          {
+            "t": 27.94,
+            "step": 0.242,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.34,
+            "step": 0.163,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.08,
+            "step": 0.521,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.28,
+            "step": 0.571,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 29.7,
+            "step": 0.173,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.06,
+            "step": 0.115,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 0,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 5.25,
+        "arrivals": [
+          {
+            "t": 27.7,
+            "step": 0.226,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.1,
+            "step": 0.167,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.84,
+            "step": 0.544,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.04,
+            "step": 0.358,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 29.46,
+            "step": 0.155,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.82,
+            "step": 0.119,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 5.5,
+        "arrivals": [
+          {
+            "t": 27.44,
+            "step": 0.235,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 28.84,
+            "step": 0.158,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.58,
+            "step": 0.57,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 29.2,
+            "step": 0.179,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.44,
+            "step": 0.22,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 1,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 5.75,
+        "arrivals": [
+          {
+            "t": 27.2,
+            "step": 0.238,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 28.6,
+            "step": 0.182,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.34,
+            "step": 0.531,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.42,
+            "step": 0.298,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.94,
+            "step": 0.157,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.36,
+            "step": 0.108,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.4,
+            "step": 0.419,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 1,
+        "ok": true,
+        "swoosh_t": 29.34,
+        "other_main_events_in_section": 0
+      },
+      {
+        "preroll": 6.0,
+        "arrivals": [
+          {
+            "t": 28.34,
+            "step": 0.169,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.08,
+            "step": 0.528,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.4,
+            "step": 0.546,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.7,
+            "step": 0.178,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.06,
+            "step": 0.124,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.38,
+            "step": 0.563,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 1,
+        "ok": true,
+        "swoosh_t": 29.08,
+        "other_main_events_in_section": 0
+      },
+      {
+        "preroll": 6.25,
+        "arrivals": [
+          {
+            "t": 28.1,
+            "step": 0.172,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.84,
+            "step": 0.507,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.34,
+            "step": 0.555,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.44,
+            "step": 0.197,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 30.08,
+            "step": 0.163,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.34,
+            "step": 0.569,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 1,
+        "ok": true,
+        "swoosh_t": 28.84,
+        "other_main_events_in_section": 0
+      },
+      {
+        "preroll": 6.5,
+        "arrivals": [
+          {
+            "t": 27.84,
+            "step": 0.197,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.58,
+            "step": 0.53,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.28,
+            "step": 0.555,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.2,
+            "step": 0.161,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.84,
+            "step": 0.124,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.3,
+            "step": 0.575,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 6.75,
+        "arrivals": [
+          {
+            "t": 27.6,
+            "step": 0.169,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.34,
+            "step": 0.527,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.16,
+            "step": 0.563,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.94,
+            "step": 0.186,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.58,
+            "step": 0.153,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.24,
+            "step": 0.524,
+            "channel": "R",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 7.0,
+        "arrivals": [
+          {
+            "t": 27.34,
+            "step": 0.197,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.08,
+            "step": 0.52,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.92,
+            "step": 0.501,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.7,
+            "step": 0.177,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 28.06,
+            "step": 0.116,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.32,
+            "step": 0.151,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 30.1,
+            "step": 0.48,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.44,
+            "step": 0.123,
+            "channel": "L",
+            "kind": "minor"
+          }
+        ],
+        "main_in_section": 2,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 7.25,
+        "arrivals": [
+          {
+            "t": 27.1,
+            "step": 0.154,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 27.84,
+            "step": 0.563,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.68,
+            "step": 0.517,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.44,
+            "step": 0.169,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 29.08,
+            "step": 0.136,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.86,
+            "step": 0.498,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.42,
+            "step": 0.345,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      },
+      {
+        "preroll": 7.5,
+        "arrivals": [
+          {
+            "t": 27.58,
+            "step": 0.546,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.42,
+            "step": 0.502,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.2,
+            "step": 0.164,
+            "channel": "R",
+            "kind": "minor"
+          },
+          {
+            "t": 28.84,
+            "step": 0.156,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.62,
+            "step": 0.481,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.4,
+            "step": 0.473,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": true,
+        "swoosh_t": 29.42,
+        "other_main_events_in_section": 0
+      },
+      {
+        "preroll": 7.75,
+        "arrivals": [
+          {
+            "t": 27.34,
+            "step": 0.519,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 29.18,
+            "step": 0.493,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.44,
+            "step": 0.124,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 27.32,
+            "step": 0.117,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.58,
+            "step": 0.15,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.36,
+            "step": 0.5,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.36,
+            "step": 0.582,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": true,
+        "swoosh_t": 29.18,
+        "other_main_events_in_section": 0
+      },
+      {
+        "preroll": 8.0,
+        "arrivals": [
+          {
+            "t": 27.08,
+            "step": 0.433,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 28.92,
+            "step": 0.519,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.4,
+            "step": 0.242,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.32,
+            "step": 0.12,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 29.12,
+            "step": 0.473,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.32,
+            "step": 0.587,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": true,
+        "swoosh_t": 28.92,
+        "other_main_events_in_section": 0
+      },
+      {
+        "preroll": 8.25,
+        "arrivals": [
+          {
+            "t": 28.68,
+            "step": 0.484,
+            "channel": "L",
+            "kind": "main"
+          },
+          {
+            "t": 30.36,
+            "step": 0.217,
+            "channel": "R",
+            "kind": "minor"
+          }
+        ],
+        "departures": [
+          {
+            "t": 28.08,
+            "step": 0.14,
+            "channel": "L",
+            "kind": "minor"
+          },
+          {
+            "t": 28.86,
+            "step": 0.504,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 30.26,
+            "step": 0.579,
+            "channel": "L",
+            "kind": "main"
+          }
+        ],
+        "main_in_section": 1,
+        "minor_in_section": 0,
+        "ok": false,
+        "swoosh_t": null,
+        "other_main_events_in_section": null
+      }
+    ],
+    "n_ok": 10,
+    "chosen": {
+      "preroll": 7.75,
+      "arrivals": [
+        {
+          "t": 27.34,
+          "step": 0.519,
+          "channel": "R",
+          "kind": "main"
+        },
+        {
+          "t": 29.18,
+          "step": 0.493,
+          "channel": "L",
+          "kind": "main"
+        },
+        {
+          "t": 30.44,
+          "step": 0.124,
+          "channel": "R",
+          "kind": "minor"
+        }
+      ],
+      "departures": [
+        {
+          "t": 27.32,
+          "step": 0.117,
+          "channel": "L",
+          "kind": "minor"
+        },
+        {
+          "t": 28.58,
+          "step": 0.15,
+          "channel": "L",
+          "kind": "minor"
+        },
+        {
+          "t": 29.36,
+          "step": 0.5,
+          "channel": "R",
+          "kind": "main"
+        },
+        {
+          "t": 30.36,
+          "step": 0.582,
+          "channel": "L",
+          "kind": "main"
+        }
+      ],
+      "main_in_section": 1,
+      "minor_in_section": 0,
+      "ok": true,
+      "swoosh_t": 29.18,
+      "other_main_events_in_section": 0
+    },
+    "seconds": 10.2
+  },
+  "R01": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/gtr.wav --out /home/user/build/film/audio/renders/R01.wav --engine green --hq 0 --rate 0.6 --depth 20% --offset 90 --width 130% --color 35% --mix 0% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R01.json --quiet --automation /home/user/build/film/audio/auto/R01.json",
+    "seconds": 0.97,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.6,
+          "got": 0.5982,
+          "raw_delta": 0.00316,
+          "ok": true
+        },
+        "depth": {
+          "want": 20,
+          "got": 20.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 90,
+          "got": 90.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 130,
+          "got": 130.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 45,
+          "got": 45.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Lagrange 3rd",
+      "outPeakDb": -5.80707848072052,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R02": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/gtr.wav --out /home/user/build/film/audio/renders/R02.wav --engine green --hq 0 --rate 0.6 --depth 20% --offset 90 --width 130% --color 35% --mix 45% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R02.json --quiet --automation /home/user/build/film/audio/auto/R02.json",
+    "seconds": 0.93,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.6,
+          "got": 0.5982,
+          "raw_delta": 0.00316,
+          "ok": true
+        },
+        "depth": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 90,
+          "got": 90.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 130,
+          "got": 130.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 45,
+          "got": 45.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Lagrange 3rd",
+      "outPeakDb": -6.879154443740845,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R03": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/gtr.wav --out /home/user/build/film/audio/renders/R03.wav --engine blue --hq 0 --rate 0.8 --depth 15% --offset 0 --width 140% --color 45% --mix 40% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R03.json --quiet --automation /home/user/build/film/audio/auto/R03.json",
+    "seconds": 1.08,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.8,
+          "got": 0.8001,
+          "raw_delta": 9e-05,
+          "ok": true
+        },
+        "depth": {
+          "want": 15,
+          "got": 15.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 90,
+          "got": 90.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 140,
+          "got": 140.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 45,
+          "got": 45.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 40,
+          "got": 40.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Cubic",
+      "outPeakDb": -6.976923942565918,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R04": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/gtr.wav --out /home/user/build/film/audio/renders/R04.wav --engine red --hq 0 --rate 0.55 --depth 35% --offset 90 --width 120% --color 30% --mix 50% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R04.json --quiet --automation /home/user/build/film/audio/auto/R04.json",
+    "seconds": 1.1,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.55,
+          "got": 0.5477,
+          "raw_delta": 0.0042,
+          "ok": true
+        },
+        "depth": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 90,
+          "got": 90.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 120,
+          "got": 120.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 30,
+          "got": 30.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 50,
+          "got": 50.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Tape",
+      "outPeakDb": -6.26684308052063,
+      "engineSwitchesDuringRender": 1
+    }
+  },
+  "R05": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/gtr.wav --out /home/user/build/film/audio/renders/R05.wav --engine purple --hq 1 --rate 0.12 --depth 60% --offset 90 --width 140% --color 25% --mix 35% --block 128 --preroll 7.75 --tail 3 --meta /home/user/build/film/audio/renders/R05.json --quiet --automation /home/user/build/film/audio/auto/R05.json",
+    "seconds": 1.14,
+    "preroll": 7.75,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 1.5,
+          "got": 1.4957,
+          "raw_delta": 0.00365,
+          "ok": true
+        },
+        "depth": {
+          "want": 60,
+          "got": 60.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 90,
+          "got": 90.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 140,
+          "got": 140.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 25,
+          "got": 25.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Orbit",
+      "outPeakDb": -6.63763701915741,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R06": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/gtr.wav --out /home/user/build/film/audio/renders/R06.wav --engine black --hq 1 --rate 0.5 --depth 30% --offset 120 --width 170% --color 20% --mix 55% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R06.json --quiet --automation /home/user/build/film/audio/auto/R06.json",
+    "seconds": 0.83,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.5,
+          "got": 0.5006,
+          "raw_delta": 0.00128,
+          "ok": true
+        },
+        "depth": {
+          "want": 30,
+          "got": 30.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 120,
+          "got": 120.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 170,
+          "got": 170.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 60,
+          "got": 60.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 55,
+          "got": 55.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Linear Ensemble",
+      "outPeakDb": -7.746177911758423,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R07": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/pad.wav --out /home/user/build/film/audio/renders/R07.wav --engine green --hq 1 --rate 0.45 --depth 30% --offset 100 --width 150% --color 55% --mix 50% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R07.json --quiet",
+    "seconds": 1.11,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.45,
+          "got": 0.4521,
+          "raw_delta": 0.00451,
+          "ok": true
+        },
+        "depth": {
+          "want": 30,
+          "got": 30.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 100,
+          "got": 100.0,
+          "raw_delta": 1e-05,
+          "ok": true
+        },
+        "width": {
+          "want": 150,
+          "got": 150.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 55,
+          "got": 55.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 50,
+          "got": 50.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Lagrange 5th",
+      "outPeakDb": -9.16081964969635,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R08": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/pad.wav --out /home/user/build/film/audio/renders/R08.wav --engine purple --hq 1 --rate 0.12 --depth 60% --offset 90 --width 140% --color 25% --mix 35% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R08.json --quiet",
+    "seconds": 1.26,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.12,
+          "got": 0.1197,
+          "raw_delta": 0.00191,
+          "ok": true
+        },
+        "depth": {
+          "want": 60,
+          "got": 60.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 90,
+          "got": 90.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 140,
+          "got": 140.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 25,
+          "got": 25.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Orbit",
+      "outPeakDb": -10.17845630645752,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R09": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/pad.wav --out /home/user/build/film/audio/renders/R09.wav --engine black --hq 1 --rate 0.5 --depth 30% --offset 120 --width 100% --color 60% --mix 55% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R09.json --quiet --automation /home/user/build/film/audio/auto/R09.json",
+    "seconds": 1.0,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.5,
+          "got": 0.5006,
+          "raw_delta": 0.00128,
+          "ok": true
+        },
+        "depth": {
+          "want": 30,
+          "got": 30.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 120,
+          "got": 120.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 170,
+          "got": 170.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 60,
+          "got": 60.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 55,
+          "got": 55.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Linear Ensemble",
+      "outPeakDb": -12.017117738723755,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R09ref": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/pad.wav --out /home/user/build/film/audio/renders/R09ref.wav --engine black --hq 1 --rate 0.5 --depth 30% --offset 120 --width 100% --color 60% --mix 55% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R09ref.json --quiet",
+    "seconds": 0.96,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.5,
+          "got": 0.5006,
+          "raw_delta": 0.00128,
+          "ok": true
+        },
+        "depth": {
+          "want": 30,
+          "got": 30.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 120,
+          "got": 120.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 100,
+          "got": 100.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 60,
+          "got": 60.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 55,
+          "got": 55.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Linear Ensemble",
+      "outPeakDb": -11.774482727050781,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R10": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/ep.wav --out /home/user/build/film/audio/renders/R10.wav --engine red --hq 1 --rate 0.4 --depth 35% --offset 90 --width 140% --color 55% --mix 50% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R10.json --quiet",
+    "seconds": 0.99,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.4,
+          "got": 0.3988,
+          "raw_delta": 0.00291,
+          "ok": true
+        },
+        "depth": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 90,
+          "got": 90.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 140,
+          "got": 140.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 55,
+          "got": 55.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 50,
+          "got": 50.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Tape",
+      "outPeakDb": -8.944720029830933,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R11": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/lead.wav --out /home/user/build/film/audio/renders/R11.wav --engine blue --hq 1 --rate 0.35 --depth 30% --offset 120 --width 160% --color 35% --mix 50% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R11.json --quiet",
+    "seconds": 1.82,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.35,
+          "got": 0.3505,
+          "raw_delta": 0.00125,
+          "ok": true
+        },
+        "depth": {
+          "want": 30,
+          "got": 30.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 120,
+          "got": 120.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 160,
+          "got": 160.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 50,
+          "got": 50.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Thiran Allpass",
+      "outPeakDb": -17.306950092315674,
+      "engineSwitchesDuringRender": 0
+    }
+  },
+  "R12": {
+    "cmd": "choro-render --in /home/user/build/film/audio/stems/pluck.wav --out /home/user/build/film/audio/renders/R12.wav --engine purple --hq 1 --rate 0.12 --depth 60% --offset 90 --width 140% --color 25% --mix 35% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/renders/R12.json --quiet",
+    "seconds": 1.14,
+    "preroll": 2.0,
+    "verify": {
+      "pass": true,
+      "checks": {
+        "engine": true,
+        "core": true,
+        "hq_final": true,
+        "block_128": true,
+        "tail_3": true,
+        "preroll": true,
+        "license_unlocked": true,
+        "finite": true,
+        "no_over_full_scale": true,
+        "knobs_within_one_grid_step": true
+      },
+      "knobs": {
+        "rate": {
+          "want": 0.12,
+          "got": 0.1197,
+          "raw_delta": 0.00191,
+          "ok": true
+        },
+        "depth": {
+          "want": 60,
+          "got": 60.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "offset": {
+          "want": 90,
+          "got": 90.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "width": {
+          "want": 140,
+          "got": 140.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "color": {
+          "want": 25,
+          "got": 25.0,
+          "raw_delta": 0.0,
+          "ok": true
+        },
+        "mix": {
+          "want": 35,
+          "got": 35.0,
+          "raw_delta": 0.0,
+          "ok": true
+        }
+      },
+      "core": "Orbit",
+      "outPeakDb": -13.882575035095215,
+      "engineSwitchesDuringRender": 0
+    }
+  }
+}

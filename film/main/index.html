@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Still Life</title>
+<link rel="stylesheet" href="/film/lib/base.css">
+</head>
+<body>
+<!-- GSAP as a classic script first, so the runtime can set force3D: false before any tween exists. -->
+<script src="/__node_modules/gsap/dist/gsap.min.js"></script>
+<script type="module">
+  import * as lib from "/film/lib/index.js";
+
+  const cues = await lib.loadCues("/film/cues.json");
+  const manifest = await (await fetch("/film/scenes/manifest.json")).json();
+  const scenes = [];
+  for (const file of manifest.scenes) {
+    const mod = await import(`/film/scenes/${file}`);
+    scenes.push(mod.default);
+  }
+  const stage = lib.stage.makeStage(document.body);
+  await lib.stage.runScenes({ stage, scenes, cues, lib, duration: cues.duration, fps: cues.fps });
+</script>
+</body>
+</html>

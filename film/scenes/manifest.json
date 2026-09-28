@@ -1,0 +1,4 @@
+{
+  "note": "Scene modules in play order, relative to this folder. Each exports default { id, t0, t1, build(ctx) }; see film/README.md.",
+  "scenes": []
+}

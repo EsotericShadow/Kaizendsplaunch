@@ -1,0 +1,36 @@
+/* Shared page base for the film compositions. Fonts: @fontsource (OFL) from /__node_modules,
+   Technology.ttf (the plugin's readout face) from the mounted plugin art. */
+@import url("/__node_modules/@fontsource/fraunces/600.css");
+@import url("/__node_modules/@fontsource/fraunces/400-italic.css");
+@import url("/__node_modules/@fontsource/inter/400.css");
+@import url("/__node_modules/@fontsource/inter/500.css");
+@import url("/__node_modules/@fontsource/inter/600.css");
+@import url("/__node_modules/@fontsource/inter/700.css");
+@import url("/__node_modules/@fontsource/jetbrains-mono/400.css");
+@import url("/__node_modules/@fontsource/jetbrains-mono/600.css");
+
+@font-face {
+  font-family: "Technology";
+  src: url("/art/rc/fonts/Technology.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #050506;
+  overflow: hidden;
+}
+
+#stage {
+  color: #f6f4ef;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+#stage * {
+  box-sizing: border-box;
+}

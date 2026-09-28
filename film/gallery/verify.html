@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Plate verification</title>
+<link rel="stylesheet" href="/film/lib/base.css">
+</head>
+<body>
+<script src="/__node_modules/gsap/dist/gsap.min.js"></script>
+<script type="module">
+  // One plate per second at 1.0 scale, top-left at (0, 0), in the state of the website captures
+  // (public/engines/<e>-on.png): HQ lit, knobs at 12 o'clock, COLOR and MIX 50%, readouts 1.00 Hz,
+  // 50%, 90 deg, 100%, 50%, 50%. Order: green, blue, red, purple, black, white. The frame on the
+  // right half is empty. film/tools/verify_plate.py measures these stills against the references.
+  // Then: 6-7 type baselines against 1 px guides (red) at y 200, 330, 450, 560;
+  //       7-8 shot 1 hero grade (frame 0, saturate 0.15, brightness 0.85, contrast 1.05) with a
+  //           Fold clip frame (clip time 1.00) inset.
+  //       8-9 shot 2 macro: Green at 2.0 on the 2800 px plate, plate point (1100, 560) at screen
+  //           centre, MIX turning over film 2.25-2.75 (R01) with the ring.
+  import * as lib from "/film/lib/index.js";
+  const cues = await lib.loadCues("/film/cues.json");
+  const stage = lib.stage.makeStage(document.body, { background: "#000000" });
+  const ENGINES = ["green", "blue", "red", "purple", "black", "white"];
+  const STATE = {
+    color: 50,
+    switchFrame: 0,
+    frames: { rate: 50, depth: 50, offset: 50, width: 50, mix: 78 },
+    readouts: { rate: "1.00 Hz", depth: "50%", offset: "90°", width: "100%", color: "50%", mix: "50%" },
+  };
+  const scene = {
+    id: "verify",
+    t0: 0,
+    t1: ENGINES.length + 3,
+    async build(ctx) {
+      const L = ctx.layer("plates", 1);
+      lib.util.show(L, true);
+      const plates = ENGINES.map((e) => {
+        const s = e === "white" ? { ...STATE, frames: { rate: 50, depth: 50, offset: 50, width: 50 }, mix: 50 } : STATE;
+        return lib.createPlate({ engine: e, ...s }, { parent: L, scale: 1, x: 0, y: 0 });
+      });
+      const { type, util } = lib;
+      const T = ctx.layer("type", 2);
+      const guides = [200, 330, 450, 560].map((y) => util.el("div", { parent: T, style: { position: "absolute", left: "0px", top: `${y}px`, width: "1920px", height: "1px", background: "#ff0000" } }));
+      type.headline({ parent: T, text: "Great sound ", accent: "doesn’t sit still.", size: 96, x: 960, baseline: 200, align: "center" });
+      type.headline({ parent: T, text: "Meet ", accent: "Choroboros.", size: 112, x: 96, baseline: 330 });
+      type.body("A chorus and modulation plugin for macOS.", { parent: T, size: 32, weight: 500, x: 96, baseline: 450 });
+      type.eyebrow("KAIZEN DSP · FIRST RELEASE", { parent: T, x: 96, baseline: 560 });
+      type.eyebrow("HEADPHONES ON", { parent: T, x: 1400, baseline: 560, align: "center" });
+
+      const H = ctx.layer("hero", 0);
+      const hero = lib.createHero(H, { width: 1920, height: 1080 });
+      const clipCanvas = util.el("canvas", { parent: H, style: { position: "absolute", left: "1200px", top: "60px", width: "675px", height: "400px" } });
+      const fold = await lib.clipSequence("fold", { canvas: clipCanvas, fit: "cover" });
+      const M = ctx.layer("macro", 3);
+      const macro = lib.createPlate("green", { parent: M, scale: 2, x: 960 - 1100 * 2, y: 540 - 560 * 2 });
+      macro.requireRender(cues, "R01", 2.0, 3.0);
+      const ring = lib.createRing(M);
+      return {
+        sequences: [hero.seq, fold.seq],
+        render(t) {
+          const i = Math.floor(t + 1e-6);
+          util.show(L, i < ENGINES.length);
+          plates.forEach((p, k) => util.show(p.el, k === i));
+          util.show(T, i === ENGINES.length);
+          util.show(H, i === ENGINES.length + 1);
+          util.show(M, i === ENGINES.length + 2);
+          if (i === ENGINES.length + 2) {
+            const ft = 2.0 + (t - (ENGINES.length + 2));
+            macro.setState(cues.plateStateAt("R01", ft));
+            ring.renderGesture(ft, cues.gesture("R01", "mix"), macro.controlScreenRect("mix"));
+          }
+          if (i === ENGINES.length + 1) {
+            hero.draw(0, { grade: { saturate: 0.15, brightness: 0.85, contrast: 1.05 } });
+            fold.drawClipTime(1.0);
+          }
+        },
+      };
+    },
+  };
+  await lib.stage.runScenes({ stage, scenes: [scene], cues, lib, duration: ENGINES.length + 3 });
+</script>
+</body>
+</html>
