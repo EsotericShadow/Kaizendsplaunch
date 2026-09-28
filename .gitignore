@@ -1,0 +1,11 @@
+# Working research notes derived from private repos (kept local; this repo is public)
+docs/brief/
+
+# Dependencies and build outputs
+node_modules/
+assets/
+build/
+frames/
+out/
+*.log
+.DS_Store
