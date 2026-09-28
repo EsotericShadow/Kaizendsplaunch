@@ -1,0 +1,16 @@
+{
+  "asset": "fold_main_knob_64x256.png",
+  "purpose": "Fold primary control, 64-frame horizontal rotary filmstrip",
+  "sourceProject": "../../../../Atlas/Projects/Fold Main Knob.atls",
+  "renderer": "Atlas Material Studio GPU viewport (Metal)",
+  "frameCount": 64,
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "sheetWidth": 16384,
+  "sheetHeight": 256,
+  "camera": { "yawDegrees": 30, "pitchDegrees": -20, "distanceScale": 1.0 },
+  "export": { "format": "PNG RGBA", "supersampling": 2, "padding": 0, "filter": "none", "pngCompression": 9, "optimize": true },
+  "motionReview": "Frames 1, 25 and 64 visually reviewed; continuous full-turn sheet export.",
+  "integration": "Embedded with JUCE BinaryData; frame selected from normalized fold parameter.",
+  "sha256": "7323fe92635fba502556df809d27eb106f0f5595d6563c2fb21b358ae4349738"
+}

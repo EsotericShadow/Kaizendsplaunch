@@ -3,7 +3,6 @@ docs/brief/
 
 # Dependencies and build outputs
 node_modules/
-assets/
 build/
 frames/
 out/
