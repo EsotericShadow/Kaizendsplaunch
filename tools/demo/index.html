@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Render pipeline demo</title>
+<!-- Fonts come from npm (@fontsource), served locally. No network at render time. -->
+<link rel="stylesheet" href="/__node_modules/@fontsource/fraunces/600.css">
+<link rel="stylesheet" href="/__node_modules/@fontsource/fraunces/400-italic.css">
+<link rel="stylesheet" href="/__node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="/__node_modules/@fontsource/jetbrains-mono/600.css">
+<style>
+  :root {
+    --ink: #07070a;
+    --paper: #f6f4ef;
+    --muted: #a8a7a0;
+    --purple: #b88cff;
+    --lavender: #d0bdff;
+    --green: #64e28b;
+  }
+  html, body { margin: 0; background: var(--ink); overflow: hidden; }
+  #stage {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    background: var(--ink); color: var(--paper);
+  }
+  /* The zoom happens inside the canvas draw (ImageSequence view), not as a CSS transform: canvases
+     are compositor layers and animated transforms or masks around them are not seek-safe.
+     The vignette is a plain gradient overlay rather than mask-image for the same reason. */
+  #hero { position: absolute; top: 175px; left: 690px; width: 1300px; height: 731px; }
+  #heroFade { position: absolute; top: 174px; left: 689px; width: 1302px; height: 733px;
+              background: radial-gradient(closest-side, rgba(7,7,10,0) 72%, var(--ink) 100%); }
+  #shade {
+    position: absolute; inset: 0;
+    background: radial-gradient(130% 100% at 62% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%);
+  }
+  #copy { position: absolute; left: 140px; top: 330px; white-space: nowrap; }
+  .eyebrow {
+    font: 600 17px/1 "JetBrains Mono", monospace; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--purple);
+  }
+  h1 {
+    margin: 28px 0 0; font: 600 132px/0.9 "Fraunces", serif; letter-spacing: -0.02em;
+    font-feature-settings: "ss01", "ss02";
+  }
+  h1 .ch { display: inline-block; }
+  .line {
+    margin-top: 34px; font: 600 48px/1.1 "Fraunces", serif; letter-spacing: -0.02em;
+  }
+  .line em { font-style: italic; font-weight: 400; color: var(--lavender); }
+  #lfo { position: absolute; left: 140px; top: 760px; width: 560px; height: 105px; }
+  #tc {
+    position: absolute; right: 48px; bottom: 40px;
+    font: 600 16px/1 "JetBrains Mono", monospace; letter-spacing: 0.2em; color: rgba(246,244,239,0.55);
+  }
+  /* CSS keyframes run on the composition clock (the runtime pauses and seeks them). */
+  #dot {
+    position: absolute; right: 48px; top: 44px; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 18px var(--green);
+    animation: pulse 1s ease-in-out infinite alternate;
+  }
+  @keyframes pulse { from { opacity: 0.25; transform: scale(0.7); } to { opacity: 1; transform: scale(1.15); } }
+  #fade { position: absolute; inset: 0; background: #000; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="hero"></canvas>
+  <div id="heroFade"></div>
+  <div id="shade"></div>
+  <div id="copy">
+    <div class="eyebrow">Kaizen DSP · Pipeline test</div>
+    <h1 id="title">Choroboros</h1>
+    <div class="line" id="line">Great sound doesn’t <em>sit still.</em></div>
+  </div>
+  <canvas id="lfo" width="1280" height="240"></canvas>
+  <div id="dot"></div>
+  <div id="tc"></div>
+  <div id="fade"></div>
+</div>
+
+<script src="/__node_modules/gsap/dist/gsap.min.js"></script>
+<script type="module">
+  import { defineComposition, ImageSequence } from "/__render/composition.js";
+
+  const FPS = 60;
+  const DURATION = 5;
+
+  // Split the title into letters for a stagger (done once, before the timeline is built).
+  const title = document.getElementById("title");
+  title.innerHTML = [...title.textContent].map((c) => `<span class="ch">${c}</span>`).join("");
+
+  // 97 frames of the 24 fps master at every 2nd frame = 12 fps real time. Start at frame 36 so
+  // the camera lands on the frontal frame (96) at t = 5 s. blend: true crossfades between frames.
+  const hero = new ImageSequence({
+    pattern: "/assets/demo/hero/frame-{i}.webp", count: 97, pad: 3, fps: 12,
+    canvas: "#hero", fit: "cover", blend: true,
+  });
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "expo.out" } });
+  tl.fromTo("#fade", { opacity: 1 }, { opacity: 0, duration: 0.8, ease: "power2.out" }, 0)
+    .from(".eyebrow", { opacity: 0, x: -30, duration: 1.0 }, 0.35)
+    .from("#title .ch", { opacity: 0, yPercent: 60, rotateX: -70, filter: "blur(12px)", duration: 1.3, stagger: 0.045 }, 0.5)
+    .from("#line", { opacity: 0, y: 24, duration: 1.2 }, 1.4)
+    .from("#lfo", { opacity: 0, duration: 0.8, ease: "power1.out" }, 1.8)
+    .to("#fade", { opacity: 1, duration: 0.5, ease: "power2.in" }, DURATION - 0.5);
+
+  // Procedural layer: a chorus-style LFO trace, drawn from t only (no state between frames).
+  const lfo = document.getElementById("lfo").getContext("2d");
+  function drawLfo(t) {
+    const { width: w, height: h } = lfo.canvas;
+    lfo.clearRect(0, 0, w, h);
+    const voices = [
+      { color: "rgba(100,226,139,0.95)", phase: 0 },
+      { color: "rgba(184,140,255,0.8)", phase: Math.PI / 2 },
+    ];
+    for (const v of voices) {
+      lfo.beginPath();
+      for (let x = 0; x <= w; x += 4) {
+        const u = x / w;
+        const y = h / 2 + Math.sin(u * Math.PI * 4 - t * 2 * Math.PI * 0.6 + v.phase) * (h * 0.32) * Math.sin(Math.PI * u);
+        x === 0 ? lfo.moveTo(x, y) : lfo.lineTo(x, y);
+      }
+      lfo.strokeStyle = v.color;
+      lfo.lineWidth = 4;
+      lfo.stroke();
+    }
+  }
+
+  const tc = document.getElementById("tc");
+  defineComposition({
+    width: 1920, height: 1080, fps: FPS, duration: DURATION,
+    timeline: tl,
+    fonts: ["600 100px Fraunces", "italic 400 100px Fraunces", "400 20px Inter", "600 20px 'JetBrains Mono'"],
+    sequences: [hero],
+    render(t, { frame }) {
+      hero.drawAt(t + 3, { scale: 1 + 0.07 * (t / DURATION), originX: 0.5, originY: 0.6 });
+      drawLfo(t);
+      tc.textContent = `F ${String(frame).padStart(4, "0")}  ·  ${t.toFixed(3)} S`;
+    },
+  });
+</script>
+</body>
+</html>

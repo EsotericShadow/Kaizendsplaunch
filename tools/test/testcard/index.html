@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Render test card</title>
+<link rel="stylesheet" href="/__node_modules/@fontsource/jetbrains-mono/600.css">
+<style>
+  html, body { margin: 0; background: #202020; overflow: hidden; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #202020; }
+  /* 12-bit frame index barcode, read back from the encoded video by tools/test/run-tests.mjs */
+  .bit { position: absolute; top: 40px; width: 64px; height: 64px; background: #000; }
+  .bit.on { background: #fff; }
+  .patch { position: absolute; width: 200px; height: 150px; }
+  #mover { position: absolute; left: 0; top: 820px; width: 120px; height: 120px; border-radius: 16px; background: #b88cff; }
+  #spin { position: absolute; right: 120px; top: 780px; width: 160px; height: 160px; border: 10px solid #64e28b; border-radius: 50%;
+          border-top-color: transparent; animation: spin 2s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #ramp { position: absolute; left: 40px; right: 40px; top: 990px; height: 60px; background: linear-gradient(90deg, #000, #3a2a55 60%, #07070a); }
+  #label { position: absolute; left: 960px; top: 52px; font: 600 36px/1 "JetBrains Mono", monospace; color: #f6f4ef; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bits"></div>
+  <div id="patches"></div>
+  <div id="mover"></div>
+  <div id="spin"></div>
+  <div id="ramp"></div>
+  <div id="label"></div>
+</div>
+<script src="/__node_modules/gsap/dist/gsap.min.js"></script>
+<script type="module">
+  import { defineComposition } from "/__render/composition.js";
+
+  export const PATCHES = [
+    "#000000", "#ffffff", "#808080", "#202020", "#ff0000", "#00ff00", "#0000ff", "#ffff00",
+    "#64e28b", "#b88cff", "#d0bdff", "#f6f4ef", "#07070a", "#ff776d", "#63b3ff", "#f0a04a",
+  ];
+  const BITS = 12;
+  const bits = document.getElementById("bits");
+  for (let i = 0; i < BITS; i++) {
+    const d = document.createElement("div");
+    d.className = "bit";
+    d.style.left = `${40 + i * 72}px`;
+    bits.appendChild(d);
+  }
+  const patches = document.getElementById("patches");
+  PATCHES.forEach((c, i) => {
+    const d = document.createElement("div");
+    d.className = "patch";
+    d.style.left = `${40 + (i % 8) * 230}px`;
+    d.style.top = `${200 + Math.floor(i / 8) * 190}px`;
+    d.style.background = c;
+    patches.appendChild(d);
+  });
+  window.__testcard = { PATCHES, BITS, bit: (i) => ({ x: 40 + i * 72 + 32, y: 72 }), patch: (i) => ({ x: 40 + (i % 8) * 230 + 100, y: 200 + Math.floor(i / 8) * 190 + 75 }) };
+
+  const tl = gsap.timeline({ paused: true });
+  tl.fromTo("#mover", { x: 40 }, { x: 1700, duration: 4, ease: "sine.inOut", repeat: 1, yoyo: true });
+
+  const bitEls = [...bits.children];
+  const label = document.getElementById("label");
+  defineComposition({
+    width: 1920, height: 1080, fps: 60, duration: 8,
+    timeline: tl,
+    fonts: ["600 36px 'JetBrains Mono'"],
+    render(t, { frame }) {
+      bitEls.forEach((el, i) => el.classList.toggle("on", ((frame >> (BITS - 1 - i)) & 1) === 1));
+      label.textContent = `F${String(frame).padStart(4, "0")} T${t.toFixed(3)}`;
+    },
+  });
+</script>
+</body>
+</html>

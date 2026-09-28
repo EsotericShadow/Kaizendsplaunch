@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Effects determinism test</title>
+<link rel="stylesheet" href="/__node_modules/@fontsource/fraunces/600.css">
+<style>
+  html, body { margin: 0; background: #0b0b0e; overflow: hidden; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+  .cell { position: absolute; width: 470px; height: 260px; overflow: hidden; background: #15151a; }
+  .cell::after { content: attr(data-name); position: absolute; left: 8px; bottom: 6px; font: 12px monospace; color: #777; }
+  .t { font: 600 64px/1 "Fraunces", serif; color: #f6f4ef; position: absolute; left: 60px; top: 95px; white-space: nowrap; }
+  .box { position: absolute; left: 160px; top: 55px; width: 150px; height: 150px; border-radius: 24px;
+         background: linear-gradient(135deg, #64e28b, #b88cff); }
+  .stripes { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, #333 0 12px, #1d1d22 12px 24px); }
+  .masked { -webkit-mask-image: radial-gradient(closest-side, #000 60%, transparent 100%); mask-image: radial-gradient(closest-side, #000 60%, transparent 100%); }
+  .glass { position: absolute; left: 90px; top: 50px; width: 290px; height: 160px; border-radius: 20px;
+           backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgba(255,255,255,0.08); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="/__node_modules/gsap/dist/gsap.min.js"></script>
+<script type="module">
+  import { defineComposition } from "/__render/composition.js";
+  const stage = document.getElementById("stage");
+  const tl = gsap.timeline({ paused: true, defaults: { duration: 4, ease: "sine.inOut" } });
+  const cells = [];
+  function cell(i, name, html) {
+    const c = document.createElement("div");
+    c.className = "cell";
+    c.dataset.name = name;
+    c.style.left = `${10 + (i % 4) * 478}px`;
+    c.style.top = `${10 + Math.floor(i / 4) * 268}px`;
+    c.innerHTML = html;
+    stage.appendChild(c);
+    cells.push({ name, x: 10 + (i % 4) * 478, y: 10 + Math.floor(i / 4) * 268, w: 470, h: 260 });
+    return c;
+  }
+  const img = `<img src="/assets/demo/hero/frame-096.webp" style="position:absolute;left:0;top:0;width:470px;height:264px">`;
+  const cv = `<canvas width="470" height="264" style="position:absolute;left:0;top:0;width:470px;height:264px"></canvas>`;
+  const fade = `<div style="position:absolute;inset:0;background:radial-gradient(closest-side, rgba(21,21,26,0) 60%, #15151a 100%)"></div>`;
+
+  cell(0, "text scale", `<div class="t">Choroboros</div>`);
+  tl.fromTo(stage.children[0].querySelector(".t"), { scale: 0.5 }, { scale: 1.3 }, 0);
+
+  cell(1, "text scale will-change", `<div class="t" style="will-change:transform">Choroboros</div>`);
+  tl.fromTo(stage.children[1].querySelector(".t"), { scale: 0.5 }, { scale: 1.3 }, 0);
+
+  cell(2, "img scale", img);
+  tl.fromTo(stage.children[2].querySelector("img"), { scale: 1 }, { scale: 1.4 }, 0);
+
+  cell(3, "mask on scaled el", `<div class="stripes masked"></div>`);
+  tl.fromTo(stage.children[3].querySelector(".stripes"), { scale: 1 }, { scale: 1.3 }, 0);
+
+  cell(4, "mask on static parent", `<div class="masked" style="position:absolute;inset:0"><div class="stripes"></div></div>`);
+  tl.fromTo(stage.children[4].querySelector(".stripes"), { scale: 1 }, { scale: 1.3 }, 0);
+
+  cell(5, "clip-path", `<div class="box"></div>`);
+  tl.fromTo(stage.children[5].querySelector(".box"), { clipPath: "inset(0% 50% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)" }, 0);
+
+  cell(6, "backdrop-filter", `<div class="stripes"></div><div class="glass"></div>`);
+  tl.fromTo(stage.children[6].querySelector(".stripes"), { x: 0 }, { x: 120 }, 0);
+
+  cell(7, "drop-shadow scale", `<div class="box" style="filter:drop-shadow(0 12px 18px rgba(184,140,255,0.7))"></div>`);
+  tl.fromTo(stage.children[7].querySelector(".box"), { scale: 0.6 }, { scale: 1.1 }, 0);
+
+  cell(8, "svg stroke scale", `<svg width="470" height="260" viewBox="0 0 470 260"><path id="p" d="M20 130 C 120 10, 350 250, 450 130" fill="none" stroke="#64e28b" stroke-width="6" stroke-dasharray="600" /></svg>`);
+  tl.fromTo(stage.children[8].querySelector("#p"), { strokeDashoffset: 600 }, { strokeDashoffset: 0 }, 0)
+    .fromTo(stage.children[8].querySelector("svg"), { scale: 0.7 }, { scale: 1.2 }, 0);
+
+  cell(9, "blend screen", `<div class="stripes"></div><div class="box" style="mix-blend-mode:screen"></div>`);
+  tl.fromTo(stage.children[9].querySelector(".box"), { x: -80, rotate: 0 }, { x: 80, rotate: 90 }, 0);
+
+  cell(10, "blur filter scale", `<div class="t" style="filter:blur(3px)">Choroboros</div>`);
+  tl.fromTo(stage.children[10].querySelector(".t"), { scale: 0.6 }, { scale: 1.2 }, 0);
+
+  cell(11, "3d rotate", `<div class="box" style="transform-style:preserve-3d"></div>`);
+  tl.fromTo(stage.children[11].querySelector(".box"), { rotateY: -60, transformPerspective: 600 }, { rotateY: 60, transformPerspective: 600 }, 0);
+
+  cell(12, "canvas scaled", cv);
+  tl.fromTo(stage.children[12].querySelector("canvas"), { scale: 1 }, { scale: 1.3 }, 0);
+
+  cell(13, "canvas zoom in draw + overlay", `${cv}${fade}`);
+  const zoomCanvas = stage.children[13].querySelector("canvas");
+
+  cell(14, "scaled text over canvas", `${cv}<div class="t">Choroboros</div>`);
+  tl.fromTo(stage.children[14].querySelector(".t"), { scale: 0.6 }, { scale: 1.2 }, 0);
+
+  cell(15, "static canvas, scaled overlay", `${cv}<div class="o" style="position:absolute;inset:0">${fade}</div>`);
+  tl.fromTo(stage.children[15].querySelector(".o"), { scale: 1 }, { scale: 1.3 }, 0);
+
+  const plate = new Image();
+  plate.src = "/assets/demo/hero/frame-096.webp";
+
+  window.__cells = cells;
+  defineComposition({
+    width: 1920, height: 1080, fps: 60, duration: 4, timeline: tl, fonts: ["600 64px Fraunces"],
+    async setup() {
+      await plate.decode();
+      for (const c of stage.querySelectorAll("canvas")) c.getContext("2d").drawImage(plate, 0, 0, 470, 264);
+    },
+    render(t) {
+      // Ken Burns inside the canvas: the canvas element itself never transforms.
+      const ctx = zoomCanvas.getContext("2d");
+      const s = 1 + 0.3 * (t / 4);
+      ctx.clearRect(0, 0, 470, 264);
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(plate, 235 - 235 * s, 132 - 132 * s, 470 * s, 264 * s);
+    },
+  });
+</script>
+</body>
+</html>
