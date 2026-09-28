@@ -1,0 +1,25 @@
+{
+  "name": "kaizendsp-launch-video",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Source project for the Choroboros launch video (Kaizen DSP): compositions, audio and deterministic render tooling.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "render": "node tools/render.mjs",
+    "stills": "node tools/stills.mjs",
+    "demo:assets": "node tools/demo/prepare-assets.mjs",
+    "demo:render": "node tools/render.mjs --comp tools/demo/index.html --out out/demo.mp4",
+    "bench": "node tools/bench.mjs",
+    "test:render": "node tools/test/run-tests.mjs"
+  },
+  "dependencies": {
+    "@fontsource/fraunces": "5.3.0",
+    "@fontsource/inter": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "gsap": "3.15.0",
+    "playwright-core": "1.56.1"
+  }
+}
