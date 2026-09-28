@@ -81,18 +81,19 @@ class Guitar(Instrument):
     brightness: 0..1 string damping (higher = brighter, longer highs).
     sustain_s: decay time (T60) of an open low E; higher notes decay faster.
     pluck: pluck position as a fraction of the string (0.08 near bridge .. 0.3).
+    pick_hz: (soft, hard) corner of the pick excitation; velocity moves between them.
     humanize: per-note random spread of pluck position, brightness and tuning.
     choke: when True a new note on the same string stops the previous one.
     """
 
     name = "guitar"
 
-    def __init__(self, sr=SR, seed=1, tone="di", pickup="neck", brightness=0.62, sustain_s=5.5,
-                 pluck=0.16, humanize=1.0, choke=True, release_s=0.09, level=0.5):
+    def __init__(self, sr=SR, seed=1, tone="di", pickup="neck", brightness=0.55, sustain_s=5.5,
+                 pluck=0.16, humanize=1.0, choke=True, release_s=0.09, level=0.35, pick_hz=(300.0, 2200.0)):
         super().__init__(sr, seed)
         self.tone, self.pickup, self.brightness = tone, pickup, brightness
         self.sustain_s, self.pluck, self.humanize = sustain_s, pluck, humanize
-        self.choke, self.release_s, self.level = choke, release_s, level
+        self.choke, self.release_s, self.level, self.pick_hz = choke, release_s, level, pick_hz
 
     def prepare(self, events):
         if not self.choke:
@@ -122,9 +123,13 @@ class Guitar(Instrument):
         # -- excitation: one period of noise, low-passed harder for soft picks
         ne = max(8, int(round(P)))
         noise = rng.uniform(-1, 1, ne)
-        fc = 900.0 + 7500.0 * v ** 1.6
-        b, a = signal.butter(2, min(fc, 0.45 * sr), fs=sr)
-        exc = signal.lfilter(b, a, noise)
+        # plucked-string spectrum: -6 dB/oct above a velocity-dependent corner
+        # (soft pick ~ 300 Hz, hard pick ~ 2 kHz), steeper above a second corner
+        fc1 = (self.pick_hz[0] + (self.pick_hz[1] - self.pick_hz[0]) * v ** 1.5)
+        a1 = math.exp(-2 * math.pi * fc1 / sr)
+        exc = signal.lfilter([1 - a1], [1, -a1], noise)
+        b, a = signal.butter(2, min(3500.0 + 6000.0 * v, 0.45 * sr), fs=sr)
+        exc = signal.lfilter(b, a, exc)
         exc *= np.hanning(ne + 2)[1:-1] ** 0.25                 # soften burst edges
         # pick click: short raised-cosine pulse, louder when picked hard
         nk = max(3, int(0.0006 * sr))
@@ -174,12 +179,11 @@ class Guitar(Instrument):
         res = {"neck": (3600, 1.6), "middle": (4200, 1.8), "bridge": (4800, 1.9)}[self.pickup]
         y = eq(x, [("lowpass", res[0], 0, res[1]), ("lowpass", 11000, 0, 0.6)], sr)
         if self.tone == "clean_amp":
-            y = eq(y, [("highpass", 75, 0, 0.7), ("peak", 110, 2.0, 1.1), ("peak", 450, -2.5, 1.0),
-                       ("peak", 1900, 2.5, 0.9)], sr)
+            y = eq(y, [("highpass", 75, 0, 0.7), ("peak", 130, 2.0, 1.0), ("peak", 450, -1.5, 1.0),
+                       ("peak", 1800, 1.0, 0.9)], sr)
             # gentle, slightly asymmetric valve-like saturation
             drive = 1.6
             y = (np.tanh(drive * (y + 0.05)) - math.tanh(drive * 0.05)) / drive
             # 1x12 cabinet voicing
-            y = eq(y, [("lowpass", 5200, 0, 0.9), ("lowpass", 7800, 0, 0.6), ("peak", 2600, 1.5, 1.4),
-                       ("highpass", 70, 0, 0.6)], sr)
+            y = eq(y, [("lowpass", 4800, 0, 0.85), ("lowpass", 7500, 0, 0.6), ("highpass", 70, 0, 0.6)], sr)
         return dc_block(y, 12.0, sr)

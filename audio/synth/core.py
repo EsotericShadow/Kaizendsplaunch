@@ -18,14 +18,23 @@ SR = 48000
 try:  # Optional JIT. Every kernel also runs as plain Python, only slower.
     from numba import njit as _njit
 
+    from numba import prange
+
     def jit(fn):
         return _njit(cache=True, fastmath=False)(fn)
 
+    def pjit(fn):
+        """JIT with loop parallelism (use prange for independent iterations)."""
+        return _njit(cache=True, fastmath=False, parallel=True)(fn)
+
     HAVE_NUMBA = True
 except Exception:  # pragma: no cover - exercised only without numba
+    prange = range
+
     def jit(fn):
         return fn
 
+    pjit = jit
     HAVE_NUMBA = False
 
 

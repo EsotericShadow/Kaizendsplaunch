@@ -12,16 +12,16 @@ Render
   --out <file>           output .mp4 (with --stills: output directory)
   --from <s> --to <s>    time range in seconds (default: whole composition)
   --fps <n>              frame rate (default: the composition's fps)
-  --workers <n>          parallel browsers (default: CPU count)
+  --workers <n>          parallel browsers (default: CPU count - 1)
   --audio <file.wav>     mux this audio, AAC 320k, trimmed/padded to the range
   --scale <n>            device scale factor; 2 renders a 1920x1080 comp at 3840x2160
   --preview              half resolution, x264 veryfast crf 20, jpeg q85
 Capture / encode
-  --format jpeg|png      frame transport from Chromium (default jpeg)
-  --quality <n>          jpeg quality (default 95)
+  --format png|jpeg      frame transport from Chromium (default png; jpeg with --preview)
+  --quality <n>          jpeg quality (default 95; 85 with --preview)
   --crf <n> --preset <p> x264 settings (default 16, slow)
   --x264-threads <n>     threads per chunk encoder (default 4; keep fixed for identical output)
-  --chunk <s>            chunk length in seconds; also the max GOP (default 1)
+  --chunk <s>            chunk length in seconds; also the max GOP (default 2)
   --work-dir <dir>       chunk folder (default: next to --out, .chunks-<name>)
   --resume               reuse finished chunks from an interrupted run with the same settings
   --keep                 keep the chunk folder after success

@@ -33,7 +33,11 @@ def _carrier_env(n, sr, pitch, attack_s, gate_n, release_s):
         tr = np.arange(nr) / sr
         tau = release_s / 5.0
         shape = (np.exp(-tr / tau) - math.exp(-release_s / tau)) / (1 - math.exp(-release_s / tau))
-        env[gate_n:] *= np.clip(shape, 0, 1)
+        # ease into the damper over 20 ms so the envelope has no corner
+        nb = min(nr, int(0.02 * sr))
+        w = np.ones(nr)
+        w[:nb] = 0.5 - 0.5 * np.cos(np.pi * np.arange(nb) / nb)
+        env[gate_n:] *= np.clip(1 - w * (1 - shape), 0, 1)
     return env
 
 

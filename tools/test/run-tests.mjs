@@ -126,7 +126,7 @@ test("frames-jpeg-fault", async () => {
   // 3 workers, 0.5 s chunks, and one browser killed mid-chunk: the retry must produce the
   // exact frame sequence with no gaps, duplicates or reordering.
   const out = path.join(OUT, "testcard-jpeg.mp4");
-  const r = await render({ comp: TESTCARD, out, from: 0, to: 3, workers: 3, chunkSeconds: 0.5, injectFault: 2 });
+  const r = await render({ comp: TESTCARD, out, from: 0, to: 3, workers: 3, chunkSeconds: 0.5, injectFault: 2, format: "jpeg" });
   if (r.stats.retries < 1) throw new Error("fault injection did not trigger a retry");
   const v = await verifyTestcard(out, { expectFrames: 180, expectIndex: (i) => i, tol: 6 });
   if (!v.ok) throw new Error(v.problems.join("; "));

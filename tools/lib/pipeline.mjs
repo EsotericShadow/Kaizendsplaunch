@@ -118,9 +118,12 @@ async function probeComposition(o, { keep = false } = {}) {
 
 export function normalizeOptions(raw) {
   const o = { ...raw };
-  o.workers = Math.max(1, Number(o.workers ?? Math.max(1, os.cpus().length)));
+  // One CPU is left for x264: capture and encode share the machine (see render-pipeline.md benchmarks).
+  o.workers = Math.max(1, Number(o.workers ?? Math.max(1, os.cpus().length - 1)));
   o.browser = o.browser || "shell";
-  o.format = o.format || "jpeg";
+  // PNG for final renders (+0.1-0.5 dB PSNR and ~10% smaller files than JPEG q95, ~12% slower);
+  // JPEG for previews. Measured numbers: docs/brief/render-pipeline.md.
+  o.format = o.format || (o.preview ? "jpeg" : "png");
   if (!["jpeg", "png"].includes(o.format)) throw new FatalError(`--format must be jpeg or png`);
   o.quality = Number(o.quality ?? 95);
   o.scale = Number(o.scale ?? 1);
@@ -193,7 +196,7 @@ export async function render(rawOpts) {
 
     // Chunks have a fixed length in frames, independent of the worker count, so the encoded
     // bitstream is identical whether you render with 1 or 8 workers.
-    const chunkFrames = Math.max(1, Math.round((o.chunkSeconds ?? 1) * fps));
+    const chunkFrames = Math.max(1, Math.round((o.chunkSeconds ?? 2) * fps));
     const chunks = [];
     for (let s = startFrame, i = 0; s < endFrame; s += chunkFrames, i++) {
       chunks.push({ index: i, start: s, end: Math.min(endFrame, s + chunkFrames), attempts: 0 });
@@ -366,6 +369,7 @@ export async function render(rawOpts) {
 
     const nWorkers = Math.min(o.workers, Math.max(1, todo.length));
     await Promise.all(Array.from({ length: nWorkers }, (_, i) => worker(i + 1)));
+    if (aborted) throw new FatalError("interrupted; finished chunks are kept, rerun with --resume");
     if (spare) {
       sessions.delete(spare);
       await closeSession(spare);
