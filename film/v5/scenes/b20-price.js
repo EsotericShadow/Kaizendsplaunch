@@ -11,6 +11,7 @@
 // the term stack up 60 px, twice.
 
 import { hitAt, inF, ev, fitter, headLine, bodyLine, applyStamp, flashBank, grad } from "./b00-common.js";
+import { maskHeroReadouts } from "../hero-readouts.js";
 
 const HERO_Y = 560;
 const TERMS = [
@@ -95,7 +96,9 @@ export default {
         const pu = M.punch(t, kicks, { amp: M.MOTION.punch.plate });
         setStyle(hero.canvas, "top", px(HERO_Y + sl.y + sh.y));
         setStyle(hero.canvas, "left", px(sh.x));
-        hero.draw(Math.min(96, frameOfSrc(t)), { scale: pu, originX: 0.5, originY: 0.35, grade: { brightness: 0.7 } });
+        const src = Math.min(96, frameOfSrc(t));
+        hero.draw(src, { scale: pu, originX: 0.5, originY: 0.35, grade: { brightness: 0.7 } });
+        maskHeroReadouts(hero, src, { scale: pu, originX: 0.5, originY: 0.35 }); // not the heard M12 values
 
         // Price: slams down from above, PUNCHes (type) on the snares.
         const ps = M.slam(t, cut, { dir: [0, -1] });

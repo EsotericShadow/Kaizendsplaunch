@@ -2,18 +2,19 @@
 //
 // kick + rack 6.892: "sit still." STAMPs as chorustype (Fraunces italic 400, 120 px, lavender,
 // Green wet copies at the heard settings) and the hero JUMP-CUTS +24 source frames.
-// Bar 5: the scrub steps +3 source frames on each kick (S03's grammar at half the step, so the 97
-// frames last), PUNCH (plate, x 0.6 in the tom groove).
+// Bar 5: each kick (7.297, 7.703, 8.110) hard-CUTS to another hero angle (source frames 8, 60,
+// 28, as S20's bar 48 does), creeping from there; PUNCH at the full plate amplitude (0.03).
 // Bar 6 (8.513 to 10.135) is a designed HOLD: nothing new appears, the scrub only creeps and the
 // PUNCH amplitude is x 0.6 again. The space before the title.
 // Type: "Great sound" / "doesn’t" / "sit still." at baselines 400, 520, 650.
 
 import { HERO_BASE } from "./a03-tagline-hero.js";
 import { applyStamp, checkSafe } from "./a00-common.js";
+import { maskHeroReadouts } from "../hero-readouts.js";
 
 const CREEP = 1.5; // source frames per second (as S03)
 const JUMP = 24; // the jump cut on 6.892
-const STEP = 3; // source frames per bar-5 kick
+const ANGLES = [8, 60, 28]; // the hero angles cut to on the bar-5 kicks
 
 export default {
   id: "a04-sit-still",
@@ -40,7 +41,7 @@ export default {
     this.events.push(
       { t: cut.tm, kind: "stamp", hit: "kick + rack 6.892 (sit still.)" },
       { t: cut.tm, kind: "cut", hit: "kick + rack 6.892 (hero jump +24)" },
-      ...k5.map((h) => ({ t: h.tm, kind: "sweep", hit: `kick ${h.tm} (scrub +3)` })),
+      ...k5.map((h, i) => ({ t: h.tm, kind: "cut", hit: `kick ${h.tm} (hero angle ${ANGLES[i]})` })),
     );
 
     const L = ctx.layer("hero", 10);
@@ -66,11 +67,13 @@ export default {
         show(L, on);
         show(TL, on);
         if (!on) return;
-        const steps = M.sweep(t, k5, { frames: 5, easeName: "power2.out" });
-        const frame = Math.min(96, heroOut + JUMP + STEP * steps + CREEP * (t - T0));
-        const hold = b.after(t, bar6) ? 0.6 : 1; // bar 6: the designed hold
-        const pu = M.punch(t, kicks, { amp: M.MOTION.punch.plate * M.MOTION.tomGroove * hold });
+        const k = b.stepIndex(k5, t); // the last bar-5 kick cut, or -1
+        const frame = Math.min(96, k < 0 ? heroOut + JUMP + CREEP * (t - T0) : ANGLES[k] + CREEP * (t - k5[k].tf));
+        // Bar 5 punches at full plate amplitude; bar 6 (the designed hold) at x 0.6 x 0.6, as before.
+        const amp = b.after(t, bar6) ? M.MOTION.punch.plate * M.MOTION.tomGroove * 0.6 : M.MOTION.punch.plate;
+        const pu = M.punch(t, kicks, { amp });
         hero.draw(frame, { scale: pu, originX: 0.5, originY: 0.5, grade: { brightness: 0.6, contrast: 1.05 } });
+        maskHeroReadouts(hero, frame, { scale: pu });
         applyStamp(sit.el, M.stamp(t, cut));
         ct.render(t, demos.settingsAt(t));
       },

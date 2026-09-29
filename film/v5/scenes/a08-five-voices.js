@@ -70,9 +70,10 @@ export default {
 
     const TL = ctx.layer("tags", 40);
     const tags = TAGS.map((txt, i) => monoLine(TL, txt, { x: 72, baseline: stripY(i) + 40, size: 28, color: COLOR.hue[ENGINES[i]], tracking: 0.12 }));
-    // A dark pad behind each tag so it reads over the plate art.
+    // A solid dark pad behind each tag (the text stays at x 72 and on its baseline) so it never
+    // prints over the plates' RATE and DEPTH engravings.
     tags.forEach((n) => {
-      n.style.textShadow = "0 0 10px rgba(5,5,6,0.95), 0 0 3px rgba(5,5,6,0.95)";
+      Object.assign(n.style, { padding: "3px 10px", margin: "-3px 0px 0px -10px", background: "rgba(5,5,6,0.78)", borderRadius: "6px" });
     });
 
     return {

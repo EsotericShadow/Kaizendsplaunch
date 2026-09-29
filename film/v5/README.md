@@ -26,7 +26,9 @@ early.
 | `boot.js` | Shared boot. Loads the manifest, `beats` (with the offset) and `demos`, adds the kit layers (grain, chip), and runs the scenes through `film/lib/stage.js`. |
 | `scenes/` | Main-film scenes. Unit A: `a01` to `a12`. Unit B: `b13` to `b24`. `a00-common.js` holds Unit A helpers and is not a scene. |
 | `tiktok/` | TikTok scenes `t01` to `t07` (Unit A). |
+| `hero-readouts.js` | The 3D hero's readout windows per source frame, and `maskHeroReadouts()`, which defocuses them after each hero draw (S03, S04, S20). |
 | `v5.sh` | Prep, stills, every-frame stills, preview, render and determinism commands. |
+| `DESCRIPTION.md` | The post text for YouTube Shorts, Instagram Reels and TikTok, with the music credit, the legal line and the checks to make before posting. |
 
 ## Manifest
 
@@ -235,7 +237,7 @@ The 16:9 components are reused as they are: `plate.js` (`focus`, `hiRes`), `scop
 
 **Hand-off to S04**
 - The hero source frame at the S03/S04 cut is about 51 of 97 (`HERO_BASE` 4, +6 per kick, 1.5 per second creep).
-- S04's +24 jump cut plus bar 5 and 6 kicks will run out of frames at +6 per kick. S04 should use +3 per kick, or restart the scrub.
+- S04 jump-cuts +24 on 6.892, then its bar-5 kicks hard-cut to hero angles 8, 60 and 28 (creeping from each), so the 97 frames never run out.
 
 ## Build units (TREATMENT section 6)
 
@@ -289,5 +291,5 @@ Files are disjoint and the manifests are frozen. Replace a stub, keep its id and
   - The first scope, meter and `measured.json` pass from the audio build is linked, and the scopes draw real traces.
   - Every demo in it has `level_matched: false`, so no "LEVEL MATCHED" line shows.
   - `v5.sh` renders silent video until `master_v5.wav` and `tiktok_v5.wav` exist.
-- **Hero readouts.** The 3D hero render shows its own readouts (1.00 Hz, 50 %), not the heard settings. At the S03 size they are small, and the chip states what is heard.
+- **Hero readouts.** Closed. The 3D hero render bakes in its own readouts (1.00 Hz, 50 %), not the heard settings, so `hero-readouts.js` defocuses the six readout windows on every hero frame (S03, S04, S20) from a per-source-frame table (hand-measured on frames 0 and 96, tracked between them). No hero number can be read.
 - **Chip.** During a click-stop the chip's MIX % can lead the plate readout's 60 ms digit flip by one frame.

@@ -26,12 +26,12 @@ export const cl = (b, tm, tol = 0.015) => {
 };
 
 /**
- * The type band at the bottom of a full-bleed macro: black from 0 at y 1180 to 82 % at 1330, so the
- * caption (1300), the rolled readout and the tag (1470) read over the plate art. Add it to the type
- * layer before the text.
+ * The type band at the bottom of a full-bleed macro: black from 0 at y 1120 to 93 % at 1210 and flat
+ * below, so the caption (1300), the rolled readout and the tag (1470) sit on solid black, never on
+ * the plate's own engravings and readouts. Add it to the type layer before the text.
  */
 export function bottomScrim(parent) {
-  return el("div", { parent, style: { position: "absolute", left: "0px", top: "1180px", width: "1080px", height: "740px", background: "linear-gradient(rgba(5,5,6,0), rgba(5,5,6,0.82) 150px, rgba(5,5,6,0.9))" } });
+  return el("div", { parent, style: { position: "absolute", left: "0px", top: "1120px", width: "1080px", height: "800px", background: "linear-gradient(rgba(5,5,6,0), rgba(5,5,6,0.93) 90px, rgba(5,5,6,0.93))" } });
 }
 
 /** The big engine tag (mono 56 px, engine glow hue, x 72, baseline 1470) with a dark halo. */

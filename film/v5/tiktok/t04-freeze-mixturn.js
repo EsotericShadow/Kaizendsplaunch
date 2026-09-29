@@ -61,7 +61,7 @@ export default {
     const zoom = KNOB_PX / plate.controlRect("mix").size;
     plate.require(demos.statesIn(T0, slam.t + 0.1, "T04", 240));
     frameDiv(mg, { background: `radial-gradient(circle at ${KNOB_AT[0]}px ${KNOB_AT[1]}px, rgba(5,5,6,0) 0px, rgba(5,5,6,0) 420px, rgba(5,5,6,0.62) 700px, rgba(5,5,6,0.92) 1000px)` });
-    scrim(mg, { top: 1, to: 860 });
+    scrim(mg, { top: 1, hold: 440, to: 620 }); // flat top: no WIDTH readout ghost at y 150 to 230
     const wg = frameDiv(PL);
     const whole = new PlateSmear(wg, lib, "green", { scale: WHOLE.scale });
     whole.require(demos.statesIn(slam.t - 0.1, bar81 + 0.15, "T04", 120));

@@ -77,8 +77,10 @@ export function ringSvg(parent, { color = COLOR.lavender, width = 3 } = {}) {
 }
 
 /** The L-MACRO scrim: black at `top` opacity at y 0, fading to 0 at y `to`. */
-export function scrim(parent, { top = 0.72, to = 720 } = {}) {
-  return el("div", { parent, style: { position: "absolute", left: "0px", top: "0px", width: "1080px", height: px(to), background: `linear-gradient(rgba(5,5,6,${top}), rgba(5,5,6,0))` } });
+export function scrim(parent, { top = 0.72, to = 720, hold = 0 } = {}) {
+  // hold: the scrim stays flat at `top` down to y = hold, then fades out by y = to.
+  const bg = hold > 0 ? `linear-gradient(rgba(5,5,6,${top}) 0px, rgba(5,5,6,${top}) ${px(hold)}, rgba(5,5,6,0) ${px(to)})` : `linear-gradient(rgba(5,5,6,${top}), rgba(5,5,6,0))`;
+  return el("div", { parent, style: { position: "absolute", left: "0px", top: "0px", width: "1080px", height: px(to), background: bg } });
 }
 
 /** Draw only the scope's graticule (the empty scope before the band enters). */

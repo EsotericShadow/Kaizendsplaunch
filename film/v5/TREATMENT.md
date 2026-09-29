@@ -351,13 +351,13 @@ The VST tile appears by a hard cut only. It is never scaled, blurred, flashed, t
 **Main film:**
 
 > Choroboros: a chorus and modulation plugin for macOS. VST3, AU, AAX and standalone. Green and Purple are free. 30-day free trial, no payment card. $49.99 USD, one-time purchase. https://kaizendsp.com/choroboros?utm_source=<platform>&utm_medium=video&utm_campaign=choroboros_launch
-> Music: guitar, Green Alderson; drums, Flavio Monopoli. Choroboros processing on the guitar was added by Kaizen DSP for this video.
+> Music: Green Alderson (guitar), Flavio Monopoli (drums). Choroboros processing on the guitar was added by Kaizen DSP for this video.
 > VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe and other countries. AAX is a trademark of Avid Technology, Inc. macOS and Audio Units are trademarks of Apple Inc.
 
 **TikTok post text:**
 
 > One riff, five engines, on the guitar. Choroboros for macOS: Green and Purple free, 30-day free trial, $49.99 USD. kaizendsp.com/choroboros
-> Music: guitar, Green Alderson; drums, Flavio Monopoli. Choroboros processing on the guitar added by Kaizen DSP. VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe and other countries.
+> Music: Green Alderson (guitar), Flavio Monopoli (drums). Choroboros processing on the guitar added by Kaizen DSP. VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe and other countries.
 
 The names are spelled exactly and never appear on screen. "Guitar, Green Alderson" is written that way so "Green" cannot be read as the engine. The credit line implies no use or endorsement.
 
@@ -635,6 +635,17 @@ Switch rules are as in the main film. Each demo gets at least 3 s of real pre-ro
 - `/home/user/build/v5/out/choroboros-tiktok-v5.mp4`
 
 ---
+
+## Amendment after the final review
+
+- QC-A5 true peak: the per-bar rule "at most the master's true peak + 0.1 dB" is replaced by a
+  -1 dBTP ceiling on the output, with the peak control acting only on the Choroboros change. The
+  "LEVEL MATCHED" lines state loudness, and loudness passes everywhere (every full bar within
+  0.5 LU, every demo within 0.2 LU, measured.json), so S18 keeps "LEVEL MATCHED · DRUMS UNTOUCHED".
+- QC-A6 mono: a wide stereo chorus loses up to about 1 LU more than the dry guitar when summed to
+  mono in some demos. Lowering Depth does not fix it without removing the effect, so the settings
+  stay as heard.
+- The 3D hero plates carry readouts that match the heard settings (film/v5/hero-readouts.js).
 
 ## Appendix: bar grid (bar n beat 1; frame = floor(60 t))
 

@@ -8,7 +8,9 @@
 // holds; "doesn’t" STAMPs on the 5.270 kick (104 px, baseline 520).
 //
 // Hand-off to S04: the hero source frame at the S03 -> S04 cut is HERO_OUT (see render); S04's
-// jump cut is +24 source frames from there. 97 frames exist (0-96): S04 should step +3 per kick.
+// jump cut is +24 source frames from there; its bar-5 kicks then cut to other angles.
+
+import { maskHeroReadouts } from "../hero-readouts.js";
 
 const CREEP = 1.5; // source frames per second between kicks
 export const HERO_BASE = 4; // source frame on the S03 cut
@@ -63,6 +65,7 @@ export default {
         const pu = M.punch(t, kicks, { amp: M.MOTION.punch.plate * M.MOTION.tomGroove });
         const exposure = floors.some((h) => f >= h.frame && f < h.frame + 3) ? 1.06 : 1;
         hero.draw(frame, { scale: push * pu, originX: 0.5, originY: 0.5, grade: { brightness: 0.6 * exposure, contrast: 1.05 } });
+        maskHeroReadouts(hero, frame, { scale: push * pu }); // the baked readouts are not the heard Green
         const st = M.stamp(t, stampHit);
         setStyle(doesnt.el, "visibility", st.on ? "" : "hidden");
         setStyle(doesnt.el, "opacity", String(+st.opacity.toFixed(4)));

@@ -38,7 +38,7 @@ export default {
     const fit = fitter();
     const seventeen = el("div", { parent: TL, text: "17", style: { font: `600 260px ${lib.type.FONT.display}`, letterSpacing: "-0.02em", fontFeatureSettings: '"ss01", "ss02", "lnum"', color: lib.type.C.fg, width: "1080px", textAlign: "center", transformOrigin: `${RING.cx}px 60%` } });
     lib.type.placeText(seventeen, { x: 0, baseline: RING.cy + 92 });
-    const brow1 = eyebrowLine(TL, null, "FIVE PREBUILT ENGINES ·", { size: 28, baseline: 292 });
+    const brow1 = eyebrowLine(TL, null, "FIVE PREBUILT ENGINES", { size: 28, baseline: 292 }); // no dangling "·" at the break
     const brow2 = eyebrowLine(TL, null, "17 SOUND CORES", { size: 28, baseline: 330 });
     const head = headLine(TL, fit, { text: "17 sound ", accent: "cores.", size: 104, baseline: 420 });
     const dek1 = bodyLine(TL, fit, "The ten cores inside the prebuilt", { size: 40, baseline: 1420 });

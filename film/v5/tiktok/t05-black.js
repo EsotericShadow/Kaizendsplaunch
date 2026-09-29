@@ -108,8 +108,11 @@ export default {
         flash.render(t, M.flash(t, [crash], { peak: 0.2 }), "#ffffff", lib.flash.flashMode("T5-flash"));
         const stc = M.stamp(t, sCut);
         applyStamp(cap, stc);
-        applyStamp(big.el, stc);
-        if (stc.on) big.render(demos.readoutIn(d, "color", t));
+        // The big readout only while the slider is up: over the whole plate it would sit on the
+        // plate's own slider, readout and COLOR label.
+        const stb = { ...stc, on: stc.on && !b.after(t, sWhip.t) };
+        applyStamp(big.el, stb);
+        if (stb.on) big.render(demos.readoutIn(d, "color", t));
       },
     };
   },

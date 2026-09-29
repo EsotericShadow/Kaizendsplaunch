@@ -70,7 +70,8 @@ export default {
       const st = eng === "red" ? demos.plateState(0) : demos.plateState(0, { green: "T06", blue: "T02", purple: "T03", black: "T05" }[eng]);
       s.plate.require(st);
       s.plate.setState(st);
-      const tag = el("div", { parent: s.el, text: eng.toUpperCase(), style: { font: `600 30px "JetBrains Mono", monospace`, letterSpacing: "0.12em", color: COLOR.hue[eng], textShadow: "0 0 10px rgba(5,5,6,0.95), 0 0 3px rgba(5,5,6,0.95)" } });
+      // A solid pad (not a shadow) so the tag never prints over the plate's RATE engraving.
+      const tag = el("div", { parent: s.el, text: eng.toUpperCase(), style: { font: `600 30px "JetBrains Mono", monospace`, letterSpacing: "0.12em", color: COLOR.hue[eng], padding: "3px 10px", margin: "-3px 0px 0px -10px", background: "rgba(5,5,6,0.78)", borderRadius: "6px" } });
       lib.type.placeText(tag, { x: 72, baseline: 36 });
       return { s, tag, eng };
     });

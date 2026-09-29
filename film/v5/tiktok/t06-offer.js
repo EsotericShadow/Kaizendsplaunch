@@ -7,11 +7,12 @@
 // kicks (131.960, 132.564, 132.766): PUNCH and a push step.
 // snare 132.162 (f510): STAMP "FREE" pills (mono 28 px on the hue) on the Green and Purple strips.
 // snare 132.973 (f559): STAMP "30-DAY TRIAL" tags (hue outline) on Blue, Red and Black, and the
-//   sub-line "30-day free trial." / "No payment card." (Inter 44 px, baselines 1440 and 1494, on a
-//   78 % black band).
+//   sub-line "30-day free trial." / "No payment card." (Inter 44 px, baselines 1366 and 1420, on an
+//   80 % black band, y 1318 to 1442: between the Purple FREE pill and the Black tag).
 // snare + kick 133.376 (f583): CUT: "$49.99" SLAMs in (Fraunces 600, 200 px, baseline 640) over the
-//   whole Green plate at 40 %. "USD." (italic 200 px, lavender, baseline 840) STAMPs on the next
-//   beat, 133.784 (the spec lands it with the price; one beat later there is an event every beat).
+//   whole Green plate at 40 %. "USD." (italic 200 px, lavender, baseline 840) STAMPs with it: the
+//   price is never on screen without "USD.".
+// beat 83.2 (133.784): a push step on the Green plate (SWEEP 1.00 -> 1.04), an event every beat.
 // crash + kick 133.581 (f595): FLASH Green (0.30).
 // kick 133.987 (f620): STAMP "One-time purchase." (Inter 600, 48 px, baseline 960).
 // snare 134.189 (f632): the format row appears by a hard CUT (y 1392 to 1492), in a layer above
@@ -58,7 +59,7 @@ export default {
       { t: sTrial.tm, kind: "stamp", hit: "snare 132.973 (30-DAY TRIAL tags, sub-line)" },
       { t: price.tm, kind: "slam", hit: "snare + kick 133.376 ($49.99)" },
       { t: f1.tm, kind: "flash", hit: "crash + kick 133.581 (Green 0.30)" },
-      { t: b.master(usd), kind: "stamp", hit: "beat 83.2 133.784 (USD.)" },
+      { t: b.master(usd), kind: "sweep", hit: "beat 83.2 133.784 (plate push step)" },
       { t: once.tm, kind: "stamp", hit: "kick 133.987 (One-time purchase.)" },
       { t: row.tm, kind: "cut", hit: "snare 134.189 (format row)" },
       { t: f2.tm, kind: "flash", hit: "crash + kick 134.392 (Green 0.30, under the row)" },
@@ -83,7 +84,8 @@ export default {
         s.plate.setState(st);
       } else s.plate.require(demos.statesIn(T0, price.t, null, 30));
       const tg = frameDiv(tagsL, { top: px(y), height: px(TOTEM.h) });
-      const name = el("div", { parent: tg, text: eng.toUpperCase(), style: { font: `600 30px "JetBrains Mono", monospace`, letterSpacing: "0.12em", color: COLOR.hue[eng], textShadow: "0 0 10px rgba(5,5,6,0.95), 0 0 3px rgba(5,5,6,0.95)" } });
+      // A solid pad (not a shadow) so the name never prints over the plate's engravings.
+      const name = el("div", { parent: tg, text: eng.toUpperCase(), style: { font: `600 30px "JetBrains Mono", monospace`, letterSpacing: "0.12em", color: COLOR.hue[eng], padding: "3px 10px", margin: "-3px 0px 0px -10px", background: "rgba(5,5,6,0.78)", borderRadius: "6px" } });
       lib.type.placeText(name, { x: 72, baseline: 36 });
       const free = eng === "green" || eng === "purple";
       const tag = el("div", {
@@ -108,9 +110,10 @@ export default {
       });
       return { s, name, tag, eng, free };
     });
-    const band = frameDiv(SL, { top: "1392px", height: "124px", background: "rgba(5,5,6,0.8)" });
-    const subA = bodyLine(band, "30-day free trial.", { baseline: 1440 - 1392, size: 44, color: COLOR.fg });
-    bodyLine(band, "No payment card.", { baseline: 1494 - 1392, size: 44, color: COLOR.fg });
+    // In the gap between the Purple FREE pill (bottom about y 1306) and the Black tag (top 1486).
+    const band = frameDiv(SL, { top: "1318px", height: "124px", background: "rgba(5,5,6,0.8)" });
+    const subA = bodyLine(band, "30-day free trial.", { baseline: 48, size: 44, color: COLOR.fg });
+    bodyLine(band, "No payment card.", { baseline: 102, size: 44, color: COLOR.fg });
     void subA;
 
     // The price over the whole Green plate at 40 %.
@@ -174,9 +177,10 @@ export default {
             applyStamp(st.tag, M.stamp(t, st.free ? sFree : sTrial));
           }
           applyStamp(band, M.stamp(t, sTrial, { from: 1.06 }));
-          setStyle(band, "transformOrigin", "72px 1440px");
+          setStyle(band, "transformOrigin", "72px 48px");
         } else {
-          whole.place({ cx: WHOLE.cx, cy: 1000, scale: WHOLE.scale * M.punch(t, kicks.filter((k) => k.t >= price.t - 0.01), { amp: M.MOTION.punch.plate }) });
+          const step = 1 + 0.04 * M.sweep(t, [usd]);
+          whole.place({ cx: WHOLE.cx, cy: 1000, scale: WHOLE.scale * step * M.punch(t, kicks.filter((k) => k.t >= price.t - 0.01), { amp: M.MOTION.punch.plate }) });
           whole.setState(demos.plateState(t));
           whole.setGrade(demos.grade("green", t));
           whole.render(0, null);
@@ -186,13 +190,13 @@ export default {
         setStyle(head, "visibility", priced ? "hidden" : "");
         setStyle(pr, "visibility", priced ? "" : "hidden");
         if (!priced) {
-          applyStamp(head, M.stamp(t, bar82));
+          applyStamp(head, M.stamp(t, bar82, { from: 1.08 })); // 1.18 would reach the right rail
           ct.render(t, demos.settingsAt(t));
         } else {
           const sl = M.slam(t, price, { dir: [0, -1] });
           const pu = M.punch(t, [price], { amp: M.MOTION.punch.type });
           setStyle(p1.el, "transform", `translate(0px, ${px(sl.y)}) scale(${+pu.toFixed(5)})`);
-          applyStamp(usdN.el, M.stamp(t, usd));
+          applyStamp(usdN.el, M.stamp(t, price)); // "$49.99 USD" always lands as one
           applyStamp(onceN, M.stamp(t, once));
         }
         const a1 = M.flash(t, [f1], { peak: 0.3 });

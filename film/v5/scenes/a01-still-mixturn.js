@@ -58,7 +58,9 @@ export default {
       },
     });
     const bottom = el("div", { parent: L, style: { position: "absolute", left: "0px", top: "1560px", width: "1080px", height: "360px", background: "linear-gradient(rgba(5,5,6,0), #050506 70%)" } });
-    scrim(L, { top: 0.72, to: 720 });
+    // Flat to y 580 so the plate's WIDTH readout never shows through behind "Great"; the MIX
+    // engraving (y 740 to 820) stays clear.
+    scrim(L, { top: 0.97, hold: 580, to: 740 });
 
     // The ring: 3 px lavender at 1.12x the knob.
     const RL = ctx.layer("ring", 12);

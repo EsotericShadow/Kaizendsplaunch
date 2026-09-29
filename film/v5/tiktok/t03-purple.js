@@ -86,7 +86,7 @@ export default {
         const kicks = b.hitsIn("kick", T0 - 0.01, T1);
         const pu = M.punch(t, kicks, { amp: M.MOTION.punch.macro });
         const z = 2.0 * (1 + 0.04 * M.sweep(t, steps, { frames: 4 })) * pu;
-        macro.focus({ on: SLIDER, zoom: z, at: [540, 1000] });
+        macro.focus({ on: SLIDER, zoom: z, at: [540, 900] }); // the COLOR label and readout clear the caption row
         const u = smearAt(t, tc);
         macro.render(u ?? 0, u == null ? null : "in");
         const inWhole = renderWhip(M, t, sWhip, mg, wg, { dir: [0, -1] });
