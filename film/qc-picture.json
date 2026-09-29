@@ -1,0 +1,2326 @@
+{
+ "film": "Still Life, main 16:9",
+ "composition": "film/main/index.html",
+ "generated_by": "film/tools/qc_picture.mjs (scan, gates) and film/tools/qc_picture.py",
+ "coverage_and_cuts": {
+  "frames": 5160,
+  "empty_frames": [
+   [
+    49.85,
+    50.0
+   ]
+  ],
+  "unexpected_empty": [],
+  "cuts": [
+   {
+    "t": 2.0,
+    "shot": 2,
+    "frame": 120,
+    "leaves": [
+     "shot01-05-hero:hero",
+     "shot01-cold-open:type"
+    ],
+    "enters": [
+     "shot02-mix-turn:plate",
+     "shot02-mix-turn:ring"
+    ]
+   },
+   {
+    "t": 3.0,
+    "shot": 3,
+    "frame": 180,
+    "leaves": [
+     "shot02-mix-turn:plate",
+     "shot02-mix-turn:ring"
+    ],
+    "enters": [
+     "shot01-05-hero:hero",
+     "shot03-tagline:type"
+    ]
+   },
+   {
+    "t": 7.85,
+    "shot": 4,
+    "frame": 471,
+    "leaves": [
+     "shot01-03-scope-group:scope-group",
+     "shot01-05-hero:hero",
+     "shot01-11-grain:grain",
+     "shot03-tagline:type"
+    ],
+    "enters": [
+     "shot04-stop:black"
+    ]
+   },
+   {
+    "t": 8.0,
+    "shot": 5,
+    "frame": 480,
+    "leaves": [
+     "shot04-stop:black"
+    ],
+    "enters": [
+     "shot01-05-hero:hero",
+     "shot01-11-grain:grain",
+     "shot05-title:type"
+    ]
+   },
+   {
+    "t": 12.0,
+    "shot": 6,
+    "frame": 720,
+    "leaves": [
+     "shot01-05-hero:hero",
+     "shot05-title:type"
+    ],
+    "enters": [
+     "shot06-lineup:glow",
+     "shot06-lineup:plates",
+     "shot06-lineup:type"
+    ]
+   },
+   {
+    "t": 16.0,
+    "shot": 7,
+    "frame": 960,
+    "leaves": [
+     "shot06-lineup:glow",
+     "shot06-lineup:plates",
+     "shot06-lineup:type"
+    ],
+    "enters": [
+     "shot07-11-tour-frame:frame",
+     "shot07-green:plate",
+     "shot07-green:ring",
+     "shot07-green:type"
+    ]
+   },
+   {
+    "t": 20.0,
+    "shot": 8,
+    "frame": 1200,
+    "leaves": [],
+    "enters": []
+   },
+   {
+    "t": 24.0,
+    "shot": 9,
+    "frame": 1440,
+    "leaves": [],
+    "enters": []
+   },
+   {
+    "t": 28.0,
+    "shot": 10,
+    "frame": 1680,
+    "leaves": [],
+    "enters": []
+   },
+   {
+    "t": 32.0,
+    "shot": 11,
+    "frame": 1920,
+    "leaves": [],
+    "enters": []
+   },
+   {
+    "t": 36.0,
+    "shot": 12,
+    "frame": 2160,
+    "leaves": [
+     "shot01-11-grain:grain",
+     "shot07-11-tour-frame:frame",
+     "shot11-black:plate",
+     "shot11-black:ring",
+     "shot11-black:type"
+    ],
+    "enters": [
+     "shot12-cores:glow",
+     "shot12-cores:grain",
+     "shot12-cores:ring",
+     "shot12-cores:type"
+    ]
+   },
+   {
+    "t": 40.0,
+    "shot": 13,
+    "frame": 2400,
+    "leaves": [
+     "shot12-cores:glow",
+     "shot12-cores:grain",
+     "shot12-cores:ring",
+     "shot12-cores:type"
+    ],
+    "enters": [
+     "shot13-create:grain",
+     "shot13-create:type",
+     "shot13-create:window"
+    ]
+   },
+   {
+    "t": 46.0,
+    "shot": 14,
+    "frame": 2760,
+    "leaves": [
+     "shot13-create:grain",
+     "shot13-create:type",
+     "shot13-create:window"
+    ],
+    "enters": [
+     "shot14-looks:grain",
+     "shot14-looks:type",
+     "shot14-looks:wall"
+    ]
+   },
+   {
+    "t": 49.85,
+    "shot": 15,
+    "frame": 2991,
+    "leaves": [
+     "shot14-looks:grain",
+     "shot14-looks:type",
+     "shot14-looks:wall"
+    ],
+    "enters": []
+   },
+   {
+    "t": 50.0,
+    "shot": 16,
+    "frame": 3000,
+    "leaves": [],
+    "enters": [
+     "shot16-free:bloom",
+     "shot16-free:glow",
+     "shot16-free:grain",
+     "shot16-free:plates",
+     "shot16-free:scopes",
+     "shot16-free:type"
+    ]
+   },
+   {
+    "t": 54.0,
+    "shot": 17,
+    "frame": 3240,
+    "leaves": [
+     "shot16-free:bloom",
+     "shot16-free:glow",
+     "shot16-free:grain",
+     "shot16-free:plates",
+     "shot16-free:scopes",
+     "shot16-free:type"
+    ],
+    "enters": [
+     "shot17-trial:grain",
+     "shot17-trial:plates",
+     "shot17-trial:ring",
+     "shot17-trial:scopes",
+     "shot17-trial:type"
+    ]
+   },
+   {
+    "t": 58.0,
+    "shot": 18,
+    "frame": 3480,
+    "leaves": [
+     "shot17-trial:grain",
+     "shot17-trial:plates",
+     "shot17-trial:ring",
+     "shot17-trial:scopes",
+     "shot17-trial:type"
+    ],
+    "enters": [
+     "shot18-price:glow",
+     "shot18-price:grain",
+     "shot18-price:render",
+     "shot18-price:type"
+    ]
+   },
+   {
+    "t": 62.0,
+    "shot": 19,
+    "frame": 3720,
+    "leaves": [
+     "shot18-price:glow",
+     "shot18-price:grain",
+     "shot18-price:render",
+     "shot18-price:type"
+    ],
+    "enters": [
+     "shot19-fold:family",
+     "shot19-fold:grain",
+     "shot19-fold:type",
+     "shot19-fold:window"
+    ]
+   },
+   {
+    "t": 64.5,
+    "shot": 20,
+    "frame": 3870,
+    "leaves": [
+     "shot19-fold:grain",
+     "shot19-fold:type",
+     "shot19-fold:window"
+    ],
+    "enters": [
+     "shot20-echolalia:grain",
+     "shot20-echolalia:type",
+     "shot20-echolalia:window"
+    ]
+   },
+   {
+    "t": 67.0,
+    "shot": 21,
+    "frame": 4020,
+    "leaves": [
+     "shot20-echolalia:grain",
+     "shot20-echolalia:type",
+     "shot20-echolalia:window"
+    ],
+    "enters": [
+     "shot21-stovetop:background",
+     "shot21-stovetop:grain",
+     "shot21-stovetop:stills",
+     "shot21-stovetop:type"
+    ]
+   },
+   {
+    "t": 69.5,
+    "shot": 22,
+    "frame": 4170,
+    "leaves": [
+     "shot19-fold:family",
+     "shot21-stovetop:background",
+     "shot21-stovetop:grain",
+     "shot21-stovetop:stills",
+     "shot21-stovetop:type"
+    ],
+    "enters": [
+     "shot22-silence:dot",
+     "shot22-silence:grain"
+    ]
+   },
+   {
+    "t": 70.0,
+    "shot": 23,
+    "frame": 4200,
+    "leaves": [
+     "shot22-silence:dot"
+    ],
+    "enters": [
+     "shot23-payoff:glow",
+     "shot23-payoff:scope",
+     "shot23-payoff:tagline"
+    ]
+   },
+   {
+    "t": 74.0,
+    "shot": 24,
+    "frame": 4440,
+    "leaves": [],
+    "enters": [
+     "shot24-endcard:plate",
+     "shot24-endcard:type"
+    ]
+   },
+   {
+    "t": 78.0,
+    "shot": 25,
+    "frame": 4680,
+    "leaves": [],
+    "enters": []
+   }
+  ],
+  "pass": true
+ },
+ "gate5_readouts_knobs_captions": {
+  "times": [
+   0.25,
+   2.5,
+   3.5,
+   16.1,
+   18.6,
+   22.6,
+   26.5,
+   30.6,
+   34.6,
+   37.6,
+   41,
+   47,
+   50.8,
+   55,
+   58.8,
+   63,
+   65.5,
+   68.5,
+   72,
+   80
+  ],
+  "failures": [],
+  "plates_checked": 13,
+  "pass": true,
+  "gate5_detail": [
+   {
+    "t": 0.25,
+    "plates": [],
+    "texts": [
+     "HEADPHONES ON",
+     "Great sound ",
+     "STEREO FIELD",
+     "DRY | CHOROBOROS"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 2.5,
+    "plates": [
+     {
+      "engine": "green",
+      "render": "R01",
+      "frames": {
+       "rate": 45,
+       "depth": 22,
+       "offset": 50,
+       "width": 63,
+       "mix": 117
+      },
+      "readouts": {
+       "rate": "0.60 Hz",
+       "depth": "20%",
+       "offset": "90°",
+       "width": "130%",
+       "color": "35%",
+       "mix": "22%"
+      },
+      "thumbX": 648.27,
+      "expected": {
+       "frames": {
+        "rate": 45,
+        "depth": 22,
+        "offset": 50,
+        "width": 63,
+        "mix": 117
+       },
+       "readouts": {
+        "rate": "0.60 Hz",
+        "depth": "20%",
+        "offset": "90°",
+        "width": "130%",
+        "color": "35%",
+        "mix": "22%"
+       },
+       "thumbX": 648.27
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "STEREO FIELD",
+     "DRY | CHOROBOROS",
+     "LEVEL MATCHED"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 3.5,
+    "plates": [],
+    "texts": [
+     "STEREO FIELD",
+     "DRY | CHOROBOROS",
+     "LEVEL MATCHED",
+     "Great sound doesn’t sit still."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 16.1,
+    "plates": [
+     {
+      "engine": "green",
+      "render": "R02",
+      "frames": {
+       "rate": 45,
+       "depth": 22,
+       "offset": 50,
+       "width": 63,
+       "mix": 85
+      },
+      "readouts": {
+       "rate": "0.60 Hz",
+       "depth": "20%",
+       "offset": "90°",
+       "width": "130%",
+       "color": "35%",
+       "mix": "45%"
+      },
+      "thumbX": 648.27,
+      "expected": {
+       "frames": {
+        "rate": 45,
+        "depth": 22,
+        "offset": 50,
+        "width": 63,
+        "mix": 85
+       },
+       "readouts": {
+        "rate": "0.60 Hz",
+        "depth": "20%",
+        "offset": "90°",
+        "width": "130%",
+        "color": "35%",
+        "mix": "45%"
+       },
+       "thumbX": 648.27
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "FREE",
+     "LAGRANGE 3RD CORE",
+     "Green. Sways.",
+     "Warm acoustic and synth sends",
+     "BEST FOR",
+     "SAME TAKE · LEVEL MATCHED"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 18.6,
+    "plates": [
+     {
+      "engine": "green",
+      "render": "R02",
+      "frames": {
+       "rate": 45,
+       "depth": 36,
+       "offset": 50,
+       "width": 63,
+       "mix": 85
+      },
+      "readouts": {
+       "rate": "0.60 Hz",
+       "depth": "35%",
+       "offset": "90°",
+       "width": "130%",
+       "color": "35%",
+       "mix": "45%"
+      },
+      "thumbX": 648.27,
+      "expected": {
+       "frames": {
+        "rate": 45,
+        "depth": 36,
+        "offset": 50,
+        "width": 63,
+        "mix": 85
+       },
+       "readouts": {
+        "rate": "0.60 Hz",
+        "depth": "35%",
+        "offset": "90°",
+        "width": "130%",
+        "color": "35%",
+        "mix": "45%"
+       },
+       "thumbX": 648.27
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "FREE",
+     "LAGRANGE 3RD CORE",
+     "Green. Sways.",
+     "Warm acoustic and synth sends",
+     "Depth.",
+     "BEST FOR",
+     "SAME TAKE · LEVEL MATCHED"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 22.6,
+    "plates": [
+     {
+      "engine": "blue",
+      "render": "R03",
+      "frames": {
+       "rate": 47,
+       "depth": 18,
+       "offset": 50,
+       "width": 68,
+       "mix": 92
+      },
+      "readouts": {
+       "rate": "0.80 Hz",
+       "depth": "15%",
+       "offset": "90°",
+       "width": "140%",
+       "color": "45%",
+       "mix": "40%"
+      },
+      "thumbX": 698.13,
+      "expected": {
+       "frames": {
+        "rate": 47,
+        "depth": 18,
+        "offset": 50,
+        "width": 68,
+        "mix": 92
+       },
+       "readouts": {
+        "rate": "0.80 Hz",
+        "depth": "15%",
+        "offset": "90°",
+        "width": "140%",
+        "color": "45%",
+        "mix": "40%"
+       },
+       "thumbX": 698.13
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "CUBIC CORE",
+     "Blue. Widens.",
+     "Clean width on vocals and buses",
+     "Offset.",
+     "BEST FOR",
+     "SAME TAKE · LEVEL MATCHED"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 26.5,
+    "plates": [
+     {
+      "engine": "red",
+      "render": "R04",
+      "frames": {
+       "rate": 44,
+       "depth": 36,
+       "offset": 50,
+       "width": 59,
+       "mix": 78
+      },
+      "readouts": {
+       "rate": "0.55 Hz",
+       "depth": "35%",
+       "offset": "90°",
+       "width": "120%",
+       "color": "30%",
+       "mix": "50%"
+      },
+      "thumbX": 623.35,
+      "expected": {
+       "frames": {
+        "rate": 44,
+        "depth": 36,
+        "offset": 50,
+        "width": 59,
+        "mix": 78
+       },
+       "readouts": {
+        "rate": "0.55 Hz",
+        "depth": "35%",
+        "offset": "90°",
+        "width": "120%",
+        "color": "30%",
+        "mix": "50%"
+       },
+       "thumbX": 623.35
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "Red. Wavers.",
+     "BBD AND TAPE. VINTAGE INSTABILITY.",
+     "BBD | TAPE",
+     "TWO SOUND CORES PER ENGINE",
+     "SAME KNOBS, DIFFERENT CORE",
+     "BEST FOR",
+     "SAME TAKE · LEVEL MATCHED"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 30.6,
+    "plates": [
+     {
+      "engine": "purple",
+      "render": "R05",
+      "frames": {
+       "rate": 54,
+       "depth": 59,
+       "offset": 50,
+       "width": 68,
+       "mix": 99
+      },
+      "readouts": {
+       "rate": "1.5 Hz",
+       "depth": "60%",
+       "offset": "90°",
+       "width": "140%",
+       "color": "25%",
+       "mix": "35%"
+      },
+      "thumbX": 598.42,
+      "expected": {
+       "frames": {
+        "rate": 54,
+        "depth": 59,
+        "offset": 50,
+        "width": 68,
+        "mix": 99
+       },
+       "readouts": {
+        "rate": "1.5 Hz",
+        "depth": "60%",
+        "offset": "90°",
+        "width": "140%",
+        "color": "25%",
+        "mix": "35%"
+       },
+       "thumbX": 598.42
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "FREE",
+     "ORBIT CORE",
+     "Purple. Orbits.",
+     "STRANGE TEXTURES, SOUND DESIGN, WEIRDNESS",
+     "Rate.",
+     "BEST FOR",
+     "SAME TAKE · LEVEL MATCHED"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 34.6,
+    "plates": [
+     {
+      "engine": "black",
+      "render": "R06",
+      "frames": {
+       "rate": 43,
+       "depth": 31,
+       "offset": 65,
+       "width": 81,
+       "mix": 70
+      },
+      "readouts": {
+       "rate": "0.50 Hz",
+       "depth": "30%",
+       "offset": "120°",
+       "width": "170%",
+       "color": "60%",
+       "mix": "55%"
+      },
+      "thumbX": 772.9,
+      "expected": {
+       "frames": {
+        "rate": 43,
+        "depth": 31,
+        "offset": 65,
+        "width": 81,
+        "mix": 70
+       },
+       "readouts": {
+        "rate": "0.50 Hz",
+        "depth": "30%",
+        "offset": "120°",
+        "width": "170%",
+        "color": "60%",
+        "mix": "55%"
+       },
+       "thumbX": 772.9
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "ENSEMBLE CORE",
+     "Black. Multiplies.",
+     "Dense ensembles. Low CPU.",
+     "Color.",
+     "BEST FOR",
+     "SAME TAKE · LEVEL MATCHED"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 37.6,
+    "plates": [],
+    "texts": [
+     "17",
+     "SOUND CORES",
+     "NOW PLAYING · LAGRANGE 5TH",
+     "The ten cores inside the prebuilt engines, plus seven more."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 41,
+    "plates": [],
+    "texts": [
+     "Build your own",
+     "in Create.",
+     "INTERFACE CAPTURE FROM CHOROBOROS 1.0.5",
+     "Choose one or two cores.",
+     "Modify recipes.",
+     "Add artwork."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 47,
+    "plates": [],
+    "texts": [
+     "ARTWORK PACKS FOR CREATE",
+     "26 custom looks.",
+     "A custom look changes what Choroboros looks like, not how it sounds."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 50.8,
+    "plates": [
+     {
+      "engine": "green",
+      "render": "R01",
+      "frames": {
+       "rate": 45,
+       "depth": 22,
+       "offset": 50,
+       "width": 63,
+       "mix": 85
+      },
+      "readouts": {
+       "rate": "0.60 Hz",
+       "depth": "20%",
+       "offset": "90°",
+       "width": "130%",
+       "color": "35%",
+       "mix": "45%"
+      },
+      "thumbX": 648.27,
+      "expected": {
+       "frames": {
+        "rate": 45,
+        "depth": 22,
+        "offset": 50,
+        "width": 63,
+        "mix": 85
+       },
+       "readouts": {
+        "rate": "0.60 Hz",
+        "depth": "20%",
+        "offset": "90°",
+        "width": "130%",
+        "color": "35%",
+        "mix": "45%"
+       },
+       "thumbX": 648.27
+      },
+      "ok": true,
+      "diffs": []
+     },
+     {
+      "engine": "purple",
+      "render": "R08",
+      "frames": {
+       "rate": 32,
+       "depth": 59,
+       "offset": 50,
+       "width": 68,
+       "mix": 99
+      },
+      "readouts": {
+       "rate": "0.12 Hz",
+       "depth": "60%",
+       "offset": "90°",
+       "width": "140%",
+       "color": "25%",
+       "mix": "35%"
+      },
+      "thumbX": 598.42,
+      "expected": {
+       "frames": {
+        "rate": 32,
+        "depth": 59,
+        "offset": 50,
+        "width": 68,
+        "mix": 99
+       },
+       "readouts": {
+        "rate": "0.12 Hz",
+        "depth": "60%",
+        "offset": "90°",
+        "width": "140%",
+        "color": "25%",
+        "mix": "35%"
+       },
+       "thumbX": 598.42
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "GREEN",
+     "PURPLE",
+     "FREE MODE",
+     "Green and Purple are free.",
+     "No card or licence key needed."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 55,
+    "plates": [
+     {
+      "engine": "blue",
+      "render": "R03",
+      "frames": {
+       "rate": 47,
+       "depth": 18,
+       "offset": 50,
+       "width": 68,
+       "mix": 92
+      },
+      "readouts": {
+       "rate": "0.80 Hz",
+       "depth": "15%",
+       "offset": "90°",
+       "width": "140%",
+       "color": "45%",
+       "mix": "40%"
+      },
+      "thumbX": 698.13,
+      "expected": {
+       "frames": {
+        "rate": 47,
+        "depth": 18,
+        "offset": 50,
+        "width": 68,
+        "mix": 92
+       },
+       "readouts": {
+        "rate": "0.80 Hz",
+        "depth": "15%",
+        "offset": "90°",
+        "width": "140%",
+        "color": "45%",
+        "mix": "40%"
+       },
+       "thumbX": 698.13
+      },
+      "ok": true,
+      "diffs": []
+     },
+     {
+      "engine": "red",
+      "render": "R10",
+      "frames": {
+       "rate": 41,
+       "depth": 36,
+       "offset": 50,
+       "width": 68,
+       "mix": 78
+      },
+      "readouts": {
+       "rate": "0.40 Hz",
+       "depth": "35%",
+       "offset": "90°",
+       "width": "140%",
+       "color": "55%",
+       "mix": "50%"
+      },
+      "thumbX": 747.98,
+      "expected": {
+       "frames": {
+        "rate": 41,
+        "depth": 36,
+        "offset": 50,
+        "width": 68,
+        "mix": 78
+       },
+       "readouts": {
+        "rate": "0.40 Hz",
+        "depth": "35%",
+        "offset": "90°",
+        "width": "140%",
+        "color": "55%",
+        "mix": "50%"
+       },
+       "thumbX": 747.98
+      },
+      "ok": true,
+      "diffs": []
+     },
+     {
+      "engine": "black",
+      "render": "R09",
+      "frames": {
+       "rate": 43,
+       "depth": 31,
+       "offset": 65,
+       "width": 81,
+       "mix": 70
+      },
+      "readouts": {
+       "rate": "0.50 Hz",
+       "depth": "30%",
+       "offset": "120°",
+       "width": "170%",
+       "color": "60%",
+       "mix": "55%"
+      },
+      "thumbX": 772.9,
+      "expected": {
+       "frames": {
+        "rate": 43,
+        "depth": 31,
+        "offset": 65,
+        "width": 81,
+        "mix": 70
+       },
+       "readouts": {
+        "rate": "0.50 Hz",
+        "depth": "30%",
+        "offset": "120°",
+        "width": "170%",
+        "color": "60%",
+        "mix": "55%"
+       },
+       "thumbX": 772.9
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "BLUE",
+     "RED",
+     "BLACK",
+     "CREATE",
+     "30-day free trial. No payment card.",
+     "Unlocks Blue, Red, Black and Create."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 58.8,
+    "plates": [],
+    "texts": [
+     "ONE-TIME PURCHASE · NO SUBSCRIPTION",
+     "$49.99 USD.",
+     "Lifetime updates. 30-day refund."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 63,
+    "plates": [],
+    "texts": [
+     "FOLD · COMING SOON",
+     "A free spectral stereo shaper.",
+     "MORE FROM KAIZEN DSP"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 65.5,
+    "plates": [],
+    "texts": [
+     "MORE FROM KAIZEN DSP",
+     "ECHOLALIA · DELAY + REVERB · COMING SOON",
+     "Echoes that change as they return."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 68.5,
+    "plates": [],
+    "texts": [
+     "MORE FROM KAIZEN DSP",
+     "STOVETOP · IN DEVELOPMENT",
+     "Heats up",
+     "as you play."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 72,
+    "plates": [],
+    "texts": [
+     "Great sound",
+     "doesn’t",
+     "sit still."
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   },
+   {
+    "t": 80,
+    "plates": [
+     {
+      "engine": "green",
+      "render": "R01",
+      "frames": {
+       "rate": 45,
+       "depth": 22,
+       "offset": 50,
+       "width": 63,
+       "mix": 85
+      },
+      "readouts": {
+       "rate": "0.60 Hz",
+       "depth": "20%",
+       "offset": "90°",
+       "width": "130%",
+       "color": "35%",
+       "mix": "45%"
+      },
+      "thumbX": 648.27,
+      "expected": {
+       "frames": {
+        "rate": 45,
+        "depth": 22,
+        "offset": 50,
+        "width": 63,
+        "mix": 85
+       },
+       "readouts": {
+        "rate": "0.60 Hz",
+        "depth": "20%",
+        "offset": "90°",
+        "width": "130%",
+        "color": "35%",
+        "mix": "45%"
+       },
+       "thumbX": 648.27
+      },
+      "ok": true,
+      "diffs": []
+     }
+    ],
+    "texts": [
+     "Great sound",
+     "doesn’t",
+     "sit still.",
+     "KAIZENDSP",
+     "CHOROBOROS · CHORUS PLUGIN",
+     "Buy Choroboros",
+     "Start your 30-day free trial",
+     "Available now for macOS · Apple Silicon + Intel",
+     "GREEN AND PURPLE FREE · 30-DAY TRIAL · $49.99 USD ONE-TIME",
+     "Five prebuilt engines · 17 sound cores · Version 1.0.5",
+     "VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe and other countries. AAX is a trademark of Avid Technology, Inc. macOS and Audio Units are trademarks of Apple Inc. © 2026 Kaizen Strategic AI Inc. All rights reserved. Made in Canada.",
+     "kaizendsp.com/choroboros",
+     "VST®3 · AU · Audio Units · AAX · Standalone · macOS"
+    ],
+    "missing": [],
+    "unexpected": [],
+    "ok": true
+   }
+  ]
+ },
+ "gate6_product_clips": {
+  "fold": {
+   "source": "public/fold/fold-motion-sound.mp4",
+   "window": [
+    1.0,
+    3.25
+   ],
+   "last_clip_time_shown": 3.2333,
+   "first_source_time_with_orange_clip_label": 3.3,
+   "margin_s": 0.0667,
+   "extracted_frames_checked": 135,
+   "frames_with_orange": [],
+   "pass": true
+  },
+  "echolalia": {
+   "source": "public/film/echolalia/time-sound-preview.mp4",
+   "window": [
+    9.5,
+    11.75
+   ],
+   "crop_src_px": [
+    0,
+    96,
+    1600,
+    530
+   ],
+   "elements": {
+    "header (Echolalia STUDY, VISUAL STUDY, HUB, preset label)": {
+     "box_src_px": [
+      16,
+      23,
+      1557,
+      53
+     ],
+     "inside_crop": false
+    },
+    "KAIZEN DSP EST. 2023": {
+     "box_src_px": [
+      60,
+      661,
+      219,
+      768
+     ],
+     "inside_crop": false
+    },
+    "burned-in caption": {
+     "box_src_px": [
+      400,
+      767,
+      1199,
+      792
+     ],
+     "inside_crop": false
+    }
+   },
+   "frames_checked": 135,
+   "pass": true
+  },
+  "pass": true
+ },
+ "gate7_stovetop_version_strings": {
+  "scale": 0.45,
+  "items": {
+   "v0.1.0 (bottom right)": {
+    "source_cap_height_px": 8,
+    "rendered_cap_height_px": 3.6
+   },
+   "header subtitle 0.1.0 / KAIZEN DSP": {
+    "source_cap_height_px": 8,
+    "rendered_cap_height_px": 3.6
+   }
+  },
+  "rendered_still": {
+   "file": "/home/user/build/film/stills/full-0.5/still-137-t68.500-f04110.png",
+   "ink_rows_px": 3
+  },
+  "pass": true
+ },
+ "gate8_vst_tile": {
+  "src": "/art/site/brand/platforms/vst-compatible.png",
+  "natural_px": [
+   474,
+   443
+  ],
+  "drawn_px": [
+   77,
+   72
+  ],
+  "style_chain_unmodified": true,
+  "top_layer_z": "100",
+  "pixels_vs_same_image_scaled_alone": {
+   "max_abs_diff": 0,
+   "mean_abs_diff": 0.0
+  },
+  "frames_with_logo": [
+   76.0,
+   86.0
+  ],
+  "frames_with_vst3_label": [
+   76.0,
+   86.0
+  ],
+  "logo_in_every_label_frame": true,
+  "logo_opacity_values": [
+   1
+  ],
+  "pass": true
+ },
+ "gate9_reading_budget": {
+  "rule": "each block on screen >= max(1.5 s, 0.25 s/word) at >= 50% opacity; new words per shot <= 5/s",
+  "blocks": [
+   {
+    "shots": "1",
+    "block": "Eyebrow",
+    "text": "HEADPHONES ON",
+    "words": 2,
+    "table_time_s": 2.0,
+    "measured_s": 2.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "1, 3",
+    "block": "Headline, first half",
+    "text": "Great sound ",
+    "words": 2,
+    "table_time_s": 1.75,
+    "measured_s": 1.75,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "1, 3",
+    "block": "Headline",
+    "text": "Great sound doesn’t sit still.",
+    "words": 5,
+    "table_time_s": 4.85,
+    "measured_s": 4.85,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "1-3",
+    "block": "Scope label",
+    "text": "STEREO FIELD",
+    "words": 2,
+    "table_time_s": 7.6,
+    "measured_s": 7.6,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "1-3",
+    "block": "Pill",
+    "text": "DRY | CHOROBOROS",
+    "words": 2,
+    "table_time_s": 7.6,
+    "measured_s": 7.6,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "2-3",
+    "block": "Footnote",
+    "text": "LEVEL MATCHED",
+    "words": 2,
+    "table_time_s": 5.6,
+    "measured_s": 5.6,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "5",
+    "block": "Eyebrow",
+    "text": "KAIZEN DSP · FIRST RELEASE",
+    "words": 4,
+    "table_time_s": 3.5,
+    "measured_s": 3.633,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "5",
+    "block": "H1",
+    "text": "Meet Choroboros.",
+    "words": 2,
+    "table_time_s": 3.25,
+    "measured_s": 3.383,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "5",
+    "block": "Sub",
+    "text": "A chorus and modulation plugin for macOS.",
+    "words": 7,
+    "table_time_s": 2.5,
+    "measured_s": 2.633,
+    "min_required_s": 1.75,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "6",
+    "block": "Headline",
+    "text": "Five prebuilt engines.",
+    "words": 3,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "6",
+    "block": "Labels",
+    "text": "GREEN / BLUE / RED / PURPLE / BLACK",
+    "words": 1,
+    "table_time_s": 2.0,
+    "measured_s": 2.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "GREEN": 4.0,
+     "BLUE": 3.5,
+     "RED": 3.0,
+     "PURPLE": 2.5,
+     "BLACK": 2.0
+    }
+   },
+   {
+    "shots": "6",
+    "block": "Footnote",
+    "text": "EVERY CHOROBOROS DEMO IN THIS FILM STARTS MONO AND DRY.",
+    "words": 10,
+    "table_time_s": 3.0,
+    "measured_s": 3.0,
+    "min_required_s": 2.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "7-11",
+    "block": "Label",
+    "text": "BEST FOR",
+    "words": 2,
+    "table_time_s": 20.0,
+    "measured_s": 20.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "7-11",
+    "block": "Footnote",
+    "text": "SAME TAKE · LEVEL MATCHED",
+    "words": 4,
+    "table_time_s": 20.0,
+    "measured_s": 20.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "7",
+    "block": "Pill, eyebrow",
+    "text": "FREE / LAGRANGE 3RD CORE",
+    "words": 4,
+    "table_time_s": 4.0,
+    "measured_s": 3.983,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "FREE": 3.983,
+     "LAGRANGE 3RD CORE": 3.983
+    }
+   },
+   {
+    "shots": "7",
+    "block": "Headline",
+    "text": "Green. Sways.",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 3.983,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "7",
+    "block": "Best for",
+    "text": "Warm acoustic and synth sends",
+    "words": 5,
+    "table_time_s": 4.0,
+    "measured_s": 3.983,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "7",
+    "block": "Caption",
+    "text": "Depth.",
+    "words": 1,
+    "table_time_s": 2.0,
+    "measured_s": 1.983,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "8",
+    "block": "Eyebrow",
+    "text": "CUBIC CORE",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "8",
+    "block": "Headline",
+    "text": "Blue. Widens.",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "8",
+    "block": "Best for",
+    "text": "Clean width on vocals and buses",
+    "words": 6,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "8",
+    "block": "Caption",
+    "text": "Offset.",
+    "words": 1,
+    "table_time_s": 2.0,
+    "measured_s": 1.983,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "9",
+    "block": "Headline",
+    "text": "Red. Wavers.",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "9",
+    "block": "Best for",
+    "text": "BBD AND TAPE. VINTAGE INSTABILITY.",
+    "words": 5,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "9",
+    "block": "Pill",
+    "text": "BBD | TAPE",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "9",
+    "block": "Lines",
+    "text": "TWO SOUND CORES PER ENGINE / SAME KNOBS, DIFFERENT CORE",
+    "words": 9,
+    "table_time_s": 2.75,
+    "measured_s": 2.733,
+    "min_required_s": 2.25,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "TWO SOUND CORES PER ENGINE": 2.733,
+     "SAME KNOBS, DIFFERENT CORE": 2.733
+    }
+   },
+   {
+    "shots": "10",
+    "block": "Pill, eyebrow",
+    "text": "FREE / ORBIT CORE",
+    "words": 3,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "FREE": 3.95,
+     "ORBIT CORE": 3.95
+    }
+   },
+   {
+    "shots": "10",
+    "block": "Headline",
+    "text": "Purple. Orbits.",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "10",
+    "block": "Best for",
+    "text": "STRANGE TEXTURES, SOUND DESIGN, WEIRDNESS",
+    "words": 5,
+    "table_time_s": 4.0,
+    "measured_s": 3.95,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "10",
+    "block": "Caption",
+    "text": "Rate.",
+    "words": 1,
+    "table_time_s": 2.0,
+    "measured_s": 1.983,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "11",
+    "block": "Eyebrow",
+    "text": "ENSEMBLE CORE",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 3.967,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "11",
+    "block": "Headline",
+    "text": "Black. Multiplies.",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 3.967,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "11",
+    "block": "Best for",
+    "text": "Dense ensembles. Low CPU.",
+    "words": 4,
+    "table_time_s": 4.0,
+    "measured_s": 3.967,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "11",
+    "block": "Caption",
+    "text": "Color.",
+    "words": 1,
+    "table_time_s": 2.0,
+    "measured_s": 2.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "12",
+    "block": "Centre",
+    "text": "17 / SOUND CORES",
+    "words": 3,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "17": 4.0,
+     "SOUND CORES": 4.0
+    }
+   },
+   {
+    "shots": "12",
+    "block": "Tag",
+    "text": "NOW PLAYING · LAGRANGE 5TH",
+    "words": 4,
+    "table_time_s": 3.5,
+    "measured_s": 3.4,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "12",
+    "block": "Bottom",
+    "text": "The ten cores inside the prebuilt engines, plus seven more.",
+    "words": 10,
+    "table_time_s": 2.5,
+    "measured_s": 2.5,
+    "min_required_s": 2.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "13",
+    "block": "Headline",
+    "text": "Build your own / in Create.",
+    "words": 5,
+    "table_time_s": 6.0,
+    "measured_s": 6.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "Build your own": 6.0,
+     "in Create.": 6.0
+    }
+   },
+   {
+    "shots": "13",
+    "block": "Caption",
+    "text": "INTERFACE CAPTURE FROM CHOROBOROS 1.0.5",
+    "words": 5,
+    "table_time_s": 5.75,
+    "measured_s": 5.617,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "13",
+    "block": "Sub",
+    "text": "Choose one or two cores. / Modify recipes. / Add artwork.",
+    "words": 9,
+    "table_time_s": 5.25,
+    "measured_s": 5.117,
+    "min_required_s": 2.25,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "Choose one or two cores.": 5.117,
+     "Modify recipes.": 5.117,
+     "Add artwork.": 5.117
+    }
+   },
+   {
+    "shots": "13",
+    "block": "Footnote",
+    "text": "INCLUDED WITH AN ACTIVE 30-DAY TRIAL / OR A PAID LICENCE.",
+    "words": 10,
+    "table_time_s": 4.0,
+    "measured_s": 3.867,
+    "min_required_s": 2.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "INCLUDED WITH AN ACTIVE 30-DAY TRIAL": 3.867,
+     "OR A PAID LICENCE.": 3.867
+    }
+   },
+   {
+    "shots": "14",
+    "block": "Eyebrow",
+    "text": "ARTWORK PACKS FOR CREATE",
+    "words": 4,
+    "table_time_s": 3.85,
+    "measured_s": 3.85,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "14",
+    "block": "Headline",
+    "text": "26 custom looks.",
+    "words": 3,
+    "table_time_s": 3.85,
+    "measured_s": 3.85,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "14",
+    "block": "Bottom",
+    "text": "A custom look changes what Choroboros looks like, not how it sounds.",
+    "words": 12,
+    "table_time_s": 3.35,
+    "measured_s": 3.217,
+    "min_required_s": 3.0,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "16",
+    "block": "Eyebrow",
+    "text": "FREE MODE",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "16",
+    "block": "Headline",
+    "text": "Green and Purple are free.",
+    "words": 5,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "16",
+    "block": "Sub",
+    "text": "No card or licence key needed.",
+    "words": 6,
+    "table_time_s": 3.25,
+    "measured_s": 3.117,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "16",
+    "block": "Labels",
+    "text": "GREEN / PURPLE",
+    "words": 1,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "GREEN": 4.0,
+     "PURPLE": 4.0
+    }
+   },
+   {
+    "shots": "17",
+    "block": "Headline",
+    "text": "30-day free trial. No payment card.",
+    "words": 6,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "17",
+    "block": "Labels",
+    "text": "BLUE / RED / BLACK / CREATE",
+    "words": 1,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "BLUE": 4.0,
+     "RED": 4.0,
+     "BLACK": 4.0,
+     "CREATE": 4.0
+    }
+   },
+   {
+    "shots": "17",
+    "block": "Sub",
+    "text": "Unlocks Blue, Red, Black and Create.",
+    "words": 6,
+    "table_time_s": 3.25,
+    "measured_s": 3.117,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "18",
+    "block": "Eyebrow",
+    "text": "ONE-TIME PURCHASE · NO SUBSCRIPTION",
+    "words": 4,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "18",
+    "block": "Headline",
+    "text": "$49.99 USD.",
+    "words": 2,
+    "table_time_s": 4.0,
+    "measured_s": 4.0,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "18",
+    "block": "Sub",
+    "text": "Lifetime updates. 30-day refund.",
+    "words": 4,
+    "table_time_s": 3.5,
+    "measured_s": 3.367,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "19-21",
+    "block": "Eyebrow",
+    "text": "MORE FROM KAIZEN DSP",
+    "words": 4,
+    "table_time_s": 7.5,
+    "measured_s": 7.5,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "19",
+    "block": "Eyebrow",
+    "text": "FOLD · COMING SOON",
+    "words": 3,
+    "table_time_s": 2.5,
+    "measured_s": 2.5,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "19",
+    "block": "Headline",
+    "text": "A free spectral stereo shaper.",
+    "words": 5,
+    "table_time_s": 2.5,
+    "measured_s": 2.5,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "20",
+    "block": "Eyebrow",
+    "text": "ECHOLALIA · DELAY + REVERB · COMING SOON",
+    "words": 5,
+    "table_time_s": 2.5,
+    "measured_s": 2.5,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "20",
+    "block": "Headline",
+    "text": "Echoes that change as they return.",
+    "words": 6,
+    "table_time_s": 2.5,
+    "measured_s": 2.5,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "21",
+    "block": "Eyebrow",
+    "text": "STOVETOP · IN DEVELOPMENT",
+    "words": 3,
+    "table_time_s": 2.5,
+    "measured_s": 2.5,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "21",
+    "block": "Headline",
+    "text": "Heats up / as you play.",
+    "words": 5,
+    "table_time_s": 2.5,
+    "measured_s": 2.5,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "Heats up": 2.5,
+     "as you play.": 2.5
+    }
+   },
+   {
+    "shots": "23-25",
+    "block": "Tagline",
+    "text": "Great sound / doesn’t / sit still.",
+    "words": 5,
+    "table_time_s": 16.0,
+    "measured_s": 15.5,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": false,
+    "per_key_s": {
+     "Great sound": 15.867,
+     "doesn’t": 15.5,
+     "sit still.": 15.5
+    }
+   },
+   {
+    "shots": "24-25",
+    "block": "Top right",
+    "text": "CHOROBOROS · CHORUS PLUGIN",
+    "words": 3,
+    "table_time_s": 10.0,
+    "measured_s": 9.867,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "24-25",
+    "block": "CTA buttons",
+    "text": "Buy Choroboros / Start your 30-day free trial",
+    "words": 7,
+    "table_time_s": 11.0,
+    "measured_s": 11.0,
+    "min_required_s": 1.75,
+    "pass": true,
+    "within_0.15s_of_table": true,
+    "per_key_s": {
+     "Buy Choroboros": 11.0,
+     "Start your 30-day free trial": 11.0
+    }
+   },
+   {
+    "shots": "24-25",
+    "block": "URL",
+    "text": "kaizendsp.com/choroboros",
+    "words": 1,
+    "table_time_s": 11.5,
+    "measured_s": 11.367,
+    "min_required_s": 1.5,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "24-25",
+    "block": "Line",
+    "text": "Available now for macOS · Apple Silicon + Intel",
+    "words": 7,
+    "table_time_s": 11.0,
+    "measured_s": 10.867,
+    "min_required_s": 1.75,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "24-25",
+    "block": "Facts",
+    "text": "GREEN AND PURPLE FREE · 30-DAY TRIAL · $49.99 USD ONE-TIME",
+    "words": 9,
+    "table_time_s": 10.5,
+    "measured_s": 10.367,
+    "min_required_s": 2.25,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "24-25",
+    "block": "Tiles",
+    "text": "VST®3 · AU · Audio Units · AAX · Standalone · macOS",
+    "words": 7,
+    "table_time_s": 10.0,
+    "measured_s": 10.0,
+    "min_required_s": 1.75,
+    "pass": true,
+    "within_0.15s_of_table": true
+   },
+   {
+    "shots": "24-25",
+    "block": "Footer",
+    "text": "Five prebuilt engines · 17 sound cores · Version 1.0.5",
+    "words": 9,
+    "table_time_s": 9.5,
+    "measured_s": 9.367,
+    "min_required_s": 2.25,
+    "pass": true,
+    "within_0.15s_of_table": true
+   }
+  ],
+  "density": [
+   {
+    "shot": 1,
+    "window": [
+     0,
+     2
+    ],
+    "new_words": 8,
+    "words_per_s": 4.0,
+    "pass": true
+   },
+   {
+    "shot": 3,
+    "window": [
+     3,
+     7.85
+    ],
+    "new_words": 5,
+    "words_per_s": 1.03,
+    "pass": true
+   },
+   {
+    "shot": 5,
+    "window": [
+     8,
+     12
+    ],
+    "new_words": 13,
+    "words_per_s": 3.25,
+    "pass": true
+   },
+   {
+    "shot": 6,
+    "window": [
+     12,
+     16
+    ],
+    "new_words": 18,
+    "words_per_s": 4.5,
+    "pass": true
+   },
+   {
+    "shot": 7,
+    "window": [
+     16,
+     20
+    ],
+    "new_words": 18,
+    "words_per_s": 4.5,
+    "pass": true
+   },
+   {
+    "shot": 8,
+    "window": [
+     20,
+     24
+    ],
+    "new_words": 11,
+    "words_per_s": 2.75,
+    "pass": true
+   },
+   {
+    "shot": 9,
+    "window": [
+     24,
+     28
+    ],
+    "new_words": 18,
+    "words_per_s": 4.5,
+    "pass": true
+   },
+   {
+    "shot": 10,
+    "window": [
+     28,
+     32
+    ],
+    "new_words": 11,
+    "words_per_s": 2.75,
+    "pass": true
+   },
+   {
+    "shot": 11,
+    "window": [
+     32,
+     36
+    ],
+    "new_words": 9,
+    "words_per_s": 2.25,
+    "pass": true
+   },
+   {
+    "shot": 12,
+    "window": [
+     36,
+     40
+    ],
+    "new_words": 17,
+    "words_per_s": 4.25,
+    "pass": true
+   },
+   {
+    "shot": 13,
+    "window": [
+     40,
+     46
+    ],
+    "new_words": 29,
+    "words_per_s": 4.83,
+    "pass": true
+   },
+   {
+    "shot": 14,
+    "window": [
+     46,
+     49.85
+    ],
+    "new_words": 19,
+    "words_per_s": 4.94,
+    "pass": true
+   },
+   {
+    "shot": 16,
+    "window": [
+     50,
+     54
+    ],
+    "new_words": 15,
+    "words_per_s": 3.75,
+    "pass": true
+   },
+   {
+    "shot": 17,
+    "window": [
+     54,
+     58
+    ],
+    "new_words": 16,
+    "words_per_s": 4.0,
+    "pass": true
+   },
+   {
+    "shot": 18,
+    "window": [
+     58,
+     62
+    ],
+    "new_words": 10,
+    "words_per_s": 2.5,
+    "pass": true
+   },
+   {
+    "shot": 19,
+    "window": [
+     62,
+     64.5
+    ],
+    "new_words": 12,
+    "words_per_s": 4.8,
+    "pass": true
+   },
+   {
+    "shot": 20,
+    "window": [
+     64.5,
+     67
+    ],
+    "new_words": 11,
+    "words_per_s": 4.4,
+    "pass": true
+   },
+   {
+    "shot": 21,
+    "window": [
+     67,
+     69.5
+    ],
+    "new_words": 8,
+    "words_per_s": 3.2,
+    "pass": true
+   },
+   {
+    "shot": 23,
+    "window": [
+     70,
+     74
+    ],
+    "new_words": 5,
+    "words_per_s": 1.25,
+    "pass": true
+   },
+   {
+    "shot": "24-25",
+    "window": [
+     74,
+     86
+    ],
+    "new_words": 42,
+    "words_per_s": 3.5,
+    "pass": true
+   }
+  ],
+  "pass": true
+ },
+ "gate11_determinism": {
+  "times": [
+   "t=0.250",
+   "t=2.600",
+   "t=20.100",
+   "t=26.200",
+   "t=41.500",
+   "t=50.100",
+   "t=63.300",
+   "t=72.000",
+   "t=80.000"
+  ],
+  "result": "deterministic: all captures identical",
+  "pass": true
+ }
+}

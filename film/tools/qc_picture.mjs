@@ -73,7 +73,8 @@ async function installProbe() {
     if (n.classList.contains("t-pill")) return [...n.children].map((c) => c.textContent.trim()).filter(Boolean).join(" | ");
     return n.textContent.replace(/\s+/g, " ").trim();
   };
-  const SEL = ".t-eyebrow,.t-headline,.t-body,.t-mono,.t-pill,.t-tag,.t-lockup,.t-btn,.t-formats";
+  const SEL = ".t-eyebrow,.t-headline,.t-body,.t-mono,.t-pill,.t-tag,.t-lockup,.t-btn";
+  const EXTRA = ["17", "kaizendsp.com/choroboros", "Heats up", "as you play."];
   window.__qc = {
     async scan(t) {
       await window.__composition.seek(t);
@@ -92,7 +93,30 @@ async function installProbe() {
         if (!k) continue;
         texts[k] = Math.max(texts[k] || 0, +a.toFixed(3));
       }
-      return { layers, texts };
+      // Blocks set as plain leaf elements rather than the type classes.
+      for (const n of stage.querySelectorAll("div, span")) {
+        if (n.childElementCount || !EXTRA.includes(n.textContent.trim())) continue;
+        if (!visible(n) || !onStage(n)) continue;
+        const a = effOpacity(n);
+        if (a < 0.02) continue;
+        const k = n.textContent.trim();
+        texts[k] = Math.max(texts[k] || 0, +a.toFixed(3));
+      }
+      // The format row and the VST logo (gate 8: the logo is on screen in every frame "VST®3" is).
+      let formats = 0;
+      for (const row of stage.querySelectorAll(".t-formats")) {
+        for (const n of row.querySelectorAll("*")) {
+          if (n.childElementCount || n.textContent.trim() !== "VST®3") continue;
+          if (visible(n) && onStage(n)) formats = Math.max(formats, +effOpacity(n).toFixed(3));
+        }
+      }
+      if (formats >= 0.02) texts["VST®3 · AU · Audio Units · AAX · Standalone · macOS"] = formats;
+      let vst = 0;
+      for (const img of stage.querySelectorAll("img")) {
+        if (!/vst-compatible\.png$/.test(img.src)) continue;
+        if (visible(img) && onStage(img)) vst = Math.max(vst, +effOpacity(img).toFixed(3));
+      }
+      return { layers, texts, vst };
     },
     plates() {
       const out = [];
@@ -286,7 +310,6 @@ async function gates() {
       const film = await seekAndCapture(s.page, s.cdp, t8, { format: "png", clip });
       const ref = await s.context.newPage();
       await ref.setViewportSize({ width: 1920, height: 1080 });
-      await ref.goto(new URL("/film/main/index.html", s.page.url()).href.replace("/film/main/index.html", "/film/README.md"));
       await ref.setContent(
         `<html><body style="margin:0;background:#050506"><div style="position:absolute;left:0;top:0;width:1920px;height:1080px;background:${info.tileBg}"></div>` +
           `<img src="${new URL(info.src, s.page.url()).href}" style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px"></body></html>`,

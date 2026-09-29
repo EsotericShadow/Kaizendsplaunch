@@ -4,8 +4,8 @@
 #   film/film.sh prep                                  write /data/available.json (run by every command)
 #   film/film.sh gui                                   slice the plugin filmstrips into /data/gui (once, ~15 s)
 #   film/film.sh frames                                extract the Fold and Echolalia clip windows to frames
-#   film/film.sh stills <name> <t1,t2,...> [comp]      PNG stills + contact sheet in $OUT/stills/<name>
-#   film/film.sh preview <name> [from] [to] [comp]     half-size preview MP4 in $OUT/out/<name>.mp4
+#   film/film.sh stills <name> <t1,t2,...> [comp]      PNG stills + contact sheets (12 per sheet) in $OUT/stills/<name>
+#   film/film.sh preview <name> [from] [to] [comp]     half-size preview MP4 in $OUT/out/<name>.mp4 (with the master audio if it exists)
 #   film/film.sh render <name> [from] [to] [comp]      final MP4 (adds the master audio if it exists)
 #   film/film.sh check <t1,t2,...> [comp]              determinism check (two browsers, three seek orders)
 #   film/film.sh gallery                               stills of the component gallery
@@ -96,14 +96,17 @@ PY
 stills() {
   local name="$1" at="$2" comp="${3:-film/main/index.html}"
   prep >/dev/null
-  cd "$REPO" && node tools/stills.mjs --comp "$comp" --at "$at" --out "$OUT/stills/$name" --workers "$WORKERS" "${MOUNTS[@]}"
+  # Contact sheets are made with PIL: the renderer's in-browser sheet runs out of memory past ~40 stills.
+  cd "$REPO" && node tools/stills.mjs --comp "$comp" --at "$at" --out "$OUT/stills/$name" --workers "$WORKERS" --no-sheet "${MOUNTS[@]}"
+  python3 "$REPO/film/tools/sheet.py" "$OUT/stills/$name" 12 4 480 sheet
 }
 
 preview() {
   local name="$1" from="${2:-}" to="${3:-}" comp="${4:-film/main/index.html}"
   prep >/dev/null
   local range=(); [[ -n "$from" ]] && range+=(--from "$from"); [[ -n "$to" ]] && range+=(--to "$to")
-  cd "$REPO" && node tools/render.mjs --comp "$comp" --out "$OUT/out/$name.mp4" --preview --workers "$WORKERS" "${range[@]}" "${MOUNTS[@]}"
+  local audio=(); [[ -f "$OUT/audio/master.wav" ]] && audio=(--audio "$OUT/audio/master.wav")
+  cd "$REPO" && node tools/render.mjs --comp "$comp" --out "$OUT/out/$name.mp4" --preview --workers "$WORKERS" "${range[@]}" "${audio[@]}" "${MOUNTS[@]}"
 }
 
 render() {

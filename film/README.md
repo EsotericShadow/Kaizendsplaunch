@@ -14,13 +14,16 @@ outside the repo through URL mounts, and every output (videos, stills, extracted
 | Path | What it is |
 |---|---|
 | `main/index.html` | The film: 1920x1080, 60 fps, 86.0 s. Loads every scene listed in `scenes/manifest.json`. |
-| `scenes/manifest.json` | Scene modules in play order. Empty until the scene work lands. |
+| `scenes/manifest.json` | Scene modules in play order. |
 | `scenes/shotNN-name.js` | One module per shot (see "Adding a scene"). |
 | `lib/` | Shared components. Scenes get them as `ctx.lib`. |
 | `gallery/index.html` | An 8-second test composition that exercises every component. |
 | `gallery/verify.html` | Plates in the state of the real plugin captures, plus text-baseline, hero and macro checks. |
 | `tools/prep_gui.py` | Slices the plugin's filmstrip sheets into one image per frame. |
 | `tools/verify_plate.py` | Measures the plates against the real captures and other references. |
+| `tools/qc_picture.mjs`, `tools/qc_picture.py` | Picture QC (treatment 11, gates 5-9 and 11) into `qc-picture.json`. |
+| `tools/sheet.py` | Contact sheets (12 stills each) for `film.sh stills`. |
+| `qc-picture.json` | The latest picture QC report. |
 | `film.sh` | Render, stills, preview, determinism and data-prep commands. |
 
 ## URL mounts
@@ -142,6 +145,15 @@ film/film.sh preview tour 16 36              # half-size preview of a range
 film/film.sh render final                    # full render, with the master audio if it exists
 film/film.sh check 3.5,18.25,26.2 film/gallery/index.html   # determinism check
 python3 film/tools/verify_plate.py /home/user/build/film/stills/verify
+```
+
+Picture QC, after any change to the scenes, cues or copy:
+
+```sh
+node film/tools/qc_picture.mjs scan          # layers and text blocks on every frame (about 2 min)
+node film/tools/qc_picture.mjs gates         # readouts, knob frames, captions (gate 5), VST tile (gate 8)
+film/film.sh check 0.25,2.6,20.1,26.2,41.5,50.1,63.3,72,80 > /home/user/build/film/logs/determinism.log
+python3 film/tools/qc_picture.py             # gates 6, 7, 9, cuts and coverage; writes film/qc-picture.json
 ```
 
 `film.sh prep` runs before every command. It slices the filmstrips if that has not been done yet

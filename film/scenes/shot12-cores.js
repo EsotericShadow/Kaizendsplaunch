@@ -141,7 +141,8 @@ export default {
           setStyle(tag, "left", px(x + ICON / 2 + 14));
           setStyle(tag, "top", px(y + 5 + tagTop0));
         }
-        setAlpha(bottom, fadeIn(t, 37.5, 0.25));
+        // Hard cut at 37.50: the line has exactly its 2.5 s reading minimum (10 words), so no fade.
+        setAlpha(bottom, fadeIn(t, 37.5, 0));
         grain.render(t);
       },
     };
