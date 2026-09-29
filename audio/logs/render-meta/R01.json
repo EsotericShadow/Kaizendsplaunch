@@ -24,9 +24,9 @@
     "trim": 0.0
   },
   "automated": true,
-  "inPeakDb": -10.504379272460938,
-  "outPeakDb": -5.80707848072052,
-  "outRmsDb": -25.956482712279822,
+  "inPeakDb": -10.500178337097168,
+  "outPeakDb": -6.267024278640747,
+  "outRmsDb": -27.217677954130846,
   "outNonFinite": 0,
   "outDenormals": 0,
   "outSamplesOverFullScale": 0,

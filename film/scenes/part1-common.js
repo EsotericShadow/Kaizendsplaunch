@@ -58,6 +58,33 @@ export const TOUR = [
 
 export const tourAt = (t) => TOUR.find((s) => t >= s.t0 && t < s.t1) || null;
 
+/**
+ * A scope's disc and 1 px outline drawn once into a canvas under the scope. As CSS (border-radius),
+ * the circle's edge was rasterised differently from frame to frame wherever another element's
+ * repaint rect cut across it (the shot 2 plate's filter, Red's pushed-in plate): a seek-history
+ * dependence of up to 10/255. A canvas bitmap does not change with the repaint rect.
+ */
+export function scopeBackdrop(lib, parent, { cx, cy, size, fill = "rgba(5,5,6,0.6)", stroke = "rgba(246,244,239,0.14)" }) {
+  const { el, px } = lib.util;
+  const c = el("canvas", { parent });
+  Object.assign(c.style, { position: "absolute", left: px(cx - size / 2), top: px(cy - size / 2), width: px(size), height: px(size) });
+  const dpr = window.devicePixelRatio || 1;
+  c.width = Math.round(size * dpr);
+  c.height = Math.round(size * dpr);
+  const g = c.getContext("2d");
+  g.scale(dpr, dpr);
+  g.beginPath();
+  g.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
+  g.fillStyle = fill;
+  g.fill();
+  g.beginPath();
+  g.arc(size / 2, size / 2, size / 2 - 0.5, 0, 2 * Math.PI);
+  g.lineWidth = 1;
+  g.strokeStyle = stroke;
+  g.stroke();
+  return c;
+}
+
 /** Absolutely positioned full-frame box. */
 export function box(lib, parent) {
   return lib.util.el("div", { parent, style: { position: "absolute", left: "0px", top: "0px", width: "100%", height: "100%" } });

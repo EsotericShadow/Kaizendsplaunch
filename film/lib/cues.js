@@ -156,8 +156,10 @@ export class Cues {
   cyclesAt(renderId, t) {
     const r = this.render(renderId);
     const gs = this.gesturesFor(renderId, "rate");
-    if (!gs.length) return r.knobs.rate * t;
-    let acc = 0;
+    // The render's LFO starts at the head of its pre-roll, before film time 0, at the initial Rate.
+    const pre = r.knobs.rate * this.prerollOf(renderId);
+    if (!gs.length) return pre + r.knobs.rate * t;
+    let acc = pre;
     let tPrev = 0;
     let rate = r.knobs.rate;
     for (const g of gs) {
@@ -170,6 +172,15 @@ export class Cues {
       rate = g.to;
     }
     return acc + rate * (t - tPrev);
+  }
+
+  /**
+   * Seconds the render ran before film time 0: the render's own "preroll" (R05's swoosh sweep),
+   * else the sheet's preroll_default, else 2.0 (treatment 8.4: every render uses --preroll 2).
+   */
+  prerollOf(renderId) {
+    const r = this.render(renderId);
+    return r.preroll ?? this.json.preroll_default ?? 2.0;
   }
 
   _integrateRate(renderId, a, b) {

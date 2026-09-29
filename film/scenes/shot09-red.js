@@ -28,14 +28,19 @@ export default {
     };
 
     const extras = (root) => {
-      const pill = type.pill(["BBD", "TAPE"], { parent: root, x: L.col.x0, y: L.pill.y, w: L.pill.w, h: L.pill.h, size: 16, fill: type.HUE.red });
-      // Dark backing so the pill reads cleanly where the pushed-in plate passes under it.
-      pill.el.style.background = "rgba(5,5,6,0.85)";
+      // One pill per state, swapped by visibility so the flip repaints the whole pill. Each has a
+      // dark backing, to read cleanly where the pushed-in plate passes under it.
+      const pills = [0, 1].map((i) => {
+        const p = type.pill(["BBD", "TAPE"], { parent: root, x: L.col.x0, y: L.pill.y, w: L.pill.w, h: L.pill.h, size: 16, active: i, fill: type.HUE.red });
+        p.el.style.background = "rgba(5,5,6,0.85)";
+        return p.el;
+      });
       const lines = LINES.map((text, i) => type.mono(text, { parent: root, size: 15, color: type.C.lavender, x: L.col.cx, baseline: L.lines[i], align: "center" }));
       return {
         law: (t) => (t < hqT ? "STEP" : "WOW"),
         render(t) {
-          pill.setActive(t < hqT ? 0 : 1, type.HUE.red);
+          util.show(pills[0], t < hqT);
+          util.show(pills[1], t >= hqT);
           for (const n of lines) util.show(n, t >= LINES_T);
         },
       };

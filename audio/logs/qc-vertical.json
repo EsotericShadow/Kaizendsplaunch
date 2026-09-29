@@ -1,5 +1,5 @@
 {
-  "film": "main",
+  "film": "vertical",
   "gates": {
     "1_source_stems_mono_correlation_1": {
       "pass": true,
@@ -8,8 +8,8 @@
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
           "correlation_dual_mono": 1.0,
           "finite": true
         },
@@ -17,8 +17,8 @@
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
           "correlation_dual_mono": 1.0,
           "finite": true
         },
@@ -26,8 +26,8 @@
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
           "correlation_dual_mono": 1.0,
           "finite": true
         },
@@ -35,8 +35,8 @@
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
           "correlation_dual_mono": 1.0,
           "finite": true
         },
@@ -44,8 +44,8 @@
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
           "correlation_dual_mono": 1.0,
           "finite": true
         },
@@ -53,17 +53,17 @@
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
-          "correlation_dual_mono": 1.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
+          "correlation_dual_mono": null,
           "finite": true
         },
         "bass": {
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
           "correlation_dual_mono": 1.0,
           "finite": true
         },
@@ -71,8 +71,8 @@
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
           "correlation_dual_mono": 1.0,
           "finite": true
         },
@@ -80,8 +80,8 @@
           "channels": 1,
           "samplerate": 48000,
           "subtype": "FLOAT",
-          "frames": 4128000,
-          "duration_s": 86.0,
+          "frames": 1344000,
+          "duration_s": 28.0,
           "correlation_dual_mono": 1.0,
           "finite": true
         }
@@ -91,18 +91,15 @@
     "2_level_match": {
       "pass": true,
       "result": {
-        "bars_1_4_pass": true,
-        "bars_9_18_pass": true,
-        "bars_28_31_pass": true,
-        "footnote_shots_2_3": "LEVEL MATCHED",
-        "footnote_tour": "SAME TAKE \u00b7 LEVEL MATCHED"
+        "guitar_bars_1_7_pass": true,
+        "pad_width_spans_pass": true
       },
-      "worst_residual_lu": 0.013,
+      "worst_residual_lu": 0.219,
       "ffmpeg_crosscheck": {
-        "file": "gtr edit after level gain, 16.0-36.0 s",
-        "meter_py_lufs": -25.197,
-        "ffmpeg_ebur128_lufs": -25.2,
-        "delta_lu": 0.003
+        "file": "gtr edit after level gain, 0.0-14.0 s",
+        "meter_py_lufs": -23.407,
+        "ffmpeg_ebur128_lufs": -23.4,
+        "delta_lu": -0.007
       }
     },
     "3_render_meta": {
@@ -320,57 +317,39 @@
     },
     "4_purple_swoosh": {
       "render": "R05",
-      "preroll": 7.75,
-      "swoosh_t": 29.18,
+      "preroll": 6.5,
+      "swoosh_t": 10.54,
       "window": [
-        28.75,
-        29.5
+        10.25,
+        10.85
       ],
       "pass": true,
       "chosen_detail": {
-        "preroll": 7.75,
+        "preroll": 6.5,
         "arrivals": [
           {
-            "t": 27.34,
-            "step": 0.519,
-            "channel": "R",
-            "kind": "main"
-          },
-          {
-            "t": 29.18,
-            "step": 0.493,
+            "t": 10.54,
+            "step": 0.782,
             "channel": "L",
             "kind": "main"
-          },
-          {
-            "t": 30.44,
-            "step": 0.124,
-            "channel": "R",
-            "kind": "minor"
           }
         ],
         "departures": [
           {
-            "t": 27.32,
-            "step": 0.117,
-            "channel": "L",
-            "kind": "minor"
-          },
-          {
-            "t": 28.58,
-            "step": 0.15,
-            "channel": "L",
-            "kind": "minor"
-          },
-          {
-            "t": 29.36,
-            "step": 0.5,
+            "t": 9.78,
+            "step": 0.426,
             "channel": "R",
             "kind": "main"
           },
           {
-            "t": 30.36,
-            "step": 0.582,
+            "t": 10.76,
+            "step": 0.426,
+            "channel": "R",
+            "kind": "main"
+          },
+          {
+            "t": 11.2,
+            "step": 0.387,
             "channel": "L",
             "kind": "main"
           }
@@ -378,12 +357,12 @@
         "main_in_section": 1,
         "minor_in_section": 0,
         "ok": true,
-        "swoosh_t": 29.18,
+        "swoosh_t": 10.54,
         "other_main_events_in_section": 0
       }
     },
     "10_master": {
-      "integrated_lufs": -14.416,
+      "integrated_lufs": -14.402,
       "target": -14.0,
       "tolerance": 0.5,
       "true_peak_dbtp": -1.1,
@@ -392,546 +371,274 @@
       "clipped_runs_3_samples_at_fs": 0,
       "samples_at_or_over_full_scale": 0,
       "non_finite": 0,
-      "limiter_max_gain_reduction_db": 0.842,
+      "limiter_max_gain_reduction_db": 0.862,
       "format": {
         "samplerate": 48000,
         "channels": 2,
         "subtype": "PCM_24",
-        "frames": 4128000,
-        "duration_s": 86.0
+        "frames": 1344000,
+        "duration_s": 28.0
       },
       "ffmpeg_ebur128": {
         "ebur128_I": -14.4,
-        "ebur128_LRA": 6.7,
+        "ebur128_LRA": 5.1,
         "ebur128_TP": -1.1,
-        "loudnorm_I": -14.45,
+        "loudnorm_I": -14.63,
         "loudnorm_TP": -1.1,
-        "loudnorm_LRA": 7.0
-      },
-      "pass": true
-    },
-    "honesty_zones": {
-      "zones": [
-        [
-          0.0,
-          8.0
-        ],
-        [
-          16.0,
-          36.0
-        ]
-      ],
-      "featured_gtr_is_render_times_gain": {
-        "max_rel_error": 4.849922395734523e-08,
-        "pass": true,
-        "note": "stem_gtr == Choroboros edit x one scalar gain curve (level match, fader, zone level, master, limiter), identical in L and R"
-      },
-      "no_limiting_in_zones": {
-        "min_limiter_gain": 0.9999999999997867,
-        "pass": true
-      },
-      "no_reverb_delay_or_other_music_in_zones": {
-        "max_abs": {
-          "plate": 0.0,
-          "hall": 0.0,
-          "delay": 0.0,
-          "gtr_oct": 0.0,
-          "pad": 0.0,
-          "ep": 0.0,
-          "lead": 0.0,
-          "pluck": 0.0,
-          "arp": 0.0,
-          "bells": 0.0,
-          "clips": 0.0
-        },
-        "pass": true
-      },
-      "backing_mono_in_zones": {
-        "correlation": [
-          1.0,
-          1.0
-        ],
-        "pass": true
-      },
-      "tour_backing_sample_identical": {
-        "max_abs_diff_pass_2_3_4_vs_1": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "pass_5_until_35.49_vs_1": 0.0,
-        "pass": true,
-        "note": "drums + bass as heard in the master; pass 5 (Black) stops at 35.50 per the treatment (the fill it replaces starts with a ghost note humanised 1.1 ms early, so the comparison ends at 35.49)"
+        "loudnorm_LRA": 5.9
       },
       "pass": true
     }
   },
   "checks": {
     "mono_fold": {
-      "integrated_lufs_stereo": -14.416,
-      "integrated_lufs_mono_fold": -15.361,
-      "drop_lu": 0.945,
-      "correlation_overall": 0.6963,
+      "integrated_lufs_stereo": -14.402,
+      "integrated_lufs_mono_fold": -15.391,
+      "drop_lu": 0.989,
+      "correlation_overall": 0.6888,
       "sections": [
         {
-          "name": "cold-open",
+          "name": "mix-turn",
           "t0": 0.0,
           "t1": 2.0,
-          "drop_lu": 0.0,
-          "correlation": 1.0
-        },
-        {
-          "name": "mix-turn",
-          "t0": 2.0,
-          "t1": 3.0,
-          "drop_lu": 0.59,
-          "correlation": 0.756
-        },
-        {
-          "name": "tagline",
-          "t0": 3.0,
-          "t1": 7.85,
-          "drop_lu": 1.44,
-          "correlation": 0.463
+          "drop_lu": 0.56,
+          "correlation": 0.738
         },
         {
           "name": "title",
-          "t0": 8.0,
-          "t1": 12.0,
-          "drop_lu": 1.01,
-          "correlation": 0.731
-        },
-        {
-          "name": "lineup",
-          "t0": 12.0,
-          "t1": 16.0,
+          "t0": 2.0,
+          "t1": 4.0,
           "drop_lu": 0.75,
-          "correlation": 0.786
+          "correlation": 0.873
         },
         {
           "name": "green",
-          "t0": 16.0,
-          "t1": 20.0,
-          "drop_lu": 0.83,
-          "correlation": 0.777
+          "t0": 4.0,
+          "t1": 6.0,
+          "drop_lu": 0.85,
+          "correlation": 0.764
         },
         {
           "name": "blue",
-          "t0": 20.0,
-          "t1": 24.0,
-          "drop_lu": 0.41,
-          "correlation": 0.898
+          "t0": 6.0,
+          "t1": 8.0,
+          "drop_lu": 0.52,
+          "correlation": 0.864
         },
         {
           "name": "red",
-          "t0": 24.0,
-          "t1": 28.0,
-          "drop_lu": 0.88,
-          "correlation": 0.754
+          "t0": 8.0,
+          "t1": 10.0,
+          "drop_lu": 0.75,
+          "correlation": 0.792
         },
         {
           "name": "purple",
-          "t0": 28.0,
-          "t1": 32.0,
-          "drop_lu": 0.28,
-          "correlation": 0.921
+          "t0": 10.0,
+          "t1": 12.0,
+          "drop_lu": 0.31,
+          "correlation": 0.917
         },
         {
           "name": "black",
-          "t0": 32.0,
-          "t1": 36.0,
-          "drop_lu": 1.26,
-          "correlation": 0.667
-        },
-        {
-          "name": "cores",
-          "t0": 36.0,
-          "t1": 40.0,
-          "drop_lu": 1.43,
-          "correlation": 0.587
-        },
-        {
-          "name": "create",
-          "t0": 40.0,
-          "t1": 46.0,
-          "drop_lu": 1.4,
-          "correlation": 0.555
-        },
-        {
-          "name": "looks",
-          "t0": 46.0,
-          "t1": 49.85,
-          "drop_lu": 0.97,
-          "correlation": 0.66
+          "t0": 12.0,
+          "t1": 14.0,
+          "drop_lu": 1.04,
+          "correlation": 0.706
         },
         {
           "name": "free",
-          "t0": 50.0,
-          "t1": 54.0,
-          "drop_lu": 0.59,
-          "correlation": 0.814
+          "t0": 14.0,
+          "t1": 17.0,
+          "drop_lu": 0.86,
+          "correlation": 0.752
         },
         {
           "name": "trial",
-          "t0": 54.0,
-          "t1": 58.0,
-          "drop_lu": 1.27,
-          "correlation": 0.563
+          "t0": 17.0,
+          "t1": 20.0,
+          "drop_lu": 1.42,
+          "correlation": 0.537
         },
         {
           "name": "price",
-          "t0": 58.0,
-          "t1": 62.0,
-          "drop_lu": 1.34,
-          "correlation": 0.521
-        },
-        {
-          "name": "fold",
-          "t0": 62.0,
-          "t1": 64.5,
-          "drop_lu": 0.47,
-          "correlation": 0.866
-        },
-        {
-          "name": "echolalia",
-          "t0": 64.5,
-          "t1": 67.0,
-          "drop_lu": 1.37,
-          "correlation": 0.536
-        },
-        {
-          "name": "stovetop",
-          "t0": 67.0,
-          "t1": 69.5,
-          "drop_lu": 0.27,
-          "correlation": 0.931
-        },
-        {
-          "name": "payoff",
-          "t0": 70.0,
-          "t1": 74.0,
-          "drop_lu": 1.91,
-          "correlation": 0.286
+          "t0": 20.0,
+          "t1": 22.0,
+          "drop_lu": 1.21,
+          "correlation": 0.554
         },
         {
           "name": "endcard",
-          "t0": 74.0,
-          "t1": 78.0,
-          "drop_lu": 1.46,
-          "correlation": 0.509
-        },
-        {
-          "name": "hold",
-          "t0": 78.0,
-          "t1": 86.0,
-          "drop_lu": 1.69,
-          "correlation": 0.422
+          "t0": 22.0,
+          "t1": 28.0,
+          "drop_lu": 1.51,
+          "correlation": 0.469
         }
       ],
-      "worst_section_drop_lu": 1.91
+      "worst_section_drop_lu": 1.51
     },
     "digital_silences": {
       "pass": true,
-      "windows": [
-        {
-          "t0": 7.85,
-          "t1": 8.0,
-          "max_abs": 0.0,
-          "exact_zero": true
-        },
-        {
-          "t0": 49.85,
-          "t1": 50.0,
-          "max_abs": 0.0,
-          "exact_zero": true
-        },
-        {
-          "t0": 69.5,
-          "t1": 70.0,
-          "max_abs": 0.0,
-          "exact_zero": true
-        }
-      ]
+      "windows": []
     },
     "joins_click_scan": {
       "method": "Join/cut click check. High-pass (> 5 kHz) energy in the 2 ms window at\n    t, relative to the loudest 2 ms HF burst in the surrounding +-100 ms outside\n    +-4 ms of t (dB; <= 0 means nothing at the join sticks out above the\n    natural transients around it). For a cut into silence only the material\n    before is the reference, for a hard start only the material after. Also\n    returns the absolute HF burst level at the join (dBFS).",
       "events": [
         {
-          "t": 7.85,
-          "kind": "cut",
+          "t": 4.0,
+          "kind": "join",
           "master": {
-            "rel_db": -3.9,
-            "abs_dbfs": -19.5
+            "rel_db": -0.2,
+            "abs_dbfs": -33.9
           },
           "gtr": {
-            "rel_db": -24.0,
-            "abs_dbfs": -67.6
+            "rel_db": -7.2,
+            "abs_dbfs": -48.7
+          }
+        },
+        {
+          "t": 6.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -0.2,
+            "abs_dbfs": -33.8
+          },
+          "gtr": {
+            "rel_db": -18.1,
+            "abs_dbfs": -56.3
           }
         },
         {
           "t": 8.0,
-          "kind": "start",
+          "kind": "join",
           "master": {
-            "rel_db": -1.4,
-            "abs_dbfs": -27.3
+            "rel_db": -0.3,
+            "abs_dbfs": -34.1
           },
           "gtr": {
-            "rel_db": -86.7,
-            "abs_dbfs": -120.4
+            "rel_db": -8.0,
+            "abs_dbfs": -49.7
           }
         },
         {
-          "t": 16.0,
+          "t": 10.0,
           "kind": "join",
           "master": {
-            "rel_db": -2.0,
-            "abs_dbfs": -30.6
+            "rel_db": -0.3,
+            "abs_dbfs": -34.0
           },
           "gtr": {
-            "rel_db": -9.8,
-            "abs_dbfs": -45.9
+            "rel_db": -17.8,
+            "abs_dbfs": -56.2
+          }
+        },
+        {
+          "t": 12.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -1.9,
+            "abs_dbfs": -35.1
+          },
+          "gtr": {
+            "rel_db": -11.4,
+            "abs_dbfs": -48.9
+          }
+        },
+        {
+          "t": 14.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -1.8,
+            "abs_dbfs": -29.9
+          },
+          "gtr": {
+            "rel_db": -13.2,
+            "abs_dbfs": -51.4
+          },
+          "pad": {
+            "rel_db": -49.6,
+            "abs_dbfs": -134.2
+          }
+        },
+        {
+          "t": 17.0,
+          "kind": "join",
+          "master": {
+            "rel_db": -4.1,
+            "abs_dbfs": -32.1
+          },
+          "gtr": {
+            "rel_db": -6.5,
+            "abs_dbfs": -43.9
+          },
+          "pad": {
+            "rel_db": -43.3,
+            "abs_dbfs": -80.2
+          },
+          "ep": {
+            "rel_db": null,
+            "abs_dbfs": null
           }
         },
         {
           "t": 20.0,
           "kind": "join",
           "master": {
-            "rel_db": -2.2,
-            "abs_dbfs": -29.7
+            "rel_db": -2.3,
+            "abs_dbfs": -29.0
           },
           "gtr": {
-            "rel_db": -7.5,
-            "abs_dbfs": -44.9
-          }
-        },
-        {
-          "t": 24.0,
-          "kind": "join",
-          "master": {
-            "rel_db": -2.2,
-            "abs_dbfs": -29.9
-          },
-          "gtr": {
-            "rel_db": -10.7,
-            "abs_dbfs": -46.2
-          }
-        },
-        {
-          "t": 28.0,
-          "kind": "join",
-          "master": {
-            "rel_db": -3.1,
-            "abs_dbfs": -30.6
-          },
-          "gtr": {
-            "rel_db": -5.7,
-            "abs_dbfs": -42.0
-          }
-        },
-        {
-          "t": 32.0,
-          "kind": "join",
-          "master": {
-            "rel_db": -2.8,
-            "abs_dbfs": -29.9
-          },
-          "gtr": {
-            "rel_db": -9.8,
-            "abs_dbfs": -46.1
-          }
-        },
-        {
-          "t": 36.0,
-          "kind": "join",
-          "master": {
-            "rel_db": -30.6,
-            "abs_dbfs": -78.4
-          },
-          "gtr": {
-            "rel_db": -89.1,
-            "abs_dbfs": -136.6
+            "rel_db": -9.5,
+            "abs_dbfs": -46.7
           },
           "pad": {
-            "rel_db": -67.4,
-            "abs_dbfs": -143.7
-          }
-        },
-        {
-          "t": 40.0,
-          "kind": "join",
-          "master": {
-            "rel_db": -5.5,
-            "abs_dbfs": -42.9
-          },
-          "pad": {
-            "rel_db": -22.5,
-            "abs_dbfs": -66.5
-          }
-        },
-        {
-          "t": 49.85,
-          "kind": "cut",
-          "master": {
-            "rel_db": -11.8,
-            "abs_dbfs": -30.7
-          },
-          "gtr": {
-            "rel_db": -24.0,
-            "abs_dbfs": -77.8
-          },
-          "pad": {
-            "rel_db": -33.1,
-            "abs_dbfs": -72.1
-          }
-        },
-        {
-          "t": 50.0,
-          "kind": "start",
-          "master": {
-            "rel_db": -1.8,
-            "abs_dbfs": -30.6
-          },
-          "gtr": {
-            "rel_db": -9.2,
-            "abs_dbfs": -44.4
-          },
-          "pad": {
-            "rel_db": -29.5,
-            "abs_dbfs": -101.0
-          }
-        },
-        {
-          "t": 54.0,
-          "kind": "join",
-          "master": {
-            "rel_db": -1.9,
-            "abs_dbfs": -32.8
-          },
-          "gtr": {
-            "rel_db": -11.1,
-            "abs_dbfs": -49.9
-          },
-          "pad": {
-            "rel_db": -26.3,
-            "abs_dbfs": -65.6
+            "rel_db": -39.2,
+            "abs_dbfs": -83.5
           },
           "ep": {
-            "rel_db": -17.5,
-            "abs_dbfs": -64.0
-          }
-        },
-        {
-          "t": 58.0,
-          "kind": "join",
-          "master": {
-            "rel_db": 4.0,
-            "abs_dbfs": -25.6
-          },
-          "gtr": {
-            "rel_db": -8.7,
-            "abs_dbfs": -47.4
-          },
-          "pad": {
-            "rel_db": -14.7,
-            "abs_dbfs": -62.3
-          },
-          "ep": {
-            "rel_db": -9.3,
-            "abs_dbfs": -55.6
-          },
-          "pluck": {
-            "rel_db": -1.2,
-            "abs_dbfs": -33.9
-          }
-        },
-        {
-          "t": 62.0,
-          "kind": "join",
-          "master": {
-            "rel_db": -2.4,
-            "abs_dbfs": -31.7
-          },
-          "gtr": {
-            "rel_db": -79.1,
-            "abs_dbfs": -134.4
-          },
-          "pad": {
-            "rel_db": -11.1,
-            "abs_dbfs": -59.4
-          },
-          "ep": {
-            "rel_db": -39.5,
-            "abs_dbfs": -124.8
+            "rel_db": -5.4,
+            "abs_dbfs": -60.5
           },
           "lead": {
-            "rel_db": -87.8,
-            "abs_dbfs": -133.1
+            "rel_db": null,
+            "abs_dbfs": null
           },
           "pluck": {
-            "rel_db": -21.0,
-            "abs_dbfs": -56.4
+            "rel_db": -1.4,
+            "abs_dbfs": -31.5
           }
         },
         {
-          "t": 69.5,
-          "kind": "cut",
-          "master": {
-            "rel_db": -27.1,
-            "abs_dbfs": -76.5
-          },
-          "pad": {
-            "rel_db": -24.3,
-            "abs_dbfs": -76.6
-          }
-        },
-        {
-          "t": 70.0,
-          "kind": "start",
-          "master": {
-            "rel_db": -11.2,
-            "abs_dbfs": -47.5
-          },
-          "gtr": {
-            "rel_db": -11.2,
-            "abs_dbfs": -47.5
-          }
-        },
-        {
-          "t": 74.0,
+          "t": 22.0,
           "kind": "join",
           "master": {
-            "rel_db": -7.1,
-            "abs_dbfs": -43.4
+            "rel_db": -7.2,
+            "abs_dbfs": -37.8
           },
           "gtr": {
-            "rel_db": -5.6,
-            "abs_dbfs": -43.3
+            "rel_db": -8.9,
+            "abs_dbfs": -47.5
           },
           "pad": {
-            "rel_db": -41.8,
-            "abs_dbfs": -131.0
+            "rel_db": -15.0,
+            "abs_dbfs": -58.2
+          },
+          "lead": {
+            "rel_db": -66.8,
+            "abs_dbfs": -118.9
+          },
+          "pluck": {
+            "rel_db": -25.5,
+            "abs_dbfs": -60.7
           }
         }
       ],
-      "worst_master_rel_db": 4.0
+      "worst_master_rel_db": -0.2
     },
-    "p_block_identical": {
-      "pass": true,
-      "pastes": [
-        16.0,
-        20.0,
-        24.0,
-        28.0,
-        32.0,
-        50.0,
-        58.0
-      ]
-    },
-    "arc_log": "/home/user/Kaizendsplaunch/audio/logs/arc.json",
     "stems_sum_to_mix": {
-      "max_abs_diff": 5.960464477539063e-08
+      "max_abs_diff": 5.552283255383372e-08
     },
-    "master_24bit_vs_float_max_diff": 1.1897577761876832e-07
+    "master_24bit_vs_float_max_diff": 1.1896190699189901e-07
   },
   "pass": true
 }

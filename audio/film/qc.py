@@ -17,7 +17,7 @@ import numpy as np
 import soundfile as sf
 
 import edit
-from common import SR, Film, correlation, dual, jdump, lufs, read, smp
+from common import SR, Film, correlation, dual, hard_silence, jdump, lufs, read, smp
 from synth import io as sio
 from synth import meter
 from synth.filters import eq
@@ -189,6 +189,62 @@ def main():
         pastes = [16.0, 20.0, 24.0, 28.0, 32.0, 50.0, 58.0]
         qc["checks"]["p_block_identical"] = {"pass": all(np.array_equal(ref, g[smp(t):smp(t + 4.0)]) for t in pastes),
                                              "pastes": pastes}
+
+    # production pass: honesty zones
+    hz = [tuple(z) for z in mix_info["plan"]["honesty_zones"]]
+    hon = {"zones": hz}
+    gpath = film.p("mix", "gtr_total_gain.npy")
+    if os.path.exists(gpath):
+        G = np.load(gpath)
+        e = edit.edited(film, "gtr", cues)
+        sg = read(film.p("mix", "stem_gtr.wav"))
+        errs = []
+        for (z0, z1) in hz:
+            s_, t_ = smp(z0), smp(z1)
+            rec = e * G[:, None]
+            for (q0, q1) in edit.silences(cues):
+                rec = hard_silence(rec, q0, q1)
+            ref = rec[s_:t_]
+            errs.append(float(np.abs(sg[s_:t_] - ref).max() / max(np.abs(sg[s_:t_]).max(), 1e-12)))
+        hon["featured_gtr_is_render_times_gain"] = {"max_rel_error": max(errs),
+                                                    "pass": max(errs) < 1e-5,
+                                                    "note": "stem_gtr == Choroboros edit x one scalar gain curve "
+                                                            "(level match, fader, zone level, master, limiter), "
+                                                            "identical in L and R"}
+    lg = np.load(film.p("mix", "limiter_gain.npy")) if os.path.exists(film.p("mix", "limiter_gain.npy")) else None
+    if lg is not None:
+        mn = min(float(lg[smp(z0):smp(z1)].min()) for (z0, z1) in hz)
+        hon["no_limiting_in_zones"] = {"min_limiter_gain": mn, "pass": mn >= 1 - 1e-9}
+    zero = {}
+    for k in ("plate", "hall", "delay", "gtr_oct", "pad", "ep", "lead", "pluck", "arp", "bells", "clips"):
+        p = film.p("mix", f"stem_{k}.wav")
+        if os.path.exists(p):
+            x = read(p)
+            zero[k] = max(float(np.abs(x[smp(z0):smp(z1)]).max()) for (z0, z1) in hz)
+    hon["no_reverb_delay_or_other_music_in_zones"] = {"max_abs": zero, "pass": all(v == 0.0 for v in zero.values())}
+    bk = read(film.p("mix", "stem_drums.wav")) + read(film.p("mix", "stem_bass.wav"))
+    hon["backing_mono_in_zones"] = {"correlation": [round(correlation(bk[smp(z0):smp(z1)]), 6) for (z0, z1) in hz]}
+    hon["backing_mono_in_zones"]["pass"] = all(abs(c - 1) < 1e-9 for c in hon["backing_mono_in_zones"]["correlation"])
+    if a.film == "main":
+        blocks = [16.0, 20.0, 24.0, 28.0]
+        ref = bk[smp(16.0):smp(20.0)]
+        diffs = [float(np.abs(bk[smp(t):smp(t) + len(ref)] - ref).max()) for t in blocks[1:]]
+        d5 = float(np.abs(bk[smp(32.0):smp(35.49)] - ref[:smp(3.49)]).max())
+        hon["tour_backing_sample_identical"] = {
+            "max_abs_diff_pass_2_3_4_vs_1": diffs, "pass_5_until_35.49_vs_1": d5,
+            "pass": max(diffs + [d5]) == 0.0,
+            "note": "drums + bass as heard in the master; pass 5 (Black) stops at 35.50 per the treatment (the "
+                    "fill it replaces starts with a ghost note humanised 1.1 ms early, so the comparison ends at 35.49)"}
+    hon["pass"] = all(v.get("pass", True) for v in hon.values() if isinstance(v, dict))
+    qc["gates"]["honesty_zones"] = hon
+
+    # arc: per-bar loudness, short-term, crest, onsets, mono drop (from the mix report)
+    bars = mix_info["report"].get("bars")
+    if bars:
+        jdump(film.log_path("arc.json"), {"note": "per bar: BS.1770 loudness of the 2 s bar, short-term (3 s) at "
+                                                  "the bar end, crest (sample peak/RMS), onset count, mono-fold drop",
+                                          "bars": bars})
+        qc["checks"]["arc_log"] = film.log_path("arc.json")
 
     # extra: stems sum to the master
     tot = sum(read(film.p("mix", f"stem_{k}.wav")) for k in mix_info["files"]["stems"])

@@ -389,3 +389,374 @@ def reverse_guitar(note_events_audio, length_s):
     y = y[-k:] if len(y) >= k else np.concatenate([np.zeros(k - len(y)), y])
     y = y * fade_curve(len(y), int(0.15 * SR), 0)
     return y
+
+
+# =================================================================== production pass (owner direction)
+# Realism layers. Still no modulation effect anywhere: no vibrato, no detuned
+# unison, no chorus; the only motion effect in the film is Choroboros.
+
+from synth.core import jit  # noqa: E402
+from synth.filters import ladder  # noqa: E402
+from synth.guitar import OPEN_STRINGS, PICKUP_MM, SCALE_MM, string_and_fret, tune_loop  # noqa: E402
+from synth.osc import pulse as osc_pulse, saw as osc_saw, sine as osc_sine  # noqa: E402
+from synth.drums import Clap  # noqa: E402
+
+
+@jit
+def _string_loop_eta(exc, M, eta, a0, gain, n_out):
+    """Karplus-Strong loop with a per-sample allpass coefficient (pitch drift)."""
+    y = np.zeros(n_out)
+    a1 = 1.0 - 2.0 * a0
+    f_prev = 0.0
+    ap_prev = 0.0
+    ne = len(exc)
+    for n in range(n_out):
+        d0 = y[n - M] if n >= M else 0.0
+        d1 = y[n - M - 1] if n >= M + 1 else 0.0
+        d2 = y[n - M - 2] if n >= M + 2 else 0.0
+        f = a0 * d0 + a1 * d1 + a0 * d2
+        e_ = eta[n]
+        ap = e_ * f + f_prev - e_ * ap_prev
+        f_prev = f
+        ap_prev = ap
+        e = exc[n] if n < ne else 0.0
+        y[n] = e + gain[n] * ap
+    return y
+
+
+class RealGuitar(FilmGuitar):
+    """FilmGuitar plus two realism details of a real string (not effects):
+    - pitch drift on the attack: a plucked string starts a few cents sharp
+      (tension modulation) and settles within about 60 ms (2 + 4 v cents);
+    - fret-hand squeak before notes marked meta["squeak"] (a short gliding
+      band of noise, about -30 dB under the note)."""
+
+    def __init__(self, drift_cents=(2.0, 4.0), drift_tau=0.06, **kw):
+        super().__init__(**kw)
+        self.drift_cents, self.drift_tau = drift_cents, drift_tau
+
+    def voice(self, pitch, vel, dur_s, meta):
+        sr, rng, hz = self.sr, self.rng, self.humanize
+        f0 = float(midi_to_hz(pitch)) * 2 ** (rng.normal(0, 0.8 * hz) / 1200)
+        M, eta0, P = tune_loop(f0, sr)
+        string, fret = meta.get("string"), meta.get("fret")
+        if string is None:
+            string, fret = string_and_fret(pitch)
+        if fret is None:
+            fret = pitch - OPEN_STRINGS[string]
+        v = float(np.clip(vel, 0.05, 1.0))
+        ne = max(8, int(round(P)))
+        noise = rng.uniform(-1, 1, ne)
+        fc1 = (self.pick_hz[0] + (self.pick_hz[1] - self.pick_hz[0]) * v ** 1.5)
+        a1 = math.exp(-2 * math.pi * fc1 / sr)
+        exc = signal.lfilter([1 - a1], [1, -a1], noise)
+        b, a = signal.butter(2, min(3500.0 + 6000.0 * v, 0.45 * sr), fs=sr)
+        exc = signal.lfilter(b, a, exc)
+        exc *= np.hanning(ne + 2)[1:-1] ** 0.25
+        nk = max(3, int(0.0006 * sr))
+        exc[:nk] += np.hanning(nk + 2)[1:-1] * (0.25 + 0.6 * v)
+        beta = float(np.clip(self.pluck * (1 + rng.normal(0, 0.12 * hz)), 0.05, 0.45))
+        kd = max(1, int(round(beta * P)))
+        exc = exc - np.concatenate([np.zeros(kd), exc[:-kd]]) if kd < ne else exc
+        exc *= v ** 1.2 / max(np.abs(exc).max(), 1e-9)
+        t60 = self.sustain_s * (82.4 / f0) ** 0.5
+        bright = float(np.clip(self.brightness + rng.normal(0, 0.05 * hz), 0.05, 0.98))
+        a0 = 0.25 * (1 - bright) ** 1.5
+        w0 = 2 * math.pi * f0 / sr
+        fir_mag = 1 - 2 * a0 * (1 - math.cos(w0))
+        r = 10 ** (-3 * P / (sr * t60))
+        g_sus = min(r / fir_mag, 0.99995)
+        g_rel = min(10 ** (-3 * P / (sr * self.release_s)) / fir_mag, 0.999)
+        n_gate = int(dur_s * sr)
+        n_out = n_gate + int(self.release_s * 1.4 * sr) + ne
+        n_out = min(n_out, int((t60 * 1.1 + 0.05) * sr) + ne)
+        gain = np.full(n_out, g_sus)
+        if n_gate < n_out:
+            nr = max(2, int(0.012 * sr))
+            ramp = 0.5 - 0.5 * np.cos(np.pi * np.arange(nr) / nr)
+            seg = gain[n_gate:n_gate + nr]
+            seg[:] = g_sus + (g_rel - g_sus) * ramp[:len(seg)]
+            gain[n_gate + nr:] = g_rel
+        # pitch drift: loop period shorter at the attack by c(t) cents, c -> 0
+        d0 = P - 1.0 - M
+        c0 = (self.drift_cents[0] + self.drift_cents[1] * v) * (1 + rng.normal(0, 0.15))
+        t = np.arange(n_out) / sr
+        dP = P * (1 - 2 ** (-(c0 * np.exp(-t / self.drift_tau)) / 1200))
+        d = np.clip(d0 - dP, 0.08, 1.49)
+        thiran = lambda dd: (1 - dd) / (1 + dd)
+        eta = thiran(d) + (eta0 - thiran(d0))
+        y = _string_loop_eta(exc, M, np.ascontiguousarray(eta), a0, gain, n_out)
+        L = SCALE_MM * 2 ** (-fret / 12)
+        gamma = min(PICKUP_MM[self.pickup] / L, 0.45)
+        kp = max(1, int(round(gamma * P)))
+        y = y - np.concatenate([np.zeros(kp), y[:-kp]])
+        nf = min(len(y), int(0.01 * sr))
+        y[-nf:] *= np.linspace(1, 0, nf)
+        y = y * self.level
+        # pick scrape
+        if self.pick_noise > 0:
+            nk2 = int(0.005 * sr)
+            nz = rng.uniform(-1, 1, nk2)
+            nz = eq(nz, [("highpass", 1500, 0, 0.7), ("lowpass", 6000, 0, 0.7)], sr)
+            env = np.exp(-np.arange(nk2) / (0.0012 * sr)) * (1 - np.exp(-np.arange(nk2) / (0.0002 * sr)))
+            pk = max(np.abs(y[: int(0.02 * sr)]).max(), 1e-9)
+            y[:nk2] += nz * env / max(np.abs(nz * env).max(), 1e-9) * pk * self.pick_noise * (0.4 + 0.6 * v)
+        if meta.get("squeak"):
+            ns = int(0.05 * sr)
+            nz = rng.uniform(-1, 1, ns)
+            fc = np.linspace(4200, 2400, ns)
+            sq = svf(nz, fc, 3.0, "bp", sr) * np.sin(np.pi * np.arange(ns) / ns) ** 2
+            sq = sq / max(np.abs(sq).max(), 1e-9) * max(np.abs(y).max(), 1e-9) * 10 ** (-30 / 20)
+            pre = int(0.035 * sr)
+            y = np.concatenate([np.zeros(pre), y])
+            y[:ns] += sq
+            meta["_pre_s"] = pre / sr
+        return y
+
+
+def render_events_pre(inst, events, n, post=True):
+    """render_events that honours voices which start before their onset
+    (meta['_pre_s'], e.g. a fret squeak ahead of the note)."""
+    events = inst.prepare(sorted(events, key=lambda e: (e.start_s, e.pitch)))
+    out = np.zeros((n, 2)) if inst.stereo else np.zeros(n)
+    for ev in events:
+        if "seed" in ev.meta:
+            inst.rng = np.random.default_rng(int(ev.meta["seed"]))
+        v = inst.voice(ev.pitch, ev.vel, ev.dur_s, ev.meta)
+        if inst.stereo and v.ndim == 1:
+            v = np.stack([v, v], 1)
+        pre = ev.meta.pop("_pre_s", 0.0)
+        add_at(out, v, int(round((ev.start_s - pre) * SR)))
+    return inst.post(out) if post else out
+
+
+# ----------------------------------------------------------------- layered drums with round robin
+
+class LayeredKick:
+    """Kick = synth body + sub tail (sine around 50 Hz, longer decay) + click
+    (short high-passed tick). Every hit varies its synthesis a little (round
+    robin): body pitch sweep, decays, click level and tone."""
+
+    stereo = False
+    name = "kick"
+
+    def __init__(self, seed=10, level=0.7, sub=0.45, click=0.22, f_end=50.0):
+        self.rng = np.random.default_rng(seed)
+        self.level, self.sub, self.click, self.f_end, self.sr = level, sub, click, f_end, SR
+
+    def prepare(self, events):
+        return events
+
+    def voice(self, pitch, vel, dur_s, meta):
+        rng = self.rng
+        v = float(np.clip(vel, 0.05, 1.0))
+        body = Kick(SR, int(rng.integers(1 << 30)), f_start=150.0 * (1 + rng.normal(0, 0.02)), f_end=self.f_end,
+                    pitch_tau=0.03 * (1 + rng.normal(0, 0.06)), decay_s=0.17 * (1 + rng.normal(0, 0.06)),
+                    click=0.25, drive=1.4, level=1.0).voice(36, v, 0.1, {})
+        n = max(len(body), int(0.9 * SR))
+        t = np.arange(n) / SR
+        fs = self.f_end * (1 + 0.6 * np.exp(-t / 0.02))
+        sub = np.sin(2 * np.pi * np.cumsum(fs) / SR) * np.exp(-t / (0.32 * (1 + rng.normal(0, 0.08)))) * \
+            (1 - np.exp(-t / 0.003))
+        nc = int(0.004 * SR)
+        ck = rng.uniform(-1, 1, nc) * np.exp(-np.arange(nc) / (0.0006 * SR))
+        ck = eq(ck, [("highpass", 3000 * (1 + rng.normal(0, 0.1)), 0, 0.7), ("lowpass", 9000, 0, 0.7)], SR)
+        ck = ck / max(np.abs(ck).max(), 1e-9)
+        y = np.zeros(n)
+        y[:len(body)] += body
+        y += self.sub * sub * (0.6 + 0.4 * v)
+        y[:nc] += self.click * ck * v * (1 + rng.normal(0, 0.1))
+        y = dc_block(y, 25.0, SR) * fade_curve(n, 0, int(0.08 * SR))
+        return y * self.level * (0.35 + 0.65 * v)
+
+    def post(self, x):
+        return x
+
+
+class LayeredSnare:
+    """Snare = synth body + clap layer (a few ms late) + a noise tail, each hit
+    varied (round robin). Ghost notes (low velocity) keep mostly the body."""
+
+    stereo = False
+    name = "snare"
+
+    def __init__(self, seed=11, level=0.55, clap=0.35, tail=0.3):
+        self.rng = np.random.default_rng(seed)
+        self.level, self.clap, self.tail, self.sr = level, clap, tail, SR
+
+    def prepare(self, events):
+        return events
+
+    def voice(self, pitch, vel, dur_s, meta):
+        rng = self.rng
+        v = float(np.clip(vel, 0.05, 1.0))
+        body = Snare(SR, int(rng.integers(1 << 30)), tone_hz=(190.0 * (1 + rng.normal(0, 0.015)), 335.0),
+                     tone_decay=0.075 * (1 + rng.normal(0, 0.08)), noise_decay=0.13 * (1 + rng.normal(0, 0.08)),
+                     level=1.0).voice(38, v, 0.1, {})
+        n = int(0.7 * SR)
+        y = np.zeros(n)
+        y[:len(body)] += body
+        cl = Clap(SR, int(rng.integers(1 << 30)), centre_hz=1200 * (1 + rng.normal(0, 0.05)), tail_s=0.09,
+                  level=1.0).voice(39, v, 0.1, {})
+        off = int((0.003 + 0.004 * rng.random()) * SR)
+        w = self.clap * v ** 1.5
+        y[off:off + len(cl)] += w * cl[: n - off]
+        t = np.arange(n) / SR
+        nz = rng.uniform(-1, 1, n)
+        nz = eq(nz, [("highpass", 3500, 0, 0.7), ("lowpass", 11000, 0, 0.7)], SR)
+        nz *= np.exp(-t / (0.22 * (1 + rng.normal(0, 0.1)))) * (1 - np.exp(-t / 0.002))
+        y += self.tail * v ** 1.3 * nz / max(np.abs(nz).max(), 1e-9) * 0.5
+        y = dc_block(y, 60.0, SR) * fade_curve(n, 0, int(0.1 * SR))
+        return y * self.level * (0.3 + 0.7 * v)
+
+    def post(self, x):
+        return x
+
+
+# ----------------------------------------------------------------- bass: sub sine + saturated mid layer
+
+class LayeredBass:
+    """Bass = clean sub sine (the weight) + a mid layer (synth.Bass pluck,
+    high-passed at 110 Hz and tube-saturated for harmonics that read on phone
+    speakers). Mono, dry."""
+
+    stereo = False
+    name = "bass"
+
+    def __init__(self, seed=4, level=0.42, mid=0.55, drive=2.4):
+        self.rng = np.random.default_rng(seed)
+        self.level, self.mid, self.drive, self.sr = level, mid, drive, SR
+        self.pluck = Bass(SR, seed, kind="pluck", cutoff=260.0, env_octaves=1.6, decay_s=0.22, resonance=0.2,
+                          sub_level=0.0, release_s=0.08, level=1.0)
+
+    def prepare(self, events):
+        return events
+
+    def voice(self, pitch, vel, dur_s, meta):
+        self.pluck.rng = self.rng
+        v = float(np.clip(vel, 0.05, 1.0))
+        mid = self.pluck.voice(pitch, v, dur_s, meta)
+        n = len(mid)
+        t = np.arange(n) / SR
+        f0 = float(midi_to_hz(pitch))
+        env = np.minimum(1.0, t / 0.006) * np.where(t < dur_s, 1.0, np.exp(-(t - dur_s) / 0.03))
+        env *= 0.85 + 0.15 * np.exp(-t / 0.25)
+        sub = np.sin(2 * np.pi * f0 * t + self.rng.uniform(0, 2 * np.pi)) * env
+        mid = eq(mid, [("highpass", 110, 0, 0.7)], SR)
+        mid = np.tanh(self.drive * mid / max(np.abs(mid).max(), 1e-9)) / math.tanh(self.drive)
+        y = 0.9 * sub + self.mid * mid * (0.5 + 0.5 * v)
+        y *= fade_curve(n, 0, int(0.006 * SR))
+        return y * self.level * (0.55 + 0.45 * v)
+
+    def post(self, x):
+        return dc_block(eq(x, [("lowpass", 3000, 0, 0.7)], SR), 20.0, SR)
+
+
+# ----------------------------------------------------------------- arp synth pluck
+
+class ArpPluck:
+    """Analog-style pluck for the arpeggios: saw + pulse (alias-free additive)
+    through a 4-pole ladder with a fast filter envelope. meta['cutoff'] sets the
+    base cutoff per note, so a filter sweep is just a cutoff ramp across notes.
+    No modulation: static pulse width, no detune, no vibrato."""
+
+    stereo = False
+    name = "arp"
+
+    def __init__(self, seed=808, level=0.22, decay=0.26, env_oct=2.6, res=0.3):
+        self.rng = np.random.default_rng(seed)
+        self.level, self.decay, self.env_oct, self.res, self.sr = level, decay, env_oct, res, SR
+
+    def prepare(self, events):
+        return events
+
+    def voice(self, pitch, vel, dur_s, meta):
+        v = float(np.clip(vel, 0.05, 1.0))
+        f = float(midi_to_hz(pitch))
+        dec = self.decay * meta.get("decay_mul", 1.0)
+        n = int((dec * 6 + 0.05) * SR)
+        t = np.arange(n) / SR
+        base = float(meta.get("cutoff", 900.0))
+        cutoff = np.minimum(base * 2 ** (self.env_oct * v * np.exp(-t / 0.07)), 0.45 * SR)
+        fmax = min(16000.0, 5.66 * float(cutoff.max()))
+        x = 0.6 * osc_saw(f, n, SR, self.rng.uniform(), fmax) + 0.4 * osc_pulse(f, n, SR, 0.3, self.rng.uniform(), fmax)
+        y = ladder(x, cutoff, self.res, 1.3, 0.5, SR)
+        amp = np.exp(-t / dec) * (1 - np.exp(-t / 0.0015))
+        y = y * amp * fade_curve(n, 0, int(0.03 * SR))
+        return y * self.level * (0.3 + 0.7 * v)
+
+    def post(self, x):
+        return dc_block(eq(x, [("highpass", 180, 0, 0.7)], SR), 20.0, SR)
+
+
+# ----------------------------------------------------------------- pad layer: soft choir / strings
+
+class ChoirLayer:
+    """Soft 'aah' layer under the pad: one saw per note (no unison, no
+    vibrato) through three vowel formants and a gentle low-pass, slow attack."""
+
+    stereo = False
+    name = "choir"
+
+    def __init__(self, seed=909, level=0.1, attack=1.2, release=2.0):
+        self.rng = np.random.default_rng(seed)
+        self.level, self.attack, self.release, self.sr = level, attack, release, SR
+
+    def prepare(self, events):
+        return events
+
+    def voice(self, pitch, vel, dur_s, meta):
+        a = float(meta.get("attack", self.attack))
+        env = adsr_env(dur_s, a, 0.8, 0.9, self.release)
+        n = len(env)
+        f = float(midi_to_hz(pitch))
+        x = osc_saw(f, n, SR, self.rng.uniform(), 6000.0)
+        y = (svf(x, 720, 5.0, "bp", SR) + 0.7 * svf(x, 1150, 6.0, "bp", SR) + 0.25 * svf(x, 2700, 8.0, "bp", SR)
+             + 0.35 * svf(x, 350, 2.0, "lp", SR))
+        y = y * env
+        return y * self.level * (0.6 + 0.4 * float(vel))
+
+    def post(self, x):
+        return dc_block(eq(x, [("highpass", 140, 0, 0.7), ("lowpass", 5000, 0, 0.7)], SR), 20.0, SR)
+
+
+def adsr_env(gate_s, a, d, s, r):
+    from synth.core import adsr
+    return adsr(gate_s, a, d, s, r, SR, curve=3.0)
+
+
+# ----------------------------------------------------------------- saturation
+
+def tape(x, drive_db=4.0, bias=0.08, hf_db=-1.0):
+    """Tape/tube-style saturation: asymmetric tanh (even plus odd harmonics)
+    with unity small-signal gain (a fixed curve, so identical input always gives
+    identical output), then a gentle head-bump and HF roll. drive_db is the
+    input gain into the curve relative to full scale."""
+    x = np.asarray(x, dtype=np.float64)
+    d = 10 ** (drive_db / 20)
+    sech2 = 1 - math.tanh(bias) ** 2
+    y = (np.tanh(d * x + bias) - math.tanh(bias)) / (d * sech2)
+    y = dc_block(y, 15.0, SR)
+    return eq(y, [("peak", 90, 0.8, 0.9), ("highshelf", 9000, hf_db, 0.7)], SR)
+
+
+# ----------------------------------------------------------------- more FX (mono)
+
+def downlifter(dur=2.2, seed=761, peak_db=-24.0):
+    """Mono downlifter after an impact: low-passed noise sweeping 6 kHz -> 200 Hz."""
+    rng = np.random.default_rng(seed)
+    n = int(dur * SR)
+    u = np.linspace(0, 1, n)
+    fc = 6000 * (200 / 6000) ** (u ** 0.7)
+    y = svf(rng.uniform(-1, 1, n), fc, 1.2, "lp", SR)
+    y *= (1 - u) ** 1.6 * (1 - np.exp(-np.arange(n) / (0.01 * SR)))
+    y = dc_block(y, 40.0, SR)
+    return y / max(np.abs(y).max(), 1e-9) * 10 ** (peak_db / 20)
+
+
+def reverse_crash(dur=1.5, seed=771, peak_db=-20.0):
+    """Mono reversed crash swelling into its last sample."""
+    c = MonoCrash(seed, level=1.0, decay_s=1.2).voice(49, 0.8, 0.1, {})
+    y = c[::-1][-int(dur * SR):]
+    y = y * fade_curve(len(y), int(0.1 * SR), int(0.004 * SR))
+    return y / max(np.abs(y).max(), 1e-9) * 10 ** (peak_db / 20)

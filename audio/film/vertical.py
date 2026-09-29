@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
-"""Vertical cutdown soundtrack (28.0 s, 14 bars, treatment section 9).
+"""Vertical cutdown soundtrack (28.0 s, 14 bars, treatment section 9), production pass.
 
-Its own arrangement from the same instruments, the same take and seeds and the
-same Choroboros settings (same flags, gesture times shifted), not an edit of
-the main mix. Writes film/cues-vertical.json (same schema as cues.json), the
-vertical stems, renders, level-match log, mix, master and scope data:
+Its own arrangement from the same instruments, the same take (the hook) and
+seeds and the same Choroboros settings (same flags, gesture times shifted), not
+an edit of the main mix. Writes film/cues-vertical.json (same schema as
+cues.json), the vertical stems, renders, level-match log, mix, master and scope:
 
   /home/user/build/film/audio/vertical/...          stems, renders, edit, mix
   /home/user/build/film/audio/vertical-master.wav   48 kHz 24-bit
   /home/user/build/film/data/scope-vertical/        1680 frames + index.json
-  audio/logs/level-match-vertical.json, qc-vertical.json, render-meta/*-vertical.json
+  audio/logs/level-match-vertical.json, qc-vertical.json, arc-vertical.json, render-meta/*-vertical.json
 
-Bars (bar n starts at 2 (n - 1) s): 1 Dmaj9 T1 (Mix turn 1.00-1.50) | 2 Bm11 T3,
-impact, groove A | 3 Dmaj9 T1 Green, Depth 5.00-5.50 | 4 Bm11 T3 Blue, Offset
-7.00-7.50 | 5 Dmaj9 T1 Red, HQ at 9.00 | 6 Bm11 T3 Purple, Rate 11.00-11.50 |
-7 Dmaj9 T1 Black, Color 13.00-13.50 | 8 Gmaj9#11 M_G (free: Green gtr, Purple
-pad, groove B) | 9 A6sus2 M_A (trial from 17.00: Blue gtr, Red Tape EP, Black
-pad, Width 17.00-18.00) | 10 Gmaj9#11 M_G | 11 Dmaj9 T1 + all five engines
-(price) | 12 Dmaj9 T1 alone, moving | 13 final Dmaj9 strum at 24.00, pad, bass
-D2, soft crash | 14 ring, fade 27.00-28.00.
+Honesty zone 0.00-14.00 (the Mix turn and the five engine blocks): the featured
+guitar is Choroboros plus gain only, the backing there (drums, bass, FX) has no
+modulation, the stereo returns are gated off. Production after 14.00.
+
+Bars (bar n starts at 2 (n - 1) s):
+ 1 Dmaj9  hook T1 dry, Mix turn 1.00-1.50        8 Gmaj9#11  free: M_G (Green), pad Purple, groove B, arp
+ 2 Bm11   T3 Green, impact, groove A             9 A7sus4>A7 M_A7; trial from 17.00: Blue gtr, Red EP, Black pad
+ 3 Dmaj9  T1 Green, Depth 5.00-5.50             10 Gmaj9#11  M_G Blue, EP, pad, arp
+ 4 Bm11   T3 Blue, Offset 7.00-7.50             11 Dmaj9     hook T1 + the lead answering + all five engines
+ 5 Dmaj9  T1 Red, HQ at 9.00                    12 A7sus4>A7 under T1 alone, moving (Green) - the dominant
+ 6 Bm11   T3 Purple, Rate 11.00-11.50           13 Dmaj9     final strum at 24.00, pad Green (b), bass D2
+ 7 Dmaj9  T1 Black, Color 13.00-13.50, fill,    14           ring; fade 27.00-28.00
+          riser into the drop at 14.00
 
 Usage: python3 audio/film/vertical.py [--skip-compose]
 """
@@ -35,14 +40,62 @@ import time
 import numpy as np
 
 import compose as C
-from common import HERE, REPO, SR, Film, bar_t, jdump, smp, todb, write
-from instruments import (FMBell, FilmEPiano, PAD_EQ, comp_pedal, impact, peak_control, render_events, swish)
+from common import HERE, REPO, SR, Film, bar_t, smp, todb, write
+from instruments import (FMBell, PAD_EQ, RealGuitar, comp_pedal, downlifter, impact, peak_control, render_events,
+                         render_events_pre, reverse_crash, riser, swish, tape, ceiling_control)
 from synth.filters import eq
 from synth.instrument import NoteEvent
 
 DUR = 28.0
-V_CHORDS = {1: "D", 2: "Bm", 3: "D", 4: "Bm", 5: "D", 6: "Bm", 7: "D", 8: "G", 9: "A", 10: "G", 11: "D", 12: "D",
-            13: "D", 14: "D"}
+VH = {1: [(0, "D")], 2: [(0, "Bm")], 3: [(0, "D")], 4: [(0, "Bm")], 5: [(0, "D")], 6: [(0, "Bm")], 7: [(0, "D")],
+      8: [(0, "G")], 9: [(0, "A7s4"), (1.5, "A7")], 10: [(0, "G")], 11: [(0, "D")],
+      12: [(0, "A7s4"), (1.0, "A7")], 13: [(0, "D")], 14: [(0, "D")]}
+HONESTY_V = [(0.0, 14.0)]
+
+# ----------------------------------------------------------------- mix plan (used by mix.py --film vertical)
+
+PLAN_VERTICAL = {
+    "honesty": HONESTY_V,
+    "tour": None,
+    "faders": {
+        "gtr": [(0.0, 3.0), (14.0, 5.0), (17.0, 4.8), (20.0, 4.4), (22.0, 3.4)],
+        "gtr_oct": [(0.0, 1.0)],
+        "pad": [(0.0, 0.0), (14.0, 2.0), (17.0, 1.5), (20.0, 0.5), (22.0, -6.0), (24.0, -6.0)],
+        "ep": [(0.0, 0.5)],
+        "lead": [(0.0, 9.0)],
+        "pluck": [(0.0, -1.0)],
+        "arp": [(0.0, 1.5), (20.0, -1.0)],
+        "bells": [(0.0, 0.0)],
+        "bass": [(0.0, -9.5), (14.0, -8.5), (22.0, -13.0), (24.0, -12.0)],
+        "drums": [(0.0, 1.0), (14.0, 2.0), (20.0, 1.5), (22.0, -4.0)],
+        "fx": [(0.0, 0.0)],
+    },
+    "sends": {
+        "gtr": {"plate": [(0.0, -19.0)], "hall": [(0.0, -24.0)]},
+        "gtr_oct": {"plate": [(0.0, -10.0)], "hall": [(0.0, -14.0)]},
+        "ep": {"plate": [(0.0, -15.0)], "hall": [(0.0, -20.0)]},
+        "lead": {"plate": [(0.0, -13.0)], "hall": [(0.0, -17.0)]},
+        "pluck": {"plate": [(0.0, -17.0)], "hall": [(0.0, -16.0)]},
+        "pad": {"hall": [(0.0, -11.0)]},
+        "arp": {"hall": [(0.0, -12.0)], "delay": [(0.0, -15.0)]},
+        "snare": {"plate": [(0.0, -17.0)]},
+        "fx": {"hall": [(0.0, -22.0)]},
+    },
+    "throws": {
+        "gtr": [(15.5, 15.85, -9.0), (19.5, 19.85, -9.0), (21.5, 21.95, -7.0), (23.5, 23.95, -9.0)],
+        "arp": [(16.6, 17.0, -9.0), (19.6, 20.0, -9.0)],
+        "lead": [(21.5, 21.95, -6.0)],
+    },
+    "returns": {"plate": 0.0, "hall": 0.0, "delay": -3.0},
+    "room": {"send_db": -15.0, "return_db": 0.0},
+    "sidechain": {"targets": ["pad", "arp"], "span": (14.0, 22.0), "depth_db": 3.5},
+    "glue": {"target_mean_gr_db": 2.5, "target_span": (14.0, 22.0), "ratio": 2.0, "attack_ms": 20.0,
+             "release_ms": 160.0, "threshold_offsets": [(0.0, 2.0), (14.0, 0.0), (22.0, 4.0)]},
+    "zones": [(0.0, 14.0), (14.0, 17.0), (17.0, 20.0), (20.0, 22.0), (22.0, 24.0), (24.0, 28.0)],
+    "zone_level": {(0.0, 14.0): -4.0, (14.0, 17.0): 1.5, (17.0, 20.0): -1.5, (20.0, 22.0): -2.5, (22.0, 24.0): -3.5,
+                   (24.0, 28.0): -1.0},
+    "fade": (27.00, 28.00),
+}
 
 
 # ----------------------------------------------------------------- cues-vertical.json
@@ -58,7 +111,7 @@ def vertical_cues():
     roles = {"R01": "Green (a) guitar; Mix turn at 1.00-1.50 (V1), V2, V8, V10, V11",
              "R02": "Green block V3, Depth gesture", "R03": "Blue block V4, Offset gesture; trial guitar (V9)",
              "R04": "Red block V5, BBD then Tape at 9.00", "R05": "Purple block V6 (Orbit), Rate gesture; pre-roll swept",
-             "R06": "Black block V7 (Ensemble), Color gesture", "R07": "Pad, Green (b) Lagrange 5th, final chord",
+             "R06": "Black block V7 (Ensemble), Color gesture", "R07": "Pad, Green (b) Lagrange 5th, V11 and the final chord",
              "R08": "Pad, Purple (a) Orbit, free card (V8)", "R09": "Pad, Black (b), Width gesture at 17.00-18.00 (V9)",
              "R09ref": "Level reference for R09 (Width fixed 100%)", "R10": "EP, Red (b) Tape (V9, V10)",
              "R11": "Lead guitar, Blue (b) Thiran (V10)", "R12": "FM pluck, Purple (a) Orbit (V10)"}
@@ -108,10 +161,12 @@ def vertical_cues():
                          {"t0": 22.00, "t1": 24.00, "stem": "gtr"}]
     return {
         "title": "Still Life (vertical cutdown)", "fps": 60, "bpm": 120, "sr": SR, "block": 128, "duration": DUR,
-        "note": "Vertical cutdown timings (treatment 9), same schema as cues.json. Same take, instruments, seeds and "
-                "Choroboros settings as the main film, gestures shifted. Written by audio/film/vertical.py.",
+        "note": "Vertical cutdown timings (treatment 9), same schema as cues.json. Same take (the hook), instruments, "
+                "seeds and Choroboros settings as the main film, gestures shifted. Honesty zone 0.00-14.00. "
+                "Written by audio/film/vertical.py.",
         "renders": renders, "gestures": gestures, "position_maps": main["position_maps"], "sections": sections,
-        "bars": {str(b): c for b, c in V_CHORDS.items()},
+        "bars": {str(b): v for b, v in VH.items()},
+        "honesty_zones": HONESTY_V,
         "scope": scope,
         "levelmatch": {"sections": [[0, 14, "dry"], [17, 22, "R09ref"]], "tolerance_lu": 0.3,
                        "log": "audio/logs/level-match-vertical.json"},
@@ -150,6 +205,7 @@ def dump_cues(obj, path):
     L.append("  ],")
     L.append("")
     L.append(f'  "bars": {j(obj["bars"])},')
+    L.append(f'  "honesty_zones": {j(obj["honesty_zones"])},')
     L.append("")
     sc = dict(obj["scope"])
     feat = sc.pop("featured")
@@ -171,13 +227,13 @@ def dump_cues(obj, path):
     json.load(open(path))
 
 
-# ----------------------------------------------------------------- arrangement
+# ----------------------------------------------------------------- arrangement (compose helpers on the vertical map)
 
 def v_guitar(n):
     rows = []
     for b in range(1, 8):
         rows += C.take_at("T1" if b % 2 == 1 else "T3", bar_t(b))
-    rows += C.motif("G", bar_t(8), 5128) + C.motif("A", bar_t(9), 5129) + C.motif("G", bar_t(10), 5138)
+    rows += C.motif("M_G", bar_t(8), 5128) + C.motif("M_A7", bar_t(9), 5129) + C.motif("M_G", bar_t(10), 5138)
     rows += C.take_at("T1", bar_t(11)) + C.take_at("T1", bar_t(12))
     evs = C.to_events(rows, bar_t(13) + 0.2)
     for j, (p, s, f) in enumerate(C.FINAL_STRUM):
@@ -191,11 +247,24 @@ def v_guitar(n):
     return out
 
 
+def v_gtr_oct(n):
+    y = np.zeros(n)
+    kw = dict(level=C.GTR_LEVEL * 0.55, pluck=0.12, brightness=0.6, pick_noise=0.04)
+    rows = C.motif("M_G", bar_t(8), 6128) + C.motif("M_A7", bar_t(9), 6129) + C.motif("M_G", bar_t(10), 6138) + \
+        C.motif("T1", bar_t(11), 6211)
+    rows = [(t + 0.008, p, v * 0.8, s, f, sd + 7, False) for (t, p, v, s, f, sd, sq) in rows]
+    off, a = C.render_guitar(C.to_events(rows, bar_t(12) - 0.06, octave=1), 14.0, bar_t(12),
+                             ceiling=C.GTR_CEIL["arp"] + 3, **kw)
+    y[off:off + len(a)] += a[: max(0, n - off)]
+    return y
+
+
 def v_pad(n):
-    y = C.render_pad(C.pad_events([(8, "G"), (9, "A"), (10, "G"), (11, "D")], bar_t(12)), n, attack=0.3,
-                     env_amount=1.0)
-    y += C.render_pad(C.pad_events([(13, "D")], bar_t(13) + 2.5), n, attack=0.3, env_amount=1.0)
-    return peak_control(eq(y, PAD_EQ, SR), 3.0, 3.0, 120.0)
+    y = C.cut_after(C.render_pad(C.pad_events([8, 9, 10, 11], bar_t(12)), n, attack=0.3, env_amount=1.0),
+                    bar_t(12) + 1.9)
+    y += C.render_pad(C.pad_events([12, 13], bar_t(13) + 2.6), n, attack=0.35, env_amount=1.0)
+    y = tape(eq(y, PAD_EQ, SR), drive_db=6.0, bias=0.04, hf_db=-0.5)
+    return peak_control(y, 3.0, 3.0, 120.0)
 
 
 def v_ep(n):
@@ -204,24 +273,27 @@ def v_ep(n):
     t0 = bar_t(9)
     for tb, d, vel in ((1.0, 0.45, 0.58), (1.5, 0.13, 0.5)):          # enters at 17.00 (beat 3), then beat 4
         dt, dv = C.hum(rng)
-        for j, p in enumerate(C.EP_VOICE["A"]):
+        ch = C.chord_at(t0 + tb + 0.01)
+        for j, p in enumerate(C.EP_VOICE[ch]):
             roll = 0.004 * j + abs(rng.normal(0, 0.002))
             evs.append(NoteEvent(t0 + tb + max(dt, 0.0) + roll, p, vel * (1 + dv) * (1 - 0.03 * j), d - roll,
-                                 {"seed": int(rng.integers(1 << 30))}))
-    evs += C.ep_bars([(10, "G", None), (11, "D", None)], seed=2930)
-    y = render_events(FilmEPiano(level=0.1, bark=1.0, tine=0.75), evs, n)
-    return peak_control(y, 6.0, lookahead_ms=2.0, release_ms=80.0)
+                                 {"seed": int(rng.integers(1 << 30)), "hit": 0.0 if tb == 1.0 else tb}))
+    evs += C.ep_bars([10, 11], seed=2930)
+    return C.ep_with_bell(evs, n)
 
 
 def v_lead(n):
     b = bar_t(11)
+    line = [(b + 1.0, 81, 0.22), (b + 1.25, 78, 0.55), (b + 1.875, 76, 0.1)]
     rng = np.random.default_rng(3030)
     evs = []
-    for i, (t, p, d) in enumerate([(b, 78, 1.0), (b + 1.0, 76, 0.95)]):
+    for i, (t, p, d) in enumerate(line):
         dt, dv = C.hum(rng)
-        evs.append(NoteEvent(t + 0.020 + dt, p, 0.86 * (1 + dv), d, {"string": 5, "fret": p - 64, "seed": 30300 + i}))
-    g = C.FilmGuitar(level=C.LEAD_LEVEL, sustain_s=9.0, brightness=0.55, pluck=0.2, pick_noise=0.04)
-    y = render_events(g, evs, n)
+        evs.append(NoteEvent(t + 0.015 + dt, p, (0.9 if i == 1 else 0.8) * (1 + dv), d,
+                             {"string": 5, "fret": p - 64, "seed": 30300 + i}))
+    g = RealGuitar(level=C.LEAD_LEVEL, sustain_s=9.0, brightness=0.55, pluck=0.2, pick_noise=0.04)
+    y = render_events_pre(g, evs, n)
+    y = C.cut_after(y, bar_t(12) - 0.02, 0.03)
     return comp_pedal(y)
 
 
@@ -232,20 +304,30 @@ def v_pluck(n):
     for k in range(16):
         dt, dv = C.hum(rng, 3.0, 0.06)
         vel = (0.62 if k == 8 else 0.8 if k % 4 == 0 else 0.62 if k % 2 == 0 else 0.5) * (1 + dv)
-        evs.append(NoteEvent(bar_t(11) + k * 0.125 + dt, pat[k % 8], vel, 0.1, {"seed": 31000 + 30 * 20 + k}))
+        evs.append(NoteEvent(C.swing16(bar_t(11) + k * 0.125, 0.54, bar_t(11)) + dt, pat[k % 8], vel, 0.1,
+                             {"seed": 31000 + 30 * 20 + k}))
     return peak_control(render_events(FMBell(level=0.14), evs, n), 4.0, 1.5, 50.0)
+
+
+def v_arp(n):
+    evs = []
+    evs += C.arp_run(14.0, 20.0, 0.125, 1800.0, 0.55, 4204)
+    evs += C.arp_run(20.0, 21.9, 0.375, 2100.0, 0.42, 4206)
+    from instruments import ArpPluck
+    y = C.render_split(lambda: ArpPluck(level=0.22), evs, n, silences=[])
+    return peak_control(y, 3.0, 1.5, 50.0)
 
 
 def v_bass(n):
     evs = []
     for b in range(2, 8):
-        evs += C.groove_a_bass(b, V_CHORDS[b], 6100 + b)
+        evs += C.groove_a_bass(b, 6100 + b, pickup=(44 if b == 7 else None))
     for b in range(8, 12):
-        evs += C.groove_b_bass(b, V_CHORDS[b], 6100 + b)
-    evs += [C.bass_note(bar_t(13), 38, 2.5, 0.7, 6113)]
-    y = C.render_split(C.make_bass, evs, n, silences=[])
-    return peak_control(eq(y, [("lowshelf", 75, -3.5, 0.7), ("peak", 140, 2.0, 1.0), ("lowpass", 2500, 0, 0.7)], SR),
-                        5.0, 3.0, 80.0)
+        evs += C.groove_b_bass(b, 6100 + b)
+    evs += [C.bass_note(bar_t(12), 33, 1.9, 0.6, 6112), C.bass_note(bar_t(13), 38, 2.5, 0.7, 6113)]
+    y = eq(C.render_split(C.make_bass, evs, n, silences=[]),
+           [("lowshelf", 75, -2.0, 0.7), ("peak", 140, 1.5, 1.0), ("lowpass", 3000, 0, 0.7)], SR)
+    return ceiling_control(y, float(todb(np.abs(y).max())) - 4.0, 3.0, 80.0)
 
 
 def v_drum_events():
@@ -253,7 +335,7 @@ def v_drum_events():
     for b in range(2, 8):
         ev += C.groove_a_bar(bar_t(b), 7700 + b * 10, fill=(b == 7))
     for b in range(8, 12):
-        ev += C.groove_b_bar(bar_t(b), 7700 + b * 10, fill=(b == 11), crash=(b in (8, 11)))
+        ev += C.groove_b_bar(bar_t(b), 7700 + b * 10, fill=("full" if b == 11 else None), crash=(b in (8, 11)))
     ev += C.drum_hits("crash", [(17.0, 0.75)], 7790, 0.5)                 # the trial card cut (beat 3)
     ev += C.drum_hits("kick", [(bar_t(13), 0.55)], 7791)
     ev += C.drum_hits("crash", [(bar_t(13), 0.45)], 7792, 0.5)
@@ -267,34 +349,44 @@ def v_fx(n):
         s = smp(t)
         y[s:s + len(a)] += a[: max(0, n - s)]
 
-    put(impact(seed=721, level=10 ** (-7 / 20)), 2.00)
+    put(impact(seed=721, level=10 ** (-8 / 20)), 2.00)
+    put(downlifter(1.8, 761, -28.0), 2.05)
     for k, t in enumerate((6.0, 8.0, 10.0, 12.0)):
         put(swish(seed=731 + k, dur=0.5, peak_db=-30.0), t - 0.25)
+    put(riser(0.97, db0=-32, db1=-19, seed=781), 13.0)
+    put(reverse_crash(1.0, 782, -24.0), 14.0 - 1.0)
+    put(downlifter(2.0, 762, -26.0), 14.05)
+    put(reverse_crash(1.5, 775, -24.0), 24.0 - 1.5)
     return y
 
 
 def compose_vertical(film):
     n = film.n
     t0 = time.time()
-    for name, fn in (("gtr", v_guitar), ("pad", v_pad), ("ep", v_ep), ("lead", v_lead), ("pluck", v_pluck),
-                     ("bass", v_bass), ("fx", v_fx)):
-        y = fn(n)
-        write(film.stem_path(name), y)
-        print(f"  {name:6s} peak {todb(np.abs(y).max()):6.2f} dBFS", flush=True)
-    write(film.stem_path("bells"), np.zeros(n))
-    parts = C.render_drums(v_drum_events(), n, silences=[])
-    tot = np.zeros(n)
-    for k, v in parts.items():
-        write(film.stem_path(f"drums_{k}"), v)
-        tot += v
-    write(film.stem_path("drums"), tot)
-    print(f"  drums  peak {todb(np.abs(tot).max()):6.2f} dBFS")
+    saved = C.H
+    C.H = VH                                   # the compose helpers read the harmony map from C.H
+    try:
+        for name, fn in (("gtr", v_guitar), ("gtr_oct", v_gtr_oct), ("pad", v_pad), ("ep", v_ep), ("lead", v_lead),
+                         ("pluck", v_pluck), ("arp", v_arp), ("bass", v_bass), ("fx", v_fx)):
+            y = fn(n)
+            write(film.stem_path(name), y)
+            print(f"  {name:7s} peak {todb(np.abs(y).max()):6.2f} dBFS", flush=True)
+        write(film.stem_path("bells"), np.zeros(n))
+        parts = C.render_drums(v_drum_events(), n, silences=[])
+        tot = np.zeros(n)
+        for k in C.KINDS:
+            write(film.stem_path(f"drums_{k}"), parts[k])
+            tot += parts[k]
+        write(film.stem_path("drums"), tot)
+        print(f"  drums   peak {todb(np.abs(tot).max()):6.2f} dBFS")
+    finally:
+        C.H = saved
     print(f"vertical compose {time.time() - t0:.1f} s")
 
 
 def run(mod, *args):
     cmd = [sys.executable, os.path.join(HERE, mod), "--film", "vertical", *args]
-    print("$", " ".join(os.path.basename(c) if i == 1 else c for i, c in enumerate(cmd[1:], 1)), flush=True)
+    print("$", os.path.basename(mod), " ".join(cmd[2:]), flush=True)
     subprocess.run(cmd, check=True, cwd=HERE)
 
 
