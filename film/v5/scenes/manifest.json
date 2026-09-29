@@ -1,0 +1,55 @@
+{
+  "about": "v5 main film (TREATMENT.md): 1080x1920, 60 fps, master time. Unit A: a01-a12 (0.000-36.080); Unit B: b13-b24 (36.080-91.216). Keep play order.",
+  "duration": 91.216,
+  "fps": 60,
+  "width": 1080,
+  "height": 1920,
+  "offset": 0,
+  "film": "main",
+  "chip": {
+    "mixUntil": 3.6485
+  },
+  "grain": {
+    "opacity": 0.05,
+    "frozen": [
+      [
+        0,
+        0.4
+      ],
+      [
+        24.0,
+        36.08
+      ],
+      [
+        84.7167,
+        91.3
+      ]
+    ]
+  },
+  "scenes": [
+    "a01-still-mixturn.js",
+    "a02-montage.js",
+    "a03-tagline-hero.js",
+    "a04-sit-still.js",
+    "a05-meet.js",
+    "a06-title.js",
+    "a07-lineup.js",
+    "a08-five-voices.js",
+    "a09-blue.js",
+    "a10-red.js",
+    "a11-purple.js",
+    "a12-black.js",
+    "b13-cores.js",
+    "b14-create.js",
+    "b15-looks.js",
+    "b16-free.js",
+    "b17-trial.js",
+    "b18-ab.js",
+    "b19-settings.js",
+    "b20-price.js",
+    "b21-family.js",
+    "b22-windup.js",
+    "b23-stop.js",
+    "b24-endcard.js"
+  ]
+}

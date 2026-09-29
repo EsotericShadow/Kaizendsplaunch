@@ -1,0 +1,36 @@
+{
+  "about": "v5 TikTok (TREATMENT.md section 7): 1080x1920, 60 fps, 15 s of master 123.648-138.648 (tau = master - 123.648). Unit A owns every scene here (t01-*.js).",
+  "duration": 15.0,
+  "fps": 60,
+  "width": 1080,
+  "height": 1920,
+  "offset": 123.648,
+  "film": "tiktok",
+  "chip": false,
+  "grain": {
+    "opacity": 0.05,
+    "frozen": [
+      [
+        0,
+        0.0167
+      ],
+      [
+        4.85,
+        5.6667
+      ],
+      [
+        11.35,
+        15.1
+      ]
+    ]
+  },
+  "scenes": [
+    "t01-totem-red.js",
+    "t02-blue.js",
+    "t03-purple.js",
+    "t04-freeze-mixturn.js",
+    "t05-black.js",
+    "t06-offer.js",
+    "t07-buy.js"
+  ]
+}

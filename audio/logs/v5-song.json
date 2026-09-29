@@ -1,0 +1,3688 @@
+{
+ "version": "v5",
+ "spec": "film/v5/demos.json + film/v5/TREATMENT.md s3, s7",
+ "sr": 48000,
+ "method": {
+  "formula": "out = master - BP(nd) + choro_trim(BP(nd))",
+  "bp": "Butterworth band-pass 120 Hz to 5500 Hz, 4th order per edge, sosfiltfilt (zero phase)",
+  "preroll_s": 3.0,
+  "tail_s": 0.1,
+  "block": 128,
+  "renderer": "choro-render (called by path)",
+  "limiter_on_song": "none",
+  "path": "BP"
+ },
+ "null_tests": {
+  "mix0_green_hq0": {
+   "max_abs_residual": 1.4901161193847656e-08,
+   "dbfs": -156.5,
+   "first_10ms_after_start_dbfs": -16.5,
+   "pass": true
+  },
+  "mix0_blue_hq0": {
+   "max_abs_residual": 1.4901161193847656e-08,
+   "dbfs": -156.5,
+   "first_10ms_after_start_dbfs": -16.5,
+   "pass": true
+  },
+  "mix0_red_hq0": {
+   "max_abs_residual": 2.9802322387695312e-08,
+   "dbfs": -150.5,
+   "first_10ms_after_start_dbfs": -13.6,
+   "pass": true
+  },
+  "mix0_red_hq1": {
+   "max_abs_residual": 1.4901161193847656e-08,
+   "dbfs": -156.5,
+   "first_10ms_after_start_dbfs": -16.2,
+   "pass": true
+  },
+  "mix0_purple_hq1": {
+   "max_abs_residual": 1.4901161193847656e-08,
+   "dbfs": -156.5,
+   "first_10ms_after_start_dbfs": -16.5,
+   "pass": true
+  },
+  "mix0_black_hq1": {
+   "max_abs_residual": 1.4901161193847656e-08,
+   "dbfs": -156.5,
+   "first_10ms_after_start_dbfs": -16.5,
+   "pass": true
+  },
+  "split_recombined_vs_master": {
+   "max_abs_diff": 0.0,
+   "dbfs": -240.0,
+   "pass": true
+  },
+  "drums_plus_nondrums_vs_master": {
+   "max_abs_diff": 0.0
+  }
+ },
+ "films": {
+  "main": {
+   "span": [
+    0.0,
+    91.216
+   ],
+   "demos": {
+    "M01-green-mixturn": {
+     "on_spans": [
+      [
+       1.7117,
+       23.1075
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 0.0,
+       "t1": 21.4859,
+       "trim_db": -2.3
+      },
+      {
+       "t0": 21.4859,
+       "t1": 23.1075,
+       "trim_db": -1.4
+      }
+     ],
+     "engine": "green",
+     "core": "Lagrange 3rd",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 0
+     },
+     "gestures": [
+      {
+       "param": "mix",
+       "shape": "click-steps",
+       "ramp_s": 0.09,
+       "driver": "the four kicks of bar 1",
+       "steps": [
+        {
+         "t": 0.4074,
+         "bar_beat": "1.1",
+         "from": 0,
+         "to": 10
+        },
+        {
+         "t": 0.8106,
+         "bar_beat": "1.2",
+         "from": 10,
+         "to": 20
+        },
+        {
+         "t": 1.216,
+         "bar_beat": "1.3",
+         "from": 20,
+         "to": 30
+        },
+        {
+         "t": 1.6217,
+         "bar_beat": "1.4",
+         "from": 30,
+         "to": 40
+        }
+       ]
+      },
+      {
+       "param": "trim",
+       "shape": "follows-mix",
+       "rule": "trim(t) = trim_G * mix(t)/40, i.e. 0 -> trim_G in the same four steps; header TRIM readout shows it"
+      }
+     ],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      -3.0,
+      23.2075
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 2,
+        "t0": 2.026,
+        "delta_lu": 0.15,
+        "tp_dbtp": -1.89,
+        "tp_over_master_db": 0.5
+       },
+       {
+        "bar": 3,
+        "t0": 3.648,
+        "delta_lu": -0.116,
+        "tp_dbtp": -1.53,
+        "tp_over_master_db": 1.38
+       },
+       {
+        "bar": 4,
+        "t0": 5.27,
+        "delta_lu": 0.226,
+        "tp_dbtp": -1.45,
+        "tp_over_master_db": 1.49
+       },
+       {
+        "bar": 5,
+        "t0": 6.891,
+        "delta_lu": -0.126,
+        "tp_dbtp": -1.49,
+        "tp_over_master_db": 1.06
+       },
+       {
+        "bar": 6,
+        "t0": 8.513,
+        "delta_lu": 0.224,
+        "tp_dbtp": -1.36,
+        "tp_over_master_db": 1.48
+       },
+       {
+        "bar": 7,
+        "t0": 10.135,
+        "delta_lu": -0.047,
+        "tp_dbtp": -1.19,
+        "tp_over_master_db": 1.63
+       },
+       {
+        "bar": 8,
+        "t0": 11.756,
+        "delta_lu": 0.089,
+        "tp_dbtp": -1.03,
+        "tp_over_master_db": 0.86
+       },
+       {
+        "bar": 9,
+        "t0": 13.378,
+        "delta_lu": -0.265,
+        "tp_dbtp": -1.17,
+        "tp_over_master_db": 0.84
+       },
+       {
+        "bar": 10,
+        "t0": 14.999,
+        "delta_lu": -0.103,
+        "tp_dbtp": -1.11,
+        "tp_over_master_db": 1.32
+       },
+       {
+        "bar": 11,
+        "t0": 16.621,
+        "delta_lu": 0.131,
+        "tp_dbtp": -1.15,
+        "tp_over_master_db": 0.96
+       },
+       {
+        "bar": 12,
+        "t0": 18.243,
+        "delta_lu": 0.06,
+        "tp_dbtp": -1.13,
+        "tp_over_master_db": 1.12
+       },
+       {
+        "bar": 13,
+        "t0": 19.864,
+        "delta_lu": -0.252,
+        "tp_dbtp": -1.09,
+        "tp_over_master_db": 0.63
+       },
+       {
+        "bar": 14,
+        "t0": 21.486,
+        "delta_lu": -0.12,
+        "tp_dbtp": -1.16,
+        "tp_over_master_db": 0.68
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.05,
+      "demo_tp_over_master_db": 0.69,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 2.199,
+      "fold_loss_dry_lu": 1.56,
+      "extra_loss_lu": 0.639,
+      "lr_corr_wet": 0.187,
+      "lr_corr_dry": 0.379,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -5.2,
+      "side_mid_db_out": -4.06,
+      "side_mid_db_band_dry": -3.44,
+      "side_mid_db_band_wet": -1.61,
+      "spectrogram": "/home/user/build/v5/qc/main_M01-green-mixturn.png"
+     }
+    },
+    "M02-blue-offset": {
+     "on_spans": [
+      [
+       23.1075,
+       26.3507
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 23.1075,
+       "t1": 26.3507,
+       "trim_db": -2.0
+      }
+     ],
+     "engine": "blue",
+     "core": "Cubic",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 1.23,
+      "depth_pct": 12,
+      "offset_deg": 0,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 40
+     },
+     "gestures": [
+      {
+       "param": "offset",
+       "from": 0,
+       "to": 120,
+       "t0": 24.7291,
+       "t1": 25.5399,
+       "bar_beat": [
+        "16.1",
+        "16.3"
+       ],
+       "shape": "sine-inout"
+      }
+     ],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      20.1075,
+      26.4507
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 15,
+        "t0": 23.107,
+        "delta_lu": 0.23,
+        "tp_dbtp": -1.22,
+        "tp_over_master_db": 1.23
+       },
+       {
+        "bar": 16,
+        "t0": 24.729,
+        "delta_lu": -0.317,
+        "tp_dbtp": -9.7,
+        "tp_over_master_db": -2.37
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.034,
+      "demo_tp_over_master_db": 1.23,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 2.843,
+      "fold_loss_dry_lu": 2.632,
+      "extra_loss_lu": 0.212,
+      "lr_corr_wet": 0.058,
+      "lr_corr_dry": 0.105,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -2.02,
+      "side_mid_db_out": -1.68,
+      "side_mid_db_band_dry": -0.9,
+      "side_mid_db_band_wet": -0.5,
+      "spectrogram": "/home/user/build/v5/qc/main_M02-blue-offset.png"
+     }
+    },
+    "M03-red-hq": {
+     "on_spans": [
+      [
+       26.3507,
+       29.594
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 26.3507,
+       "t1": 27.9723,
+       "trim_db": -3.0
+      },
+      {
+       "t0": 27.9723,
+       "t1": 29.594,
+       "trim_db": -2.0
+      }
+     ],
+     "engine": "red",
+     "core": "BBD -> Tape",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 30,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 30,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": {
+      "t": 27.9723,
+      "bar_beat": "18.1",
+      "from": 0,
+      "to": 1,
+      "note": "BBD -> Tape; stepped in the automation; the lever animates 420 ms in picture"
+     },
+     "bypass": [],
+     "render_span": [
+      23.3507,
+      29.694
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 17,
+        "t0": 26.351,
+        "delta_lu": -0.035,
+        "tp_dbtp": -8.69,
+        "tp_over_master_db": 0.41
+       },
+       {
+        "bar": 18,
+        "t0": 27.972,
+        "delta_lu": 0.002,
+        "tp_dbtp": -7.41,
+        "tp_over_master_db": 1.7
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": 0.054,
+      "demo_tp_over_master_db": 1.68,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 2.613,
+      "fold_loss_dry_lu": 2.044,
+      "extra_loss_lu": 0.57,
+      "lr_corr_wet": 0.078,
+      "lr_corr_dry": 0.243,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -2.35,
+      "side_mid_db_out": -1.01,
+      "side_mid_db_band_dry": -2.13,
+      "side_mid_db_band_wet": -0.68,
+      "spectrogram": "/home/user/build/v5/qc/main_M03-red-hq.png"
+     }
+    },
+    "M04-purple-color": {
+     "on_spans": [
+      [
+       29.594,
+       32.8372
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 29.594,
+       "t1": 32.8372,
+       "trim_db": -3.1
+      }
+     ],
+     "engine": "purple",
+     "core": "Orbit",
+     "hq": 1,
+     "knobs_at_t0": {
+      "rate_hz": 0.12,
+      "depth_pct": 50,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 10,
+      "mix_pct": 30
+     },
+     "gestures": [
+      {
+       "param": "color",
+       "from": 10,
+       "to": 45,
+       "t0": 31.2156,
+       "t1": 32.0264,
+       "bar_beat": [
+        "20.1",
+        "20.3"
+       ],
+       "shape": "sine-inout"
+      }
+     ],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      26.594,
+      32.9372
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 19,
+        "t0": 29.594,
+        "delta_lu": -0.354,
+        "tp_dbtp": -7.29,
+        "tp_over_master_db": -1.68
+       },
+       {
+        "bar": 20,
+        "t0": 31.216,
+        "delta_lu": 0.086,
+        "tp_dbtp": -5.52,
+        "tp_over_master_db": 0.41
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.017,
+      "demo_tp_over_master_db": 0.09,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.89,
+      "fold_loss_dry_lu": 1.748,
+      "extra_loss_lu": 0.142,
+      "lr_corr_wet": 0.317,
+      "lr_corr_dry": 0.36,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -3.3,
+      "side_mid_db_out": -2.88,
+      "side_mid_db_band_dry": -3.13,
+      "side_mid_db_band_wet": -2.7,
+      "spectrogram": "/home/user/build/v5/qc/main_M04-purple-color.png"
+     }
+    },
+    "M05-black-depth": {
+     "on_spans": [
+      [
+       32.8372,
+       49.0538
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 32.8372,
+       "t1": 34.4588,
+       "trim_db": -2.4
+      },
+      {
+       "t0": 34.4588,
+       "t1": 49.0538,
+       "trim_db": -1.3
+      }
+     ],
+     "engine": "black",
+     "core": "Linear Ensemble",
+     "hq": 1,
+     "knobs_at_t0": {
+      "rate_hz": 0.31,
+      "depth_pct": 15,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 60,
+      "mix_pct": 40
+     },
+     "gestures": [
+      {
+       "param": "depth",
+       "from": 15,
+       "to": 30,
+       "t0": 34.4588,
+       "t1": 35.2696,
+       "bar_beat": [
+        "22.1",
+        "22.3"
+       ],
+       "shape": "sine-inout"
+      }
+     ],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      29.8372,
+      49.1538
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 21,
+        "t0": 32.837,
+        "delta_lu": 0.028,
+        "tp_dbtp": -6.56,
+        "tp_over_master_db": -1.33
+       },
+       {
+        "bar": 22,
+        "t0": 34.459,
+        "delta_lu": 0.407,
+        "tp_dbtp": -6.96,
+        "tp_over_master_db": 0.27
+       },
+       {
+        "bar": 23,
+        "t0": 36.08,
+        "delta_lu": 0.002,
+        "tp_dbtp": -2.01,
+        "tp_over_master_db": 0.46
+       },
+       {
+        "bar": 24,
+        "t0": 37.702,
+        "delta_lu": 0.067,
+        "tp_dbtp": -2.16,
+        "tp_over_master_db": 0.48
+       },
+       {
+        "bar": 25,
+        "t0": 39.324,
+        "delta_lu": 0.181,
+        "tp_dbtp": -1.93,
+        "tp_over_master_db": 0.54
+       },
+       {
+        "bar": 26,
+        "t0": 40.945,
+        "delta_lu": -0.03,
+        "tp_dbtp": -2.3,
+        "tp_over_master_db": 0.15
+       },
+       {
+        "bar": 27,
+        "t0": 42.567,
+        "delta_lu": -0.047,
+        "tp_dbtp": -2.21,
+        "tp_over_master_db": 0.25
+       },
+       {
+        "bar": 28,
+        "t0": 44.189,
+        "delta_lu": -0.069,
+        "tp_dbtp": -2.05,
+        "tp_over_master_db": 0.39
+       },
+       {
+        "bar": 29,
+        "t0": 45.81,
+        "delta_lu": 0.099,
+        "tp_dbtp": -1.9,
+        "tp_over_master_db": 0.8
+       },
+       {
+        "bar": 30,
+        "t0": 47.432,
+        "delta_lu": 0.045,
+        "tp_dbtp": -1.16,
+        "tp_over_master_db": 0.66
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": 0.008,
+      "demo_tp_over_master_db": 0.66,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.743,
+      "fold_loss_dry_lu": 1.397,
+      "extra_loss_lu": 0.345,
+      "lr_corr_wet": 0.353,
+      "lr_corr_dry": 0.465,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -5.53,
+      "side_mid_db_out": -5.06,
+      "side_mid_db_band_dry": -4.18,
+      "side_mid_db_band_wet": -3.05,
+      "spectrogram": "/home/user/build/v5/qc/main_M05-black-depth.png"
+     }
+    },
+    "M06-green-free": {
+     "on_spans": [
+      [
+       49.0538,
+       52.2962
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 49.0538,
+       "t1": 52.2962,
+       "trim_db": -1.9
+      }
+     ],
+     "engine": "green",
+     "core": "Lagrange 3rd",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      46.0538,
+      52.3962
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 31,
+        "t0": 49.053,
+        "delta_lu": -0.058,
+        "tp_dbtp": -1.08,
+        "tp_over_master_db": 0.63
+       },
+       {
+        "bar": 32,
+        "t0": 50.675,
+        "delta_lu": 0.052,
+        "tp_dbtp": -1.18,
+        "tp_over_master_db": 1.23
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.005,
+      "demo_tp_over_master_db": 0.63,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.745,
+      "fold_loss_dry_lu": 0.604,
+      "extra_loss_lu": 1.142,
+      "lr_corr_wet": 0.342,
+      "lr_corr_dry": 0.774,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -9.36,
+      "side_mid_db_out": -6.28,
+      "side_mid_db_band_dry": -8.94,
+      "side_mid_db_band_wet": -3.09,
+      "spectrogram": "/home/user/build/v5/qc/main_M06-green-free.png"
+     }
+    },
+    "M07-purple-free": {
+     "on_spans": [
+      [
+       52.2962,
+       55.54
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 52.2962,
+       "t1": 55.54,
+       "trim_db": -2.1
+      }
+     ],
+     "engine": "purple",
+     "core": "Orbit",
+     "hq": 1,
+     "knobs_at_t0": {
+      "rate_hz": 0.12,
+      "depth_pct": 50,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 30
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      49.2962,
+      55.64
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 33,
+        "t0": 52.297,
+        "delta_lu": 0.25,
+        "tp_dbtp": -1.47,
+        "tp_over_master_db": 0.99
+       },
+       {
+        "bar": 34,
+        "t0": 53.918,
+        "delta_lu": -0.364,
+        "tp_dbtp": -2.13,
+        "tp_over_master_db": -0.24
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.007,
+      "demo_tp_over_master_db": 0.42,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.242,
+      "fold_loss_dry_lu": 1.056,
+      "extra_loss_lu": 0.186,
+      "lr_corr_wet": 0.536,
+      "lr_corr_dry": 0.6,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -8.78,
+      "side_mid_db_out": -8.34,
+      "side_mid_db_band_dry": -5.96,
+      "side_mid_db_band_wet": -5.07,
+      "spectrogram": "/home/user/build/v5/qc/main_M07-purple-free.png"
+     }
+    },
+    "M08-blue-trial": {
+     "on_spans": [
+      [
+       55.54,
+       56.9581
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 55.54,
+       "t1": 56.9581,
+       "trim_db": -1.3
+      }
+     ],
+     "engine": "blue",
+     "core": "Cubic",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 1.23,
+      "depth_pct": 12,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      52.54,
+      57.0581
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [],
+      "partial_bars": [
+       {
+        "bar": 35,
+        "span": [
+         55.54,
+         56.958
+        ],
+        "delta_lu": -0.013,
+        "tp_dbtp": -1.19,
+        "tp_over_master_db": 0.6
+       }
+      ],
+      "demo_delta_lu": -0.013,
+      "demo_tp_over_master_db": 0.6,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.268,
+      "fold_loss_dry_lu": 0.509,
+      "extra_loss_lu": 0.759,
+      "lr_corr_wet": 0.509,
+      "lr_corr_dry": 0.778,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -9.33,
+      "side_mid_db_out": -6.83,
+      "side_mid_db_band_dry": -9.02,
+      "side_mid_db_band_wet": -4.86,
+      "spectrogram": "/home/user/build/v5/qc/main_M08-blue-trial.png"
+     }
+    },
+    "M09-red-trial": {
+     "on_spans": [
+      [
+       56.9581,
+       58.784
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 56.9581,
+       "t1": 58.784,
+       "trim_db": -1.9
+      }
+     ],
+     "engine": "red",
+     "core": "Tape",
+     "hq": 1,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 30,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 30,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      53.9581,
+      58.884
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 36,
+        "t0": 57.162,
+        "delta_lu": 0.091,
+        "tp_dbtp": -1.42,
+        "tp_over_master_db": 0.32
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": 0.001,
+      "demo_tp_over_master_db": -0.01,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.444,
+      "fold_loss_dry_lu": 1.044,
+      "extra_loss_lu": 0.401,
+      "lr_corr_wet": 0.447,
+      "lr_corr_dry": 0.601,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -8.1,
+      "side_mid_db_out": -6.95,
+      "side_mid_db_band_dry": -6.02,
+      "side_mid_db_band_wet": -4.16,
+      "spectrogram": "/home/user/build/v5/qc/main_M09-red-trial.png"
+     }
+    },
+    "M10-black-trial": {
+     "on_spans": [
+      [
+       58.784,
+       62.027
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 58.784,
+       "t1": 62.027,
+       "trim_db": -1.3
+      }
+     ],
+     "engine": "black",
+     "core": "Linear Ensemble",
+     "hq": 1,
+     "knobs_at_t0": {
+      "rate_hz": 0.31,
+      "depth_pct": 30,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 60,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      55.784,
+      62.127
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 37,
+        "t0": 58.783,
+        "delta_lu": 0.085,
+        "tp_dbtp": -1.52,
+        "tp_over_master_db": 0.7
+       },
+       {
+        "bar": 38,
+        "t0": 60.405,
+        "delta_lu": -0.065,
+        "tp_dbtp": -1.16,
+        "tp_over_master_db": 0.89
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": 0.014,
+      "demo_tp_over_master_db": 0.89,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.116,
+      "fold_loss_dry_lu": 0.736,
+      "extra_loss_lu": 0.38,
+      "lr_corr_wet": 0.554,
+      "lr_corr_dry": 0.68,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -8.93,
+      "side_mid_db_out": -7.71,
+      "side_mid_db_band_dry": -7.2,
+      "side_mid_db_band_wet": -5.43,
+      "spectrogram": "/home/user/build/v5/qc/main_M10-black-trial.png"
+     }
+    },
+    "M11-blue-ab": {
+     "on_spans": [
+      [
+       62.027,
+       63.447
+      ],
+      [
+       65.27,
+       66.688
+      ],
+      [
+       68.514,
+       71.757
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 62.027,
+       "t1": 71.757,
+       "trim_db": -1.7
+      }
+     ],
+     "engine": "blue",
+     "core": "Cubic",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 1.23,
+      "depth_pct": 12,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [
+      {
+       "t0": 63.447,
+       "t1": 65.27,
+       "bar_beat": [
+        "39.4.5",
+        "41.1"
+       ]
+      },
+      {
+       "t0": 66.688,
+       "t1": 68.514,
+       "bar_beat": [
+        "41.4.5",
+        "43.1"
+       ]
+      }
+     ],
+     "render_span": [
+      59.027,
+      71.857
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 44,
+        "t0": 70.134,
+        "delta_lu": 0.183,
+        "tp_dbtp": -1.14,
+        "tp_over_master_db": 0.06
+       }
+      ],
+      "partial_bars": [
+       {
+        "bar": 39,
+        "span": [
+         62.027,
+         63.447
+        ],
+        "delta_lu": -0.21,
+        "tp_dbtp": -1.08,
+        "tp_over_master_db": 1.13
+       },
+       {
+        "bar": 41,
+        "span": [
+         65.27,
+         66.688
+        ],
+        "delta_lu": 0.084,
+        "tp_dbtp": -1.04,
+        "tp_over_master_db": 0.88
+       },
+       {
+        "bar": 43,
+        "span": [
+         68.514,
+         70.134
+        ],
+        "delta_lu": -0.31,
+        "tp_dbtp": -1.17,
+        "tp_over_master_db": 0.8
+       }
+      ],
+      "demo_delta_lu": -0.048,
+      "demo_tp_over_master_db": 0.17,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 2.448,
+      "fold_loss_dry_lu": 2.205,
+      "extra_loss_lu": 0.243,
+      "lr_corr_wet": 0.128,
+      "lr_corr_dry": 0.187,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -3.61,
+      "side_mid_db_out": -3.42,
+      "side_mid_db_band_dry": -1.61,
+      "side_mid_db_band_wet": -1.29,
+      "spectrogram": "/home/user/build/v5/qc/main_M11-blue-ab.png"
+     }
+    },
+    "M12-green-price": {
+     "on_spans": [
+      [
+       71.757,
+       78.244
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 71.757,
+       "t1": 78.244,
+       "trim_db": -1.7
+      }
+     ],
+     "engine": "green",
+     "core": "Lagrange 3rd",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      68.757,
+      78.344
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 45,
+        "t0": 71.756,
+        "delta_lu": -0.246,
+        "tp_dbtp": -1.05,
+        "tp_over_master_db": 0.32
+       },
+       {
+        "bar": 46,
+        "t0": 73.378,
+        "delta_lu": 0.106,
+        "tp_dbtp": -1.14,
+        "tp_over_master_db": 1.17
+       },
+       {
+        "bar": 47,
+        "t0": 74.999,
+        "delta_lu": -0.12,
+        "tp_dbtp": -1.06,
+        "tp_over_master_db": 0.79
+       },
+       {
+        "bar": 48,
+        "t0": 76.621,
+        "delta_lu": 0.018,
+        "tp_dbtp": -1.08,
+        "tp_over_master_db": 1.03
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.078,
+      "demo_tp_over_master_db": 0.32,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 2.005,
+      "fold_loss_dry_lu": 1.811,
+      "extra_loss_lu": 0.194,
+      "lr_corr_wet": 0.27,
+      "lr_corr_dry": 0.326,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -5.55,
+      "side_mid_db_out": -5.16,
+      "side_mid_db_band_dry": -2.93,
+      "side_mid_db_band_wet": -2.4,
+      "spectrogram": "/home/user/build/v5/qc/main_M12-green-price.png"
+     }
+    },
+    "M13-green-end": {
+     "on_spans": [
+      [
+       83.31,
+       91.216
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 83.31,
+       "t1": 86.3507,
+       "trim_db": -2.0
+      },
+      {
+       "t0": 86.3507,
+       "t1": 87.9723,
+       "trim_db": -1.6
+      },
+      {
+       "t0": 87.9723,
+       "t1": 91.216,
+       "trim_db": -2.1
+      }
+     ],
+     "engine": "green",
+     "core": "Lagrange 3rd",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      80.31,
+      91.316
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 53,
+        "t0": 84.729,
+        "delta_lu": 0.261,
+        "tp_dbtp": -1.24,
+        "tp_over_master_db": 0.76
+       },
+       {
+        "bar": 54,
+        "t0": 86.351,
+        "delta_lu": 0.041,
+        "tp_dbtp": -6.17,
+        "tp_over_master_db": 0.57
+       },
+       {
+        "bar": 55,
+        "t0": 87.972,
+        "delta_lu": 0.383,
+        "tp_dbtp": -6.22,
+        "tp_over_master_db": 1.48
+       }
+      ],
+      "partial_bars": [
+       {
+        "bar": 52,
+        "span": [
+         83.31,
+         84.729
+        ],
+        "delta_lu": -0.009,
+        "tp_dbtp": -1.16,
+        "tp_over_master_db": 1.02
+       }
+      ],
+      "demo_delta_lu": 0.059,
+      "demo_tp_over_master_db": 0.83,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 2.124,
+      "fold_loss_dry_lu": 1.457,
+      "extra_loss_lu": 0.667,
+      "lr_corr_wet": 0.235,
+      "lr_corr_dry": 0.454,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -5.43,
+      "side_mid_db_out": -3.8,
+      "side_mid_db_band_dry": -4.34,
+      "side_mid_db_band_wet": -2.08,
+      "spectrogram": "/home/user/build/v5/qc/main_M13-green-end.png"
+     }
+    }
+   },
+   "joins": [
+    {
+     "t": 23.1075,
+     "window": [
+      23.0875,
+      23.1075
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "M01-green-mixturn",
+     "to": "M02-blue-offset",
+     "level_jump_lu": 0.025,
+     "level_jump_lu_bar_windows": 0.357,
+     "same_measure_inside_demo_lu": [
+      0.336,
+      0.451
+     ],
+     "max_step_out": 0.13967,
+     "max_step_master": 0.14934,
+     "max_step_out_minus_master": 0.067798,
+     "ref_step_out_minus_master_next_200ms": 0.046943
+    },
+    {
+     "t": 26.3507,
+     "window": [
+      26.3407,
+      26.3607
+     ],
+     "kind": "bar-line 20 ms equal-power centred",
+     "from": "M02-blue-offset",
+     "to": "M03-red-hq",
+     "level_jump_lu": 0.85,
+     "level_jump_lu_bar_windows": 0.288,
+     "same_measure_inside_demo_lu": [
+      0.354,
+      0.184
+     ],
+     "max_step_out": 0.021,
+     "max_step_master": 0.02242,
+     "max_step_out_minus_master": 0.010436,
+     "ref_step_out_minus_master_next_200ms": 0.013857
+    },
+    {
+     "t": 29.594,
+     "window": [
+      29.584,
+      29.604
+     ],
+     "kind": "bar-line 20 ms equal-power centred",
+     "from": "M03-red-hq",
+     "to": "M04-purple-color",
+     "level_jump_lu": 1.718,
+     "level_jump_lu_bar_windows": 0.343,
+     "same_measure_inside_demo_lu": [
+      0.468,
+      1.316
+     ],
+     "max_step_out": 0.02206,
+     "max_step_master": 0.02639,
+     "max_step_out_minus_master": 0.01224,
+     "ref_step_out_minus_master_next_200ms": 0.012916
+    },
+    {
+     "t": 32.8372,
+     "window": [
+      32.8272,
+      32.8472
+     ],
+     "kind": "bar-line 20 ms equal-power centred",
+     "from": "M04-purple-color",
+     "to": "M05-black-depth",
+     "level_jump_lu": 0.816,
+     "level_jump_lu_bar_windows": 0.072,
+     "same_measure_inside_demo_lu": [
+      0.408,
+      0.597
+     ],
+     "max_step_out": 0.02951,
+     "max_step_master": 0.0273,
+     "max_step_out_minus_master": 0.013766,
+     "ref_step_out_minus_master_next_200ms": 0.01428
+    },
+    {
+     "t": 49.0538,
+     "window": [
+      49.0338,
+      49.0538
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "M05-black-depth",
+     "to": "M06-green-free",
+     "level_jump_lu": 0.34,
+     "level_jump_lu_bar_windows": 0.104,
+     "same_measure_inside_demo_lu": [
+      0.347,
+      0.156
+     ],
+     "max_step_out": 0.10237,
+     "max_step_master": 0.11252,
+     "max_step_out_minus_master": 0.022072,
+     "ref_step_out_minus_master_next_200ms": 0.044539
+    },
+    {
+     "t": 52.2962,
+     "window": [
+      52.2762,
+      52.2962
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "M06-green-free",
+     "to": "M07-purple-free",
+     "level_jump_lu": 0.075,
+     "level_jump_lu_bar_windows": 0.208,
+     "same_measure_inside_demo_lu": [
+      0.032,
+      0.071
+     ],
+     "max_step_out": 0.1399,
+     "max_step_master": 0.14159,
+     "max_step_out_minus_master": 0.022649,
+     "ref_step_out_minus_master_next_200ms": 0.027317
+    },
+    {
+     "t": 55.54,
+     "window": [
+      55.52,
+      55.54
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "M07-purple-free",
+     "to": "M08-blue-trial",
+     "level_jump_lu": 0.552,
+     "level_jump_lu_bar_windows": 0.358,
+     "same_measure_inside_demo_lu": [
+      0.724
+     ],
+     "max_step_out": 0.13555,
+     "max_step_master": 0.13917,
+     "max_step_out_minus_master": 0.020319,
+     "ref_step_out_minus_master_next_200ms": 0.058726
+    },
+    {
+     "t": 56.9581,
+     "window": [
+      56.9381,
+      56.9581
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "M08-blue-trial",
+     "to": "M09-red-trial",
+     "level_jump_lu": 0.956,
+     "level_jump_lu_bar_windows": 0.048,
+     "same_measure_inside_demo_lu": [
+      0.093,
+      0.142
+     ],
+     "max_step_out": 0.21476,
+     "max_step_master": 0.21656,
+     "max_step_out_minus_master": 0.042332,
+     "ref_step_out_minus_master_next_200ms": 0.0371
+    },
+    {
+     "t": 58.784,
+     "window": [
+      58.764,
+      58.784
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "M09-red-trial",
+     "to": "M10-black-trial",
+     "level_jump_lu": 0.019,
+     "level_jump_lu_bar_windows": 0.005,
+     "same_measure_inside_demo_lu": [
+      0.251,
+      0.255
+     ],
+     "max_step_out": 0.06453,
+     "max_step_master": 0.0649,
+     "max_step_out_minus_master": 0.02393,
+     "ref_step_out_minus_master_next_200ms": 0.050793
+    },
+    {
+     "t": 62.027,
+     "window": [
+      62.007,
+      62.027
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "M10-black-trial",
+     "to": "M11-blue-ab",
+     "level_jump_lu": 0.343,
+     "level_jump_lu_bar_windows": 0.112,
+     "same_measure_inside_demo_lu": [
+      0.076
+     ],
+     "max_step_out": 0.1751,
+     "max_step_master": 0.1873,
+     "max_step_out_minus_master": 0.087092,
+     "ref_step_out_minus_master_next_200ms": 0.09749
+    },
+    {
+     "t": 63.447,
+     "window": [
+      63.437,
+      63.447
+     ],
+     "kind": "bypass toggle 10 ms, midpoint 5 ms before the hit",
+     "from": "M11-blue-ab",
+     "to": "master",
+     "level_jump_lu": 0.13,
+     "level_jump_lu_bar_windows": 0.189,
+     "same_measure_inside_demo_lu": [],
+     "max_step_out": 0.15552,
+     "max_step_master": 0.15199,
+     "max_step_out_minus_master": 0.058475,
+     "ref_step_out_minus_master_next_200ms": 0.0
+    },
+    {
+     "t": 65.27,
+     "window": [
+      65.26,
+      65.27
+     ],
+     "kind": "bypass toggle 10 ms, midpoint 5 ms before the hit",
+     "from": "master",
+     "to": "M11-blue-ab",
+     "level_jump_lu": 0.193,
+     "level_jump_lu_bar_windows": 0.082,
+     "same_measure_inside_demo_lu": [
+      0.261
+     ],
+     "max_step_out": 0.20051,
+     "max_step_master": 0.20051,
+     "max_step_out_minus_master": 0.062213,
+     "ref_step_out_minus_master_next_200ms": 0.074288
+    },
+    {
+     "t": 66.688,
+     "window": [
+      66.678,
+      66.688
+     ],
+     "kind": "bypass toggle 10 ms, midpoint 5 ms before the hit",
+     "from": "M11-blue-ab",
+     "to": "master",
+     "level_jump_lu": 0.135,
+     "level_jump_lu_bar_windows": 0.081,
+     "same_measure_inside_demo_lu": [],
+     "max_step_out": 0.17297,
+     "max_step_master": 0.17297,
+     "max_step_out_minus_master": 0.060935,
+     "ref_step_out_minus_master_next_200ms": 0.0
+    },
+    {
+     "t": 68.514,
+     "window": [
+      68.504,
+      68.514
+     ],
+     "kind": "bypass toggle 10 ms, midpoint 5 ms before the hit",
+     "from": "master",
+     "to": "M11-blue-ab",
+     "level_jump_lu": 0.449,
+     "level_jump_lu_bar_windows": 0.31,
+     "same_measure_inside_demo_lu": [
+      1.276,
+      0.102
+     ],
+     "max_step_out": 0.16157,
+     "max_step_master": 0.16739,
+     "max_step_out_minus_master": 0.080852,
+     "ref_step_out_minus_master_next_200ms": 0.073112
+    },
+    {
+     "t": 71.757,
+     "window": [
+      71.737,
+      71.757
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "M11-blue-ab",
+     "to": "M12-green-price",
+     "level_jump_lu": 0.089,
+     "level_jump_lu_bar_windows": 0.43,
+     "same_measure_inside_demo_lu": [
+      0.483,
+      0.318
+     ],
+     "max_step_out": 0.15321,
+     "max_step_master": 0.1831,
+     "max_step_out_minus_master": 0.029888,
+     "ref_step_out_minus_master_next_200ms": 0.091073
+    },
+    {
+     "t": 78.244,
+     "window": [
+      78.234,
+      78.244
+     ],
+     "kind": "bypass span 10 ms, midpoint 5 ms before the hit",
+     "from": "M12-green-price",
+     "to": "master",
+     "level_jump_lu": 0.262,
+     "level_jump_lu_bar_windows": 0.01,
+     "same_measure_inside_demo_lu": [],
+     "max_step_out": 0.10559,
+     "max_step_master": 0.10559,
+     "max_step_out_minus_master": 0.062911,
+     "ref_step_out_minus_master_next_200ms": 0.0
+    },
+    {
+     "t": 83.31,
+     "window": [
+      83.3,
+      83.31
+     ],
+     "kind": "bypass span end 10 ms, midpoint 5 ms before the hit",
+     "from": "master",
+     "to": "M13-green-end",
+     "level_jump_lu": 0.194,
+     "level_jump_lu_bar_windows": 0.05,
+     "same_measure_inside_demo_lu": [
+      0.202,
+      0.119
+     ],
+     "max_step_out": 0.20185,
+     "max_step_master": 0.20202,
+     "max_step_out_minus_master": 0.065219,
+     "ref_step_out_minus_master_next_200ms": 0.096968
+    }
+   ],
+   "renders": {
+    "M01-green-mixturn": {
+     "cmd": "--in main_M01-green-mixturn_in.wav --out main_M01-green-mixturn.wav --engine green --hq 0 --rate 0.62 --depth 22% --offset 90 --width 100% --color 35% --mix 0% --trim -0.000 --block 128 --preroll 0 --tail 0 --quiet --meta main_M01-green-mixturn.json --automation main_M01-green-mixturn.automation.json",
+     "latencySamples": 0,
+     "core": "Lagrange 3rd",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.219999998807907,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.349999994039536,
+      "mix": 0.399999976158142,
+      "trim": -1.399999618530273
+     },
+     "outPeakDb": -0.34,
+     "automated": [
+      "mix",
+      "trim"
+     ]
+    },
+    "M02-blue-offset": {
+     "cmd": "--in main_M02-blue-offset_in.wav --out main_M02-blue-offset.wav --engine blue --hq 0 --rate 1.23 --depth 12% --offset 0 --width 100% --color 45% --mix 40% --trim -2.000 --block 128 --preroll 0 --tail 0 --quiet --meta main_M02-blue-offset.json --automation main_M02-blue-offset.automation.json",
+     "latencySamples": 0,
+     "core": "Cubic",
+     "knobsAtEnd": {
+      "rate": 1.232720494270325,
+      "depth": 0.119999997317791,
+      "offset": 120.0,
+      "width": 1.0,
+      "color": 0.449999988079071,
+      "mix": 0.399999976158142,
+      "trim": -2.0
+     },
+     "outPeakDb": -1.39,
+     "automated": [
+      "offset"
+     ],
+     "trim_is_output_gain_max_dev_dbfs": -134.9
+    },
+    "M03-red-hq": {
+     "cmd": "--in main_M03-red-hq_in.wav --out main_M03-red-hq.wav --engine red --hq 0 --rate 0.62 --depth 30% --offset 90 --width 100% --color 30% --mix 40% --trim -3.000 --block 128 --preroll 0 --tail 0 --quiet --meta main_M03-red-hq.json --automation main_M03-red-hq.automation.json",
+     "latencySamples": 0,
+     "core": "Tape",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.299999982118607,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.299999982118607,
+      "mix": 0.399999976158142,
+      "trim": -2.0
+     },
+     "outPeakDb": -7.63,
+     "automated": [
+      "hq",
+      "trim"
+     ]
+    },
+    "M04-purple-color": {
+     "cmd": "--in main_M04-purple-color_in.wav --out main_M04-purple-color.wav --engine purple --hq 1 --rate 0.12 --depth 50% --offset 90 --width 100% --color 10% --mix 30% --trim -3.100 --block 128 --preroll 0 --tail 0 --quiet --meta main_M04-purple-color.json --automation main_M04-purple-color.automation.json",
+     "latencySamples": 0,
+     "core": "Orbit",
+     "knobsAtEnd": {
+      "rate": 0.119687452912331,
+      "depth": 0.5,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.449999988079071,
+      "mix": 0.299999982118607,
+      "trim": -3.09999942779541
+     },
+     "outPeakDb": -5.68,
+     "automated": [
+      "color"
+     ],
+     "trim_is_output_gain_max_dev_dbfs": -134.5
+    },
+    "M05-black-depth": {
+     "cmd": "--in main_M05-black-depth_in.wav --out main_M05-black-depth.wav --engine black --hq 1 --rate 0.31 --depth 15% --offset 120 --width 100% --color 60% --mix 40% --trim -2.400 --block 128 --preroll 0 --tail 0 --quiet --meta main_M05-black-depth.json --automation main_M05-black-depth.automation.json",
+     "latencySamples": 0,
+     "core": "Linear Ensemble",
+     "knobsAtEnd": {
+      "rate": 0.310342520475388,
+      "depth": 0.299999982118607,
+      "offset": 120.0,
+      "width": 1.0,
+      "color": 0.599999964237213,
+      "mix": 0.399999976158142,
+      "trim": -1.300000190734863
+     },
+     "outPeakDb": -6.19,
+     "automated": [
+      "depth",
+      "trim"
+     ]
+    },
+    "M06-green-free": {
+     "cmd": "--in main_M06-green-free_in.wav --out main_M06-green-free.wav --engine green --hq 0 --rate 0.62 --depth 22% --offset 90 --width 100% --color 35% --mix 40% --trim -1.900 --block 128 --preroll 0 --tail 0 --quiet --meta main_M06-green-free.json",
+     "latencySamples": 0,
+     "core": "Lagrange 3rd",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.219999998807907,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.349999994039536,
+      "mix": 0.399999976158142,
+      "trim": -1.899999618530273
+     },
+     "outPeakDb": -3.42,
+     "automated": [],
+     "trim_is_output_gain_max_dev_dbfs": -131.1
+    },
+    "M07-purple-free": {
+     "cmd": "--in main_M07-purple-free_in.wav --out main_M07-purple-free.wav --engine purple --hq 1 --rate 0.12 --depth 50% --offset 90 --width 100% --color 45% --mix 30% --trim -2.100 --block 128 --preroll 0 --tail 0 --quiet --meta main_M07-purple-free.json",
+     "latencySamples": 0,
+     "core": "Orbit",
+     "knobsAtEnd": {
+      "rate": 0.119687452912331,
+      "depth": 0.5,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.449999988079071,
+      "mix": 0.299999982118607,
+      "trim": -2.09999942779541
+     },
+     "outPeakDb": -4.48,
+     "automated": [],
+     "trim_is_output_gain_max_dev_dbfs": -132.1
+    },
+    "M08-blue-trial": {
+     "cmd": "--in main_M08-blue-trial_in.wav --out main_M08-blue-trial.wav --engine blue --hq 0 --rate 1.23 --depth 12% --offset 120 --width 100% --color 45% --mix 40% --trim -1.300 --block 128 --preroll 0 --tail 0 --quiet --meta main_M08-blue-trial.json",
+     "latencySamples": 0,
+     "core": "Cubic",
+     "knobsAtEnd": {
+      "rate": 1.232720494270325,
+      "depth": 0.119999997317791,
+      "offset": 120.0,
+      "width": 1.0,
+      "color": 0.449999988079071,
+      "mix": 0.399999976158142,
+      "trim": -1.300000190734863
+     },
+     "outPeakDb": -3.18,
+     "automated": [],
+     "trim_is_output_gain_max_dev_dbfs": -131.3
+    },
+    "M09-red-trial": {
+     "cmd": "--in main_M09-red-trial_in.wav --out main_M09-red-trial.wav --engine red --hq 1 --rate 0.62 --depth 30% --offset 90 --width 100% --color 30% --mix 40% --trim -1.900 --block 128 --preroll 0 --tail 0 --quiet --meta main_M09-red-trial.json",
+     "latencySamples": 0,
+     "core": "Tape",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.299999982118607,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.299999982118607,
+      "mix": 0.399999976158142,
+      "trim": -1.899999618530273
+     },
+     "outPeakDb": -4.39,
+     "automated": [],
+     "trim_is_output_gain_max_dev_dbfs": -133.2
+    },
+    "M10-black-trial": {
+     "cmd": "--in main_M10-black-trial_in.wav --out main_M10-black-trial.wav --engine black --hq 1 --rate 0.31 --depth 30% --offset 120 --width 100% --color 60% --mix 40% --trim -1.300 --block 128 --preroll 0 --tail 0 --quiet --meta main_M10-black-trial.json",
+     "latencySamples": 0,
+     "core": "Linear Ensemble",
+     "knobsAtEnd": {
+      "rate": 0.310342520475388,
+      "depth": 0.299999982118607,
+      "offset": 120.0,
+      "width": 1.0,
+      "color": 0.599999964237213,
+      "mix": 0.399999976158142,
+      "trim": -1.300000190734863
+     },
+     "outPeakDb": -2.48,
+     "automated": [],
+     "trim_is_output_gain_max_dev_dbfs": -130.5
+    },
+    "M11-blue-ab": {
+     "cmd": "--in main_M11-blue-ab_in.wav --out main_M11-blue-ab.wav --engine blue --hq 0 --rate 1.23 --depth 12% --offset 120 --width 100% --color 45% --mix 40% --trim -1.700 --block 128 --preroll 0 --tail 0 --quiet --meta main_M11-blue-ab.json",
+     "latencySamples": 0,
+     "core": "Cubic",
+     "knobsAtEnd": {
+      "rate": 1.232720494270325,
+      "depth": 0.119999997317791,
+      "offset": 120.0,
+      "width": 1.0,
+      "color": 0.449999988079071,
+      "mix": 0.399999976158142,
+      "trim": -1.699999809265137
+     },
+     "outPeakDb": 0.17,
+     "automated": [],
+     "trim_is_output_gain_max_dev_dbfs": -127.9
+    },
+    "M12-green-price": {
+     "cmd": "--in main_M12-green-price_in.wav --out main_M12-green-price.wav --engine green --hq 0 --rate 0.62 --depth 22% --offset 90 --width 100% --color 35% --mix 40% --trim -1.700 --block 128 --preroll 0 --tail 0 --quiet --meta main_M12-green-price.json",
+     "latencySamples": 0,
+     "core": "Lagrange 3rd",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.219999998807907,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.349999994039536,
+      "mix": 0.399999976158142,
+      "trim": -1.699999809265137
+     },
+     "outPeakDb": -0.01,
+     "automated": [],
+     "trim_is_output_gain_max_dev_dbfs": -129.0
+    },
+    "M13-green-end": {
+     "cmd": "--in main_M13-green-end_in.wav --out main_M13-green-end.wav --engine green --hq 0 --rate 0.62 --depth 22% --offset 90 --width 100% --color 35% --mix 40% --trim -2.000 --block 128 --preroll 0 --tail 0 --quiet --meta main_M13-green-end.json --automation main_M13-green-end.automation.json",
+     "latencySamples": 0,
+     "core": "Lagrange 3rd",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.219999998807907,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.349999994039536,
+      "mix": 0.399999976158142,
+      "trim": -2.09999942779541
+     },
+     "outPeakDb": -1.71,
+     "automated": [
+      "trim"
+     ]
+    }
+   },
+   "peak_control": {
+    "ceiling_dbtp": -1.0,
+    "true_peak_before_dbtp": 0.36,
+    "applied": true,
+    "passes": 2,
+    "true_peak_after_dbtp": -1.03,
+    "samples_pulled_back": 1892149,
+    "seconds_pulled_back": 39.42,
+    "min_change_gain": 0.413,
+    "seconds_below_0.9": 4.444,
+    "seconds_below_0.75": 0.849,
+    "seconds_below_0.5": 0.014,
+    "mean_gain_where_pulled": 0.968,
+    "rule": "g <= 1 on the Choroboros change only (3 ms look-ahead, 60 ms release); the master under it is never touched"
+   },
+   "ending": {
+    "type": "equal-power fade (cos)",
+    "from": 89.9,
+    "to": 91.08,
+    "then": "digital silence to 91.216",
+    "fade_in_samples": null
+   }
+  },
+  "tiktok": {
+   "span": [
+    123.648,
+    138.648
+   ],
+   "demos": {
+    "T01-red-hq": {
+     "on_spans": [
+      [
+       123.648,
+       125.2697
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 123.648,
+       "t1": 125.2697,
+       "trim_db": -3.0
+      }
+     ],
+     "engine": "red",
+     "core": "BBD -> Tape",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 30,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 30,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": {
+      "t": 124.865,
+      "bar_beat": "77.4",
+      "from": 0,
+      "to": 1,
+      "note": "BBD -> Tape on the snare 124.865"
+     },
+     "bypass": [],
+     "render_span": [
+      120.648,
+      125.3697
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 77,
+        "t0": 123.648,
+        "delta_lu": -0.09,
+        "tp_dbtp": -1.04,
+        "tp_over_master_db": 0.46
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.09,
+      "demo_tp_over_master_db": 0.46,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 2.084,
+      "fold_loss_dry_lu": 1.266,
+      "extra_loss_lu": 0.818,
+      "lr_corr_wet": 0.23,
+      "lr_corr_dry": 0.475,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -6.99,
+      "side_mid_db_out": -5.84,
+      "side_mid_db_band_dry": -4.47,
+      "side_mid_db_band_wet": -2.03,
+      "spectrogram": "/home/user/build/v5/qc/tiktok_T01-red-hq.png"
+     }
+    },
+    "T02-blue-offset": {
+     "on_spans": [
+      [
+       125.2697,
+       126.8913
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 125.2697,
+       "t1": 126.8913,
+       "trim_db": -2.2
+      }
+     ],
+     "engine": "blue",
+     "core": "Cubic",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 1.23,
+      "depth_pct": 12,
+      "offset_deg": 0,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 40
+     },
+     "gestures": [
+      {
+       "param": "offset",
+       "from": 0,
+       "to": 120,
+       "t0": 125.6749,
+       "t1": 126.0804,
+       "bar_beat": [
+        "78.2",
+        "78.3"
+       ],
+       "shape": "sine-inout",
+       "driver": "snare 125.675 starts it"
+      }
+     ],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      122.2697,
+      126.9913
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 78,
+        "t0": 125.27,
+        "delta_lu": -0.017,
+        "tp_dbtp": -1.07,
+        "tp_over_master_db": 1.28
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.018,
+      "demo_tp_over_master_db": 1.28,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.755,
+      "fold_loss_dry_lu": 1.264,
+      "extra_loss_lu": 0.49,
+      "lr_corr_wet": 0.357,
+      "lr_corr_dry": 0.509,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -7.21,
+      "side_mid_db_out": -5.85,
+      "side_mid_db_band_dry": -4.84,
+      "side_mid_db_band_wet": -3.18,
+      "spectrogram": "/home/user/build/v5/qc/tiktok_T02-blue-offset.png"
+     }
+    },
+    "T03-purple-color": {
+     "on_spans": [
+      [
+       126.8913,
+       128.513
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 126.8913,
+       "t1": 128.513,
+       "trim_db": -2.2
+      }
+     ],
+     "engine": "purple",
+     "core": "Orbit",
+     "hq": 1,
+     "knobs_at_t0": {
+      "rate_hz": 0.12,
+      "depth_pct": 50,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 10,
+      "mix_pct": 30
+     },
+     "gestures": [
+      {
+       "param": "color",
+       "from": 10,
+       "to": 45,
+       "t0": 127.2966,
+       "t1": 128.1074,
+       "bar_beat": [
+        "79.2",
+        "79.4"
+       ],
+       "shape": "sine-inout",
+       "driver": "snare 127.297 starts it"
+      }
+     ],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      123.8913,
+      128.613
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 79,
+        "t0": 126.891,
+        "delta_lu": 0.006,
+        "tp_dbtp": -1.32,
+        "tp_over_master_db": 0.83
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": 0.006,
+      "demo_tp_over_master_db": 0.83,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.195,
+      "fold_loss_dry_lu": 1.194,
+      "extra_loss_lu": 0.0,
+      "lr_corr_wet": 0.512,
+      "lr_corr_dry": 0.524,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -7.59,
+      "side_mid_db_out": -7.57,
+      "side_mid_db_band_dry": -4.9,
+      "side_mid_db_band_wet": -4.9,
+      "spectrogram": "/home/user/build/v5/qc/tiktok_T03-purple-color.png"
+     }
+    },
+    "T05-black-color": {
+     "on_spans": [
+      [
+       130.1345,
+       131.7561
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 130.1345,
+       "t1": 131.7561,
+       "trim_db": -1.2
+      }
+     ],
+     "engine": "black",
+     "core": "Linear Ensemble",
+     "hq": 1,
+     "knobs_at_t0": {
+      "rate_hz": 0.31,
+      "depth_pct": 30,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 20,
+      "mix_pct": 40
+     },
+     "gestures": [
+      {
+       "param": "color",
+       "from": 20,
+       "to": 60,
+       "t0": 130.5398,
+       "t1": 130.9452,
+       "bar_beat": [
+        "81.2",
+        "81.3"
+       ],
+       "shape": "sine-inout",
+       "driver": "snare 130.540 starts it"
+      }
+     ],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      127.1345,
+      131.8561
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 81,
+        "t0": 130.134,
+        "delta_lu": -0.015,
+        "tp_dbtp": -1.1,
+        "tp_over_master_db": 1.43
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.015,
+      "demo_tp_over_master_db": 1.43,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.653,
+      "fold_loss_dry_lu": 1.069,
+      "extra_loss_lu": 0.584,
+      "lr_corr_wet": 0.39,
+      "lr_corr_dry": 0.584,
+      "pass": true
+     },
+     "musicality": {
+      "side_mid_db_master": -6.0,
+      "side_mid_db_out": -4.88,
+      "side_mid_db_band_dry": -5.8,
+      "side_mid_db_band_wet": -3.57,
+      "spectrogram": "/home/user/build/v5/qc/tiktok_T05-black-color.png"
+     }
+    },
+    "T06-green-offer-buy": {
+     "on_spans": [
+      [
+       131.7561,
+       138.648
+      ]
+     ],
+     "demo_shift_db": 0.2,
+     "trim_parts": [
+      {
+       "t0": 131.7561,
+       "t1": 134.9993,
+       "trim_db": -1.1
+      },
+      {
+       "t0": 134.9993,
+       "t1": 138.648,
+       "trim_db": -1.7
+      }
+     ],
+     "engine": "green",
+     "core": "Lagrange 3rd",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 40
+     },
+     "gestures": [],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      128.7561,
+      138.748
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [
+       {
+        "bar": 82,
+        "t0": 131.756,
+        "delta_lu": -0.122,
+        "tp_dbtp": -1.02,
+        "tp_over_master_db": 1.44
+       },
+       {
+        "bar": 83,
+        "t0": 133.378,
+        "delta_lu": 0.188,
+        "tp_dbtp": -1.05,
+        "tp_over_master_db": 1.24
+       },
+       {
+        "bar": 84,
+        "t0": 134.999,
+        "delta_lu": 0.071,
+        "tp_dbtp": -1.25,
+        "tp_over_master_db": 1.51
+       },
+       {
+        "bar": 85,
+        "t0": 136.621,
+        "delta_lu": 0.162,
+        "tp_dbtp": -7.02,
+        "tp_over_master_db": 2.25
+       }
+      ],
+      "partial_bars": [],
+      "demo_delta_lu": -0.138,
+      "demo_tp_over_master_db": 1.27,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": false,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 2.075,
+      "fold_loss_dry_lu": 1.301,
+      "extra_loss_lu": 0.774,
+      "lr_corr_wet": 0.245,
+      "lr_corr_dry": 0.478,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -6.61,
+      "side_mid_db_out": -5.21,
+      "side_mid_db_band_dry": -4.48,
+      "side_mid_db_band_wet": -2.19,
+      "spectrogram": "/home/user/build/v5/qc/tiktok_T06-green-offer-buy.png"
+     }
+    },
+    "T04-green-mixturn": {
+     "on_spans": [
+      [
+       129.729,
+       130.1345
+      ]
+     ],
+     "trim_parts": [
+      {
+       "t0": 128.513,
+       "t1": 130.1345,
+       "trim_db": -2.4
+      }
+     ],
+     "engine": "green",
+     "core": "Lagrange 3rd",
+     "hq": 0,
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 0
+     },
+     "gestures": [
+      {
+       "param": "mix",
+       "from": 0,
+       "to": 40,
+       "t0": 129.3236,
+       "t1": 129.729,
+       "bar_beat": [
+        "80.3",
+        "80.4"
+       ],
+       "shape": "sine-inout",
+       "driver": "silence: the guitar alone"
+      },
+      {
+       "param": "trim",
+       "shape": "follows-mix",
+       "rule": "trim(t) = trim_G * mix(t)/40"
+      }
+     ],
+     "hq_switch": null,
+     "bypass": [],
+     "render_span": [
+      125.513,
+      130.2345
+     ],
+     "preroll": "3.0 s of real input (zeros before the first sample of the song)",
+     "level_match": {
+      "bars": [],
+      "partial_bars": [],
+      "demo_delta_lu": -0.027,
+      "demo_tp_over_master_db": 1.04,
+      "bars_pass": true,
+      "demo_pass": true,
+      "tp_pass": true,
+      "tp_within_master_plus_0.1_every_bar": true,
+      "level_matched": true
+     },
+     "mono": {
+      "fold_loss_wet_lu": 1.633,
+      "fold_loss_dry_lu": 0.971,
+      "extra_loss_lu": 0.662,
+      "lr_corr_wet": 0.397,
+      "lr_corr_dry": 0.635,
+      "pass": false
+     },
+     "musicality": {
+      "side_mid_db_master": -5.49,
+      "side_mid_db_out": -4.52,
+      "side_mid_db_band_dry": -2.82,
+      "side_mid_db_band_wet": -1.67,
+      "spectrogram": "/home/user/build/v5/qc/tiktok_T04-green-mixturn.png"
+     }
+    }
+   },
+   "joins": [
+    {
+     "t": 125.2697,
+     "window": [
+      125.2597,
+      125.2797
+     ],
+     "kind": "bar-line 20 ms equal-power centred",
+     "from": "T01-red-hq",
+     "to": "T02-blue-offset",
+     "level_jump_lu": 0.639,
+     "level_jump_lu_bar_windows": 0.077,
+     "same_measure_inside_demo_lu": [
+      0.264
+     ],
+     "max_step_out": 0.20854,
+     "max_step_master": 0.20729,
+     "max_step_out_minus_master": 0.068874,
+     "ref_step_out_minus_master_next_200ms": 0.0871
+    },
+    {
+     "t": 126.892,
+     "window": [
+      126.872,
+      126.892
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "T02-blue-offset",
+     "to": "T03-purple-color",
+     "level_jump_lu": 0.389,
+     "level_jump_lu_bar_windows": 0.031,
+     "same_measure_inside_demo_lu": [
+      0.369,
+      0.185
+     ],
+     "max_step_out": 0.12561,
+     "max_step_master": 0.124,
+     "max_step_out_minus_master": 0.034885,
+     "ref_step_out_minus_master_next_200ms": 0.029398
+    },
+    {
+     "t": 128.513,
+     "window": [
+      128.493,
+      128.513
+     ],
+     "kind": "on-hit 20 ms equal-power ending at the hit",
+     "from": "T03-purple-color",
+     "to": "T04-green-mixturn",
+     "level_jump_lu": 0.239,
+     "level_jump_lu_bar_windows": 0.06,
+     "same_measure_inside_demo_lu": [
+      0.236,
+      0.208
+     ],
+     "max_step_out": 0.16142,
+     "max_step_master": 0.16142,
+     "max_step_out_minus_master": 0.01928,
+     "ref_step_out_minus_master_next_200ms": 0.0
+    },
+    {
+     "t": 130.1345,
+     "window": [
+      130.1245,
+      130.1445
+     ],
+     "kind": "bar-line 20 ms equal-power centred",
+     "from": "T04-green-mixturn",
+     "to": "T05-black-color",
+     "level_jump_lu": 0.406,
+     "level_jump_lu_bar_windows": 0.053,
+     "same_measure_inside_demo_lu": [
+      0.414,
+      0.001
+     ],
+     "max_step_out": 0.19193,
+     "max_step_master": 0.18792,
+     "max_step_out_minus_master": 0.032123,
+     "ref_step_out_minus_master_next_200ms": 0.038682
+    },
+    {
+     "t": 131.7561,
+     "window": [
+      131.7461,
+      131.7661
+     ],
+     "kind": "bar-line 20 ms equal-power centred",
+     "from": "T05-black-color",
+     "to": "T06-green-offer-buy",
+     "level_jump_lu": 0.12,
+     "level_jump_lu_bar_windows": 0.108,
+     "same_measure_inside_demo_lu": [
+      0.242,
+      0.124
+     ],
+     "max_step_out": 0.19482,
+     "max_step_master": 0.18484,
+     "max_step_out_minus_master": 0.041818,
+     "ref_step_out_minus_master_next_200ms": 0.054396
+    }
+   ],
+   "renders": {
+    "T01-red-hq": {
+     "cmd": "--in tiktok_T01-red-hq_in.wav --out tiktok_T01-red-hq.wav --engine red --hq 0 --rate 0.62 --depth 30% --offset 90 --width 100% --color 30% --mix 40% --trim -3.000 --block 128 --preroll 0 --tail 0 --quiet --meta tiktok_T01-red-hq.json --automation tiktok_T01-red-hq.automation.json",
+     "latencySamples": 0,
+     "core": "Tape",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.299999982118607,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.299999982118607,
+      "mix": 0.399999976158142,
+      "trim": -3.0
+     },
+     "outPeakDb": -1.94,
+     "automated": [
+      "hq"
+     ],
+     "trim_is_output_gain_max_dev_dbfs": -132.3
+    },
+    "T02-blue-offset": {
+     "cmd": "--in tiktok_T02-blue-offset_in.wav --out tiktok_T02-blue-offset.wav --engine blue --hq 0 --rate 1.23 --depth 12% --offset 0 --width 100% --color 45% --mix 40% --trim -2.200 --block 128 --preroll 0 --tail 0 --quiet --meta tiktok_T02-blue-offset.json --automation tiktok_T02-blue-offset.automation.json",
+     "latencySamples": 0,
+     "core": "Cubic",
+     "knobsAtEnd": {
+      "rate": 1.232720494270325,
+      "depth": 0.119999997317791,
+      "offset": 120.0,
+      "width": 1.0,
+      "color": 0.449999988079071,
+      "mix": 0.399999976158142,
+      "trim": -2.199999809265137
+     },
+     "outPeakDb": -2.66,
+     "automated": [
+      "offset"
+     ],
+     "trim_is_output_gain_max_dev_dbfs": -130.4
+    },
+    "T03-purple-color": {
+     "cmd": "--in tiktok_T03-purple-color_in.wav --out tiktok_T03-purple-color.wav --engine purple --hq 1 --rate 0.12 --depth 50% --offset 90 --width 100% --color 10% --mix 30% --trim -2.200 --block 128 --preroll 0 --tail 0 --quiet --meta tiktok_T03-purple-color.json --automation tiktok_T03-purple-color.automation.json",
+     "latencySamples": 0,
+     "core": "Orbit",
+     "knobsAtEnd": {
+      "rate": 0.119687452912331,
+      "depth": 0.5,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.449999988079071,
+      "mix": 0.299999982118607,
+      "trim": -2.199999809265137
+     },
+     "outPeakDb": -1.53,
+     "automated": [
+      "color"
+     ],
+     "trim_is_output_gain_max_dev_dbfs": -131.0
+    },
+    "T04-green-mixturn": {
+     "cmd": "--in tiktok_T04-green-mixturn_in.wav --out tiktok_T04-green-mixturn.wav --engine green --hq 0 --rate 0.62 --depth 22% --offset 90 --width 100% --color 35% --mix 0% --trim -0.000 --block 128 --preroll 0 --tail 0 --quiet --meta tiktok_T04-green-mixturn.json --automation tiktok_T04-green-mixturn.automation.json",
+     "latencySamples": 0,
+     "core": "Lagrange 3rd",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.219999998807907,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.349999994039536,
+      "mix": 0.399999976158142,
+      "trim": -2.399999618530273
+     },
+     "outPeakDb": -3.2,
+     "automated": [
+      "mix",
+      "trim"
+     ]
+    },
+    "T05-black-color": {
+     "cmd": "--in tiktok_T05-black-color_in.wav --out tiktok_T05-black-color.wav --engine black --hq 1 --rate 0.31 --depth 30% --offset 120 --width 100% --color 20% --mix 40% --trim -1.200 --block 128 --preroll 0 --tail 0 --quiet --meta tiktok_T05-black-color.json --automation tiktok_T05-black-color.automation.json",
+     "latencySamples": 0,
+     "core": "Linear Ensemble",
+     "knobsAtEnd": {
+      "rate": 0.310342520475388,
+      "depth": 0.299999982118607,
+      "offset": 120.0,
+      "width": 1.0,
+      "color": 0.599999964237213,
+      "mix": 0.399999976158142,
+      "trim": -1.199999809265137
+     },
+     "outPeakDb": -2.41,
+     "automated": [
+      "color"
+     ],
+     "trim_is_output_gain_max_dev_dbfs": -130.5
+    },
+    "T06-green-offer-buy": {
+     "cmd": "--in tiktok_T06-green-offer-buy_in.wav --out tiktok_T06-green-offer-buy.wav --engine green --hq 0 --rate 0.62 --depth 22% --offset 90 --width 100% --color 35% --mix 40% --trim -1.100 --block 128 --preroll 0 --tail 0 --quiet --meta tiktok_T06-green-offer-buy.json --automation tiktok_T06-green-offer-buy.automation.json",
+     "latencySamples": 0,
+     "core": "Lagrange 3rd",
+     "knobsAtEnd": {
+      "rate": 0.621713101863861,
+      "depth": 0.219999998807907,
+      "offset": 90.0,
+      "width": 1.0,
+      "color": 0.349999994039536,
+      "mix": 0.399999976158142,
+      "trim": -1.699999809265137
+     },
+     "outPeakDb": -0.73,
+     "automated": [
+      "trim"
+     ]
+    }
+   },
+   "peak_control": {
+    "ceiling_dbtp": -1.0,
+    "true_peak_before_dbtp": 0.35,
+    "applied": true,
+    "passes": 1,
+    "true_peak_after_dbtp": -1.02,
+    "samples_pulled_back": 523111,
+    "seconds_pulled_back": 10.898,
+    "min_change_gain": 0.53,
+    "seconds_below_0.9": 1.013,
+    "seconds_below_0.75": 0.146,
+    "seconds_below_0.5": 0.0,
+    "mean_gain_where_pulled": 0.971,
+    "rule": "g <= 1 on the Choroboros change only (3 ms look-ahead, 60 ms release); the master under it is never touched"
+   },
+   "ending": {
+    "type": "equal-power fade (cos)",
+    "from": 138.243,
+    "to": 138.63,
+    "then": "digital silence to 138.648",
+    "fade_in_samples": 48
+   }
+  }
+ },
+ "loudness": {
+  "main": {
+   "lufs": -11.05,
+   "true_peak_dbtp": -1.03,
+   "master_same_span_lufs": -11.04,
+   "master_same_span_tp": -1.14,
+   "limiter": "none on the mix; peak control at -1 dBTP on the Choroboros change only, where needed (see films.main.peak_control)"
+  },
+  "tiktok": {
+   "lufs": -14.0,
+   "true_peak_dbtp": -4.97,
+   "normalize_gain_db": -3.95,
+   "limiter": "not needed",
+   "unity_lufs": -10.05,
+   "unity_true_peak_dbtp": -1.02,
+   "master_same_span_lufs": -10.08
+  }
+ },
+ "scope": {
+  "gain": 0.712624,
+  "typical_guitar_frame_extent": 0.32422,
+  "target_display_fraction": 0.6,
+  "display_gain": 3.0,
+  "main_guitar_display_extent_median": 0.6,
+  "main_guitar_display_extent_p90": 0.844,
+  "tiktok_guitar_display_extent_median": 0.754,
+  "tiktok_guitar_display_extent_p90": 0.884
+ },
+ "qc": {
+  "A1": {
+   "main": {
+    "samples": 4378368,
+    "expected": 4378368,
+    "master_state_samples": 416880,
+    "master_state_seconds": 8.685,
+    "max_abs_diff_vs_master_float": 0.0,
+    "bit_identical_float": true,
+    "xcorr_lag_per_bar_samples": {
+     "bars": 55,
+     "max_abs_lag": 1,
+     "nonzero": [
+      [
+       16,
+       -1
+      ],
+      [
+       18,
+       -1
+      ],
+      [
+       21,
+       -1
+      ]
+     ]
+    },
+    "pcm24_file_vs_master_pcm24_max_abs_diff": 0.0,
+    "pcm24_file_vs_master_float_max_abs_diff": 1.1891825124621391e-07,
+    "silent_after": {
+     "t": 91.08,
+     "max_abs": 0.0
+    }
+   },
+   "tiktok": {
+    "samples": 720000,
+    "expected": 720000,
+    "master_state_samples": 0,
+    "master_state_seconds": 0.0,
+    "max_abs_diff_vs_master_float": 0.0,
+    "bit_identical_float": true,
+    "xcorr_lag_per_bar_samples": {
+     "bars": 8,
+     "max_abs_lag": 1,
+     "nonzero": [
+      [
+       85,
+       -1
+      ]
+     ]
+    },
+    "first_20ms_null_vs_prefade_db": -29.6,
+    "first_20ms_null_vs_source_db_note": "Choroboros (T01 Red) is on from the first sample, so the guitar band differs from the source by design; the drums (crash + kick 123.649) are the master's",
+    "first_20ms_null_vs_source_db": -13.2
+   }
+  },
+  "A3": {
+   "main": {
+    "rms_dbfs_above_6k5": -118.1,
+    "rms_dbfs_diff_fullband": -18.3,
+    "method": "Welch power spectrum of out - master over the whole film (before the ending fade), Blackman-Harris 8192; energy summed above 6.5 kHz, worst channel",
+    "pass_rms_below_-90": true
+   },
+   "tiktok": {
+    "rms_dbfs_above_6k5": -117.2,
+    "rms_dbfs_diff_fullband": -16.4,
+    "method": "Welch power spectrum of out - master over the whole film (before the ending fade), Blackman-Harris 8192; energy summed above 6.5 kHz, worst channel",
+    "pass_rms_below_-90": true
+   }
+  },
+  "A4": {
+   "main": {
+    "envelope_corr": -0.0328,
+    "onset_envelope_corr": -0.0021,
+    "reference_master_vs_drums_onset_corr": 0.3142,
+    "reference_dry_band_vs_drums_envelope_corr": -0.0286,
+    "note": "envelope_corr: 5 ms RMS envelopes of (out - master) and the fitted drums over the Choroboros-on time; onset_envelope_corr: their half-wave rectified log-envelope differences (drum transients). The dry guitar band itself correlates with the drums at reference_dry_band_vs_drums_envelope_corr, because the band plays with them",
+    "pass_onset_below_0.05": true,
+    "pass_envelope_below_0.05": true
+   },
+   "tiktok": {
+    "envelope_corr": 0.0919,
+    "onset_envelope_corr": -0.0221,
+    "reference_master_vs_drums_onset_corr": 0.1059,
+    "reference_dry_band_vs_drums_envelope_corr": 0.1282,
+    "note": "envelope_corr: 5 ms RMS envelopes of (out - master) and the fitted drums over the Choroboros-on time; onset_envelope_corr: their half-wave rectified log-envelope differences (drum transients). The dry guitar band itself correlates with the drums at reference_dry_band_vs_drums_envelope_corr, because the band plays with them",
+    "pass_onset_below_0.05": true,
+    "pass_envelope_below_0.05": false
+   }
+  },
+  "A5": {
+   "main": {
+    "M01-green-mixturn": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.265,
+     "demo_delta_lu": -0.05
+    },
+    "M02-blue-offset": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.317,
+     "demo_delta_lu": -0.034
+    },
+    "M03-red-hq": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.035,
+     "demo_delta_lu": 0.054
+    },
+    "M04-purple-color": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.354,
+     "demo_delta_lu": -0.017
+    },
+    "M05-black-depth": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.407,
+     "demo_delta_lu": 0.008
+    },
+    "M06-green-free": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.058,
+     "demo_delta_lu": -0.005
+    },
+    "M07-purple-free": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.364,
+     "demo_delta_lu": -0.007
+    },
+    "M08-blue-trial": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": null,
+     "demo_delta_lu": -0.013
+    },
+    "M09-red-trial": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.091,
+     "demo_delta_lu": 0.001
+    },
+    "M10-black-trial": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.085,
+     "demo_delta_lu": 0.014
+    },
+    "M11-blue-ab": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.183,
+     "demo_delta_lu": -0.048
+    },
+    "M12-green-price": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.246,
+     "demo_delta_lu": -0.078
+    },
+    "M13-green-end": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.383,
+     "demo_delta_lu": 0.059
+    }
+   },
+   "tiktok": {
+    "T01-red-hq": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.09,
+     "demo_delta_lu": -0.09
+    },
+    "T02-blue-offset": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.017,
+     "demo_delta_lu": -0.018
+    },
+    "T03-purple-color": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.006,
+     "demo_delta_lu": 0.006
+    },
+    "T04-green-mixturn": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": null,
+     "demo_delta_lu": -0.027
+    },
+    "T05-black-color": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.015,
+     "demo_delta_lu": -0.015
+    },
+    "T06-green-offer-buy": {
+     "bars_pass": true,
+     "demo_pass": true,
+     "tp_pass": true,
+     "worst_bar_lu": 0.188,
+     "demo_delta_lu": -0.138
+    }
+   }
+  },
+  "A6": {
+   "main": {
+    "M01-green-mixturn": {
+     "fold_loss_wet_lu": 2.199,
+     "fold_loss_dry_lu": 1.56,
+     "extra_loss_lu": 0.639,
+     "lr_corr_wet": 0.187,
+     "lr_corr_dry": 0.379,
+     "pass": false
+    },
+    "M02-blue-offset": {
+     "fold_loss_wet_lu": 2.843,
+     "fold_loss_dry_lu": 2.632,
+     "extra_loss_lu": 0.212,
+     "lr_corr_wet": 0.058,
+     "lr_corr_dry": 0.105,
+     "pass": false
+    },
+    "M03-red-hq": {
+     "fold_loss_wet_lu": 2.613,
+     "fold_loss_dry_lu": 2.044,
+     "extra_loss_lu": 0.57,
+     "lr_corr_wet": 0.078,
+     "lr_corr_dry": 0.243,
+     "pass": false
+    },
+    "M04-purple-color": {
+     "fold_loss_wet_lu": 1.89,
+     "fold_loss_dry_lu": 1.748,
+     "extra_loss_lu": 0.142,
+     "lr_corr_wet": 0.317,
+     "lr_corr_dry": 0.36,
+     "pass": true
+    },
+    "M05-black-depth": {
+     "fold_loss_wet_lu": 1.743,
+     "fold_loss_dry_lu": 1.397,
+     "extra_loss_lu": 0.345,
+     "lr_corr_wet": 0.353,
+     "lr_corr_dry": 0.465,
+     "pass": true
+    },
+    "M06-green-free": {
+     "fold_loss_wet_lu": 1.745,
+     "fold_loss_dry_lu": 0.604,
+     "extra_loss_lu": 1.142,
+     "lr_corr_wet": 0.342,
+     "lr_corr_dry": 0.774,
+     "pass": false
+    },
+    "M07-purple-free": {
+     "fold_loss_wet_lu": 1.242,
+     "fold_loss_dry_lu": 1.056,
+     "extra_loss_lu": 0.186,
+     "lr_corr_wet": 0.536,
+     "lr_corr_dry": 0.6,
+     "pass": true
+    },
+    "M08-blue-trial": {
+     "fold_loss_wet_lu": 1.268,
+     "fold_loss_dry_lu": 0.509,
+     "extra_loss_lu": 0.759,
+     "lr_corr_wet": 0.509,
+     "lr_corr_dry": 0.778,
+     "pass": false
+    },
+    "M09-red-trial": {
+     "fold_loss_wet_lu": 1.444,
+     "fold_loss_dry_lu": 1.044,
+     "extra_loss_lu": 0.401,
+     "lr_corr_wet": 0.447,
+     "lr_corr_dry": 0.601,
+     "pass": true
+    },
+    "M10-black-trial": {
+     "fold_loss_wet_lu": 1.116,
+     "fold_loss_dry_lu": 0.736,
+     "extra_loss_lu": 0.38,
+     "lr_corr_wet": 0.554,
+     "lr_corr_dry": 0.68,
+     "pass": true
+    },
+    "M11-blue-ab": {
+     "fold_loss_wet_lu": 2.448,
+     "fold_loss_dry_lu": 2.205,
+     "extra_loss_lu": 0.243,
+     "lr_corr_wet": 0.128,
+     "lr_corr_dry": 0.187,
+     "pass": true
+    },
+    "M12-green-price": {
+     "fold_loss_wet_lu": 2.005,
+     "fold_loss_dry_lu": 1.811,
+     "extra_loss_lu": 0.194,
+     "lr_corr_wet": 0.27,
+     "lr_corr_dry": 0.326,
+     "pass": true
+    },
+    "M13-green-end": {
+     "fold_loss_wet_lu": 2.124,
+     "fold_loss_dry_lu": 1.457,
+     "extra_loss_lu": 0.667,
+     "lr_corr_wet": 0.235,
+     "lr_corr_dry": 0.454,
+     "pass": false
+    }
+   },
+   "tiktok": {
+    "T01-red-hq": {
+     "fold_loss_wet_lu": 2.084,
+     "fold_loss_dry_lu": 1.266,
+     "extra_loss_lu": 0.818,
+     "lr_corr_wet": 0.23,
+     "lr_corr_dry": 0.475,
+     "pass": false
+    },
+    "T02-blue-offset": {
+     "fold_loss_wet_lu": 1.755,
+     "fold_loss_dry_lu": 1.264,
+     "extra_loss_lu": 0.49,
+     "lr_corr_wet": 0.357,
+     "lr_corr_dry": 0.509,
+     "pass": true
+    },
+    "T03-purple-color": {
+     "fold_loss_wet_lu": 1.195,
+     "fold_loss_dry_lu": 1.194,
+     "extra_loss_lu": 0.0,
+     "lr_corr_wet": 0.512,
+     "lr_corr_dry": 0.524,
+     "pass": true
+    },
+    "T04-green-mixturn": {
+     "fold_loss_wet_lu": 1.633,
+     "fold_loss_dry_lu": 0.971,
+     "extra_loss_lu": 0.662,
+     "lr_corr_wet": 0.397,
+     "lr_corr_dry": 0.635,
+     "pass": false
+    },
+    "T05-black-color": {
+     "fold_loss_wet_lu": 1.653,
+     "fold_loss_dry_lu": 1.069,
+     "extra_loss_lu": 0.584,
+     "lr_corr_wet": 0.39,
+     "lr_corr_dry": 0.584,
+     "pass": true
+    },
+    "T06-green-offer-buy": {
+     "fold_loss_wet_lu": 2.075,
+     "fold_loss_dry_lu": 1.301,
+     "extra_loss_lu": 0.774,
+     "lr_corr_wet": 0.245,
+     "lr_corr_dry": 0.478,
+     "pass": false
+    }
+   }
+  },
+  "joins": {
+   "main": {
+    "max_level_jump_lu": 1.718,
+    "all_under_0.5": false,
+    "joins": [
+     {
+      "t": 23.1075,
+      "window": [
+       23.0875,
+       23.1075
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "M01-green-mixturn",
+      "to": "M02-blue-offset",
+      "level_jump_lu": 0.025,
+      "level_jump_lu_bar_windows": 0.357,
+      "same_measure_inside_demo_lu": [
+       0.336,
+       0.451
+      ],
+      "max_step_out": 0.13967,
+      "max_step_master": 0.14934,
+      "max_step_out_minus_master": 0.067798,
+      "ref_step_out_minus_master_next_200ms": 0.046943
+     },
+     {
+      "t": 26.3507,
+      "window": [
+       26.3407,
+       26.3607
+      ],
+      "kind": "bar-line 20 ms equal-power centred",
+      "from": "M02-blue-offset",
+      "to": "M03-red-hq",
+      "level_jump_lu": 0.85,
+      "level_jump_lu_bar_windows": 0.288,
+      "same_measure_inside_demo_lu": [
+       0.354,
+       0.184
+      ],
+      "max_step_out": 0.021,
+      "max_step_master": 0.02242,
+      "max_step_out_minus_master": 0.010436,
+      "ref_step_out_minus_master_next_200ms": 0.013857
+     },
+     {
+      "t": 29.594,
+      "window": [
+       29.584,
+       29.604
+      ],
+      "kind": "bar-line 20 ms equal-power centred",
+      "from": "M03-red-hq",
+      "to": "M04-purple-color",
+      "level_jump_lu": 1.718,
+      "level_jump_lu_bar_windows": 0.343,
+      "same_measure_inside_demo_lu": [
+       0.468,
+       1.316
+      ],
+      "max_step_out": 0.02206,
+      "max_step_master": 0.02639,
+      "max_step_out_minus_master": 0.01224,
+      "ref_step_out_minus_master_next_200ms": 0.012916
+     },
+     {
+      "t": 32.8372,
+      "window": [
+       32.8272,
+       32.8472
+      ],
+      "kind": "bar-line 20 ms equal-power centred",
+      "from": "M04-purple-color",
+      "to": "M05-black-depth",
+      "level_jump_lu": 0.816,
+      "level_jump_lu_bar_windows": 0.072,
+      "same_measure_inside_demo_lu": [
+       0.408,
+       0.597
+      ],
+      "max_step_out": 0.02951,
+      "max_step_master": 0.0273,
+      "max_step_out_minus_master": 0.013766,
+      "ref_step_out_minus_master_next_200ms": 0.01428
+     },
+     {
+      "t": 49.0538,
+      "window": [
+       49.0338,
+       49.0538
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "M05-black-depth",
+      "to": "M06-green-free",
+      "level_jump_lu": 0.34,
+      "level_jump_lu_bar_windows": 0.104,
+      "same_measure_inside_demo_lu": [
+       0.347,
+       0.156
+      ],
+      "max_step_out": 0.10237,
+      "max_step_master": 0.11252,
+      "max_step_out_minus_master": 0.022072,
+      "ref_step_out_minus_master_next_200ms": 0.044539
+     },
+     {
+      "t": 52.2962,
+      "window": [
+       52.2762,
+       52.2962
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "M06-green-free",
+      "to": "M07-purple-free",
+      "level_jump_lu": 0.075,
+      "level_jump_lu_bar_windows": 0.208,
+      "same_measure_inside_demo_lu": [
+       0.032,
+       0.071
+      ],
+      "max_step_out": 0.1399,
+      "max_step_master": 0.14159,
+      "max_step_out_minus_master": 0.022649,
+      "ref_step_out_minus_master_next_200ms": 0.027317
+     },
+     {
+      "t": 55.54,
+      "window": [
+       55.52,
+       55.54
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "M07-purple-free",
+      "to": "M08-blue-trial",
+      "level_jump_lu": 0.552,
+      "level_jump_lu_bar_windows": 0.358,
+      "same_measure_inside_demo_lu": [
+       0.724
+      ],
+      "max_step_out": 0.13555,
+      "max_step_master": 0.13917,
+      "max_step_out_minus_master": 0.020319,
+      "ref_step_out_minus_master_next_200ms": 0.058726
+     },
+     {
+      "t": 56.9581,
+      "window": [
+       56.9381,
+       56.9581
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "M08-blue-trial",
+      "to": "M09-red-trial",
+      "level_jump_lu": 0.956,
+      "level_jump_lu_bar_windows": 0.048,
+      "same_measure_inside_demo_lu": [
+       0.093,
+       0.142
+      ],
+      "max_step_out": 0.21476,
+      "max_step_master": 0.21656,
+      "max_step_out_minus_master": 0.042332,
+      "ref_step_out_minus_master_next_200ms": 0.0371
+     },
+     {
+      "t": 58.784,
+      "window": [
+       58.764,
+       58.784
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "M09-red-trial",
+      "to": "M10-black-trial",
+      "level_jump_lu": 0.019,
+      "level_jump_lu_bar_windows": 0.005,
+      "same_measure_inside_demo_lu": [
+       0.251,
+       0.255
+      ],
+      "max_step_out": 0.06453,
+      "max_step_master": 0.0649,
+      "max_step_out_minus_master": 0.02393,
+      "ref_step_out_minus_master_next_200ms": 0.050793
+     },
+     {
+      "t": 62.027,
+      "window": [
+       62.007,
+       62.027
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "M10-black-trial",
+      "to": "M11-blue-ab",
+      "level_jump_lu": 0.343,
+      "level_jump_lu_bar_windows": 0.112,
+      "same_measure_inside_demo_lu": [
+       0.076
+      ],
+      "max_step_out": 0.1751,
+      "max_step_master": 0.1873,
+      "max_step_out_minus_master": 0.087092,
+      "ref_step_out_minus_master_next_200ms": 0.09749
+     },
+     {
+      "t": 63.447,
+      "window": [
+       63.437,
+       63.447
+      ],
+      "kind": "bypass toggle 10 ms, midpoint 5 ms before the hit",
+      "from": "M11-blue-ab",
+      "to": "master",
+      "level_jump_lu": 0.13,
+      "level_jump_lu_bar_windows": 0.189,
+      "same_measure_inside_demo_lu": [],
+      "max_step_out": 0.15552,
+      "max_step_master": 0.15199,
+      "max_step_out_minus_master": 0.058475,
+      "ref_step_out_minus_master_next_200ms": 0.0
+     },
+     {
+      "t": 65.27,
+      "window": [
+       65.26,
+       65.27
+      ],
+      "kind": "bypass toggle 10 ms, midpoint 5 ms before the hit",
+      "from": "master",
+      "to": "M11-blue-ab",
+      "level_jump_lu": 0.193,
+      "level_jump_lu_bar_windows": 0.082,
+      "same_measure_inside_demo_lu": [
+       0.261
+      ],
+      "max_step_out": 0.20051,
+      "max_step_master": 0.20051,
+      "max_step_out_minus_master": 0.062213,
+      "ref_step_out_minus_master_next_200ms": 0.074288
+     },
+     {
+      "t": 66.688,
+      "window": [
+       66.678,
+       66.688
+      ],
+      "kind": "bypass toggle 10 ms, midpoint 5 ms before the hit",
+      "from": "M11-blue-ab",
+      "to": "master",
+      "level_jump_lu": 0.135,
+      "level_jump_lu_bar_windows": 0.081,
+      "same_measure_inside_demo_lu": [],
+      "max_step_out": 0.17297,
+      "max_step_master": 0.17297,
+      "max_step_out_minus_master": 0.060935,
+      "ref_step_out_minus_master_next_200ms": 0.0
+     },
+     {
+      "t": 68.514,
+      "window": [
+       68.504,
+       68.514
+      ],
+      "kind": "bypass toggle 10 ms, midpoint 5 ms before the hit",
+      "from": "master",
+      "to": "M11-blue-ab",
+      "level_jump_lu": 0.449,
+      "level_jump_lu_bar_windows": 0.31,
+      "same_measure_inside_demo_lu": [
+       1.276,
+       0.102
+      ],
+      "max_step_out": 0.16157,
+      "max_step_master": 0.16739,
+      "max_step_out_minus_master": 0.080852,
+      "ref_step_out_minus_master_next_200ms": 0.073112
+     },
+     {
+      "t": 71.757,
+      "window": [
+       71.737,
+       71.757
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "M11-blue-ab",
+      "to": "M12-green-price",
+      "level_jump_lu": 0.089,
+      "level_jump_lu_bar_windows": 0.43,
+      "same_measure_inside_demo_lu": [
+       0.483,
+       0.318
+      ],
+      "max_step_out": 0.15321,
+      "max_step_master": 0.1831,
+      "max_step_out_minus_master": 0.029888,
+      "ref_step_out_minus_master_next_200ms": 0.091073
+     },
+     {
+      "t": 78.244,
+      "window": [
+       78.234,
+       78.244
+      ],
+      "kind": "bypass span 10 ms, midpoint 5 ms before the hit",
+      "from": "M12-green-price",
+      "to": "master",
+      "level_jump_lu": 0.262,
+      "level_jump_lu_bar_windows": 0.01,
+      "same_measure_inside_demo_lu": [],
+      "max_step_out": 0.10559,
+      "max_step_master": 0.10559,
+      "max_step_out_minus_master": 0.062911,
+      "ref_step_out_minus_master_next_200ms": 0.0
+     },
+     {
+      "t": 83.31,
+      "window": [
+       83.3,
+       83.31
+      ],
+      "kind": "bypass span end 10 ms, midpoint 5 ms before the hit",
+      "from": "master",
+      "to": "M13-green-end",
+      "level_jump_lu": 0.194,
+      "level_jump_lu_bar_windows": 0.05,
+      "same_measure_inside_demo_lu": [
+       0.202,
+       0.119
+      ],
+      "max_step_out": 0.20185,
+      "max_step_master": 0.20202,
+      "max_step_out_minus_master": 0.065219,
+      "ref_step_out_minus_master_next_200ms": 0.096968
+     }
+    ]
+   },
+   "tiktok": {
+    "max_level_jump_lu": 0.639,
+    "all_under_0.5": false,
+    "joins": [
+     {
+      "t": 125.2697,
+      "window": [
+       125.2597,
+       125.2797
+      ],
+      "kind": "bar-line 20 ms equal-power centred",
+      "from": "T01-red-hq",
+      "to": "T02-blue-offset",
+      "level_jump_lu": 0.639,
+      "level_jump_lu_bar_windows": 0.077,
+      "same_measure_inside_demo_lu": [
+       0.264
+      ],
+      "max_step_out": 0.20854,
+      "max_step_master": 0.20729,
+      "max_step_out_minus_master": 0.068874,
+      "ref_step_out_minus_master_next_200ms": 0.0871
+     },
+     {
+      "t": 126.892,
+      "window": [
+       126.872,
+       126.892
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "T02-blue-offset",
+      "to": "T03-purple-color",
+      "level_jump_lu": 0.389,
+      "level_jump_lu_bar_windows": 0.031,
+      "same_measure_inside_demo_lu": [
+       0.369,
+       0.185
+      ],
+      "max_step_out": 0.12561,
+      "max_step_master": 0.124,
+      "max_step_out_minus_master": 0.034885,
+      "ref_step_out_minus_master_next_200ms": 0.029398
+     },
+     {
+      "t": 128.513,
+      "window": [
+       128.493,
+       128.513
+      ],
+      "kind": "on-hit 20 ms equal-power ending at the hit",
+      "from": "T03-purple-color",
+      "to": "T04-green-mixturn",
+      "level_jump_lu": 0.239,
+      "level_jump_lu_bar_windows": 0.06,
+      "same_measure_inside_demo_lu": [
+       0.236,
+       0.208
+      ],
+      "max_step_out": 0.16142,
+      "max_step_master": 0.16142,
+      "max_step_out_minus_master": 0.01928,
+      "ref_step_out_minus_master_next_200ms": 0.0
+     },
+     {
+      "t": 130.1345,
+      "window": [
+       130.1245,
+       130.1445
+      ],
+      "kind": "bar-line 20 ms equal-power centred",
+      "from": "T04-green-mixturn",
+      "to": "T05-black-color",
+      "level_jump_lu": 0.406,
+      "level_jump_lu_bar_windows": 0.053,
+      "same_measure_inside_demo_lu": [
+       0.414,
+       0.001
+      ],
+      "max_step_out": 0.19193,
+      "max_step_master": 0.18792,
+      "max_step_out_minus_master": 0.032123,
+      "ref_step_out_minus_master_next_200ms": 0.038682
+     },
+     {
+      "t": 131.7561,
+      "window": [
+       131.7461,
+       131.7661
+      ],
+      "kind": "bar-line 20 ms equal-power centred",
+      "from": "T05-black-color",
+      "to": "T06-green-offer-buy",
+      "level_jump_lu": 0.12,
+      "level_jump_lu_bar_windows": 0.108,
+      "same_measure_inside_demo_lu": [
+       0.242,
+       0.124
+      ],
+      "max_step_out": 0.19482,
+      "max_step_master": 0.18484,
+      "max_step_out_minus_master": 0.041818,
+      "ref_step_out_minus_master_next_200ms": 0.054396
+     }
+    ]
+   }
+  }
+ },
+ "musicality": {
+  "main": {
+   "M01-green-mixturn": {
+    "side_mid_db_master": -5.2,
+    "side_mid_db_out": -4.06,
+    "side_mid_db_band_dry": -3.44,
+    "side_mid_db_band_wet": -1.61,
+    "spectrogram": "/home/user/build/v5/qc/main_M01-green-mixturn.png"
+   },
+   "M02-blue-offset": {
+    "side_mid_db_master": -2.02,
+    "side_mid_db_out": -1.68,
+    "side_mid_db_band_dry": -0.9,
+    "side_mid_db_band_wet": -0.5,
+    "spectrogram": "/home/user/build/v5/qc/main_M02-blue-offset.png"
+   },
+   "M03-red-hq": {
+    "side_mid_db_master": -2.35,
+    "side_mid_db_out": -1.01,
+    "side_mid_db_band_dry": -2.13,
+    "side_mid_db_band_wet": -0.68,
+    "spectrogram": "/home/user/build/v5/qc/main_M03-red-hq.png"
+   },
+   "M04-purple-color": {
+    "side_mid_db_master": -3.3,
+    "side_mid_db_out": -2.88,
+    "side_mid_db_band_dry": -3.13,
+    "side_mid_db_band_wet": -2.7,
+    "spectrogram": "/home/user/build/v5/qc/main_M04-purple-color.png"
+   },
+   "M05-black-depth": {
+    "side_mid_db_master": -5.53,
+    "side_mid_db_out": -5.06,
+    "side_mid_db_band_dry": -4.18,
+    "side_mid_db_band_wet": -3.05,
+    "spectrogram": "/home/user/build/v5/qc/main_M05-black-depth.png"
+   },
+   "M06-green-free": {
+    "side_mid_db_master": -9.36,
+    "side_mid_db_out": -6.28,
+    "side_mid_db_band_dry": -8.94,
+    "side_mid_db_band_wet": -3.09,
+    "spectrogram": "/home/user/build/v5/qc/main_M06-green-free.png"
+   },
+   "M07-purple-free": {
+    "side_mid_db_master": -8.78,
+    "side_mid_db_out": -8.34,
+    "side_mid_db_band_dry": -5.96,
+    "side_mid_db_band_wet": -5.07,
+    "spectrogram": "/home/user/build/v5/qc/main_M07-purple-free.png"
+   },
+   "M08-blue-trial": {
+    "side_mid_db_master": -9.33,
+    "side_mid_db_out": -6.83,
+    "side_mid_db_band_dry": -9.02,
+    "side_mid_db_band_wet": -4.86,
+    "spectrogram": "/home/user/build/v5/qc/main_M08-blue-trial.png"
+   },
+   "M09-red-trial": {
+    "side_mid_db_master": -8.1,
+    "side_mid_db_out": -6.95,
+    "side_mid_db_band_dry": -6.02,
+    "side_mid_db_band_wet": -4.16,
+    "spectrogram": "/home/user/build/v5/qc/main_M09-red-trial.png"
+   },
+   "M10-black-trial": {
+    "side_mid_db_master": -8.93,
+    "side_mid_db_out": -7.71,
+    "side_mid_db_band_dry": -7.2,
+    "side_mid_db_band_wet": -5.43,
+    "spectrogram": "/home/user/build/v5/qc/main_M10-black-trial.png"
+   },
+   "M11-blue-ab": {
+    "side_mid_db_master": -3.61,
+    "side_mid_db_out": -3.42,
+    "side_mid_db_band_dry": -1.61,
+    "side_mid_db_band_wet": -1.29,
+    "spectrogram": "/home/user/build/v5/qc/main_M11-blue-ab.png"
+   },
+   "M12-green-price": {
+    "side_mid_db_master": -5.55,
+    "side_mid_db_out": -5.16,
+    "side_mid_db_band_dry": -2.93,
+    "side_mid_db_band_wet": -2.4,
+    "spectrogram": "/home/user/build/v5/qc/main_M12-green-price.png"
+   },
+   "M13-green-end": {
+    "side_mid_db_master": -5.43,
+    "side_mid_db_out": -3.8,
+    "side_mid_db_band_dry": -4.34,
+    "side_mid_db_band_wet": -2.08,
+    "spectrogram": "/home/user/build/v5/qc/main_M13-green-end.png"
+   }
+  },
+  "tiktok": {
+   "T01-red-hq": {
+    "side_mid_db_master": -6.99,
+    "side_mid_db_out": -5.84,
+    "side_mid_db_band_dry": -4.47,
+    "side_mid_db_band_wet": -2.03,
+    "spectrogram": "/home/user/build/v5/qc/tiktok_T01-red-hq.png"
+   },
+   "T02-blue-offset": {
+    "side_mid_db_master": -7.21,
+    "side_mid_db_out": -5.85,
+    "side_mid_db_band_dry": -4.84,
+    "side_mid_db_band_wet": -3.18,
+    "spectrogram": "/home/user/build/v5/qc/tiktok_T02-blue-offset.png"
+   },
+   "T03-purple-color": {
+    "side_mid_db_master": -7.59,
+    "side_mid_db_out": -7.57,
+    "side_mid_db_band_dry": -4.9,
+    "side_mid_db_band_wet": -4.9,
+    "spectrogram": "/home/user/build/v5/qc/tiktok_T03-purple-color.png"
+   },
+   "T04-green-mixturn": {
+    "side_mid_db_master": -5.49,
+    "side_mid_db_out": -4.52,
+    "side_mid_db_band_dry": -2.82,
+    "side_mid_db_band_wet": -1.67,
+    "spectrogram": "/home/user/build/v5/qc/tiktok_T04-green-mixturn.png"
+   },
+   "T05-black-color": {
+    "side_mid_db_master": -6.0,
+    "side_mid_db_out": -4.88,
+    "side_mid_db_band_dry": -5.8,
+    "side_mid_db_band_wet": -3.57,
+    "spectrogram": "/home/user/build/v5/qc/tiktok_T05-black-color.png"
+   },
+   "T06-green-offer-buy": {
+    "side_mid_db_master": -6.61,
+    "side_mid_db_out": -5.21,
+    "side_mid_db_band_dry": -4.48,
+    "side_mid_db_band_wet": -2.19,
+    "spectrogram": "/home/user/build/v5/qc/tiktok_T06-green-offer-buy.png"
+   }
+  }
+ },
+ "outputs": {
+  "master": "/home/user/build/v5/master_v5.wav",
+  "tiktok": "/home/user/build/v5/tiktok_v5.wav",
+  "tiktok_unity": "/home/user/build/v5/tiktok_v5_unity.wav",
+  "scope_main": "/home/user/build/v5/data/scope",
+  "scope_tiktok": "/home/user/build/v5/data-tiktok/scope",
+  "qc": "/home/user/build/v5/qc",
+  "report": "/home/user/build/v5/audio/report.json"
+ }
+}

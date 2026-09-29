@@ -1,0 +1,939 @@
+{
+ "about": "Choroboros demo specification for the v5 portrait film and the 15 s TikTok. Machine-readable twin of film/v5/TREATMENT.md section 3. The audio build renders from this file and the picture reads knob values, engine, core, bypass state and the chip from it. Every time is MASTER time (seconds from the first sample of the owner's master, gapless 48 kHz decode; see film/v5/grid.json).",
+ "version": 1,
+ "status": "FINAL (v5 treatment)",
+ "time_base": "master seconds; bar n beat k = 0.4048 + (n-1)*1.621622 + (k-1)*0.405405",
+ "units": "plugin display units: rate Hz, depth/width/color/mix percent, offset degrees, trim dB. choro-render accepts these directly (e.g. --depth 22%).",
+ "engines": {
+  "green": {
+   "cores": [
+    "Lagrange 3rd",
+    "Lagrange 5th"
+   ],
+   "hue": "#64e28b",
+   "glow": "#7ee0a0",
+   "readout": "#9dbd78"
+  },
+  "blue": {
+   "cores": [
+    "Cubic",
+    "Thiran Allpass"
+   ],
+   "hue": "#63b3ff",
+   "glow": "#79b8ff",
+   "readout": "#7fb8ff"
+  },
+  "red": {
+   "cores": [
+    "BBD",
+    "Tape"
+   ],
+   "hue": "#ff776d",
+   "glow": "#ff8a80",
+   "readout": "#ff8d8b"
+  },
+  "purple": {
+   "cores": [
+    "Phase Warp",
+    "Orbit"
+   ],
+   "hue": "#b88cff",
+   "glow": "#c9b1ff",
+   "readout": "#b88dd8"
+  },
+  "black": {
+   "cores": [
+    "Linear",
+    "Linear Ensemble"
+   ],
+   "hue": "#9ca3af",
+   "glow": "#9aa0a6",
+   "readout": "#d4d4d4"
+  }
+ },
+ "inputs": {
+  "master": "/home/user/build/v5/master_src.wav (48 kHz stereo, the song as it is)",
+  "nondrums": "/home/user/build/v5/stems/nondrums.wav (master minus fitted drums, sample-locked)",
+  "renderer": "/home/user/build/choro-render/build/choro-render (called by path; never copied, never committed)"
+ },
+ "method": {
+  "BP": {
+   "formula": "out = master - BP(nd) + choro_trim(BP(nd))",
+   "bp": {
+    "type": "Butterworth band-pass, 4th order per edge, zero phase (sosfiltfilt)",
+    "hp_hz": 120,
+    "lp_hz": 5500
+   },
+   "why": "Only the guitar band is processed. The bottom (bass, kick residue) and the top above 5.5 kHz (cymbal residue in nd) stay dry. We subtract exactly what we feed, so no complementary crossover is needed. In the guitar-alone windows nd = master (drums digitally silent), so the same formula processes the master itself: no path switch anywhere.",
+   "null_requirements": [
+    "Mix 0 render of BP(nd) vs BP(nd): residual < -100 dBFS (proves zero latency/alignment)",
+    "out - master is band-limited: energy above 6.5 kHz < -90 dBFS",
+    "out - master carries no drum transients: envelope correlation with the fitted drums < 0.05",
+    "bypass spans and everything outside demos: bit-identical to the master"
+   ]
+  },
+  "fallback_parallel": {
+   "formula": "out = master + g * wet_only(choro(BP(nd)))",
+   "use_when": "BP fails a null requirement or the crash-dense bars 45-52 swirl audibly. wet_only = choro(Mix 100 %) - dry-aligned; g set so the result matches the BP level. Record the choice per demo in the report."
+  }
+ },
+ "render": {
+  "per_demo": "one render per demo: input = BP(nd) from (t0 - 3.0 s) to (t1 + 0.1 s); automation times = master time - (t0 - 3.0); keep [t0, t1]. Every knob passed explicitly (never the factory profile). --block 128 --preroll 0 --tail 0. Workers <= 2.",
+  "automation": "continuous params sampled from the gesture curve every 10 ms (the picture reads the same curve from this file); hq stepped; trim automated if the renderer accepts it in automation, else applied as the identical gain curve after the render (same numbers shown in the header).",
+  "crossfades": {
+   "engine_on_hit": "20 ms equal-power ending at the hit attack",
+   "engine_on_bar_line": "20 ms equal-power centred on the bar line",
+   "bypass_toggle": "10 ms equal-power, midpoint 5 ms before the hit attack"
+  }
+ },
+ "level_match": {
+  "meter": "BS.1770 (audio/synth/meter.py)",
+  "rule": "trim per demo = -(LUFS(out) - LUFS(master)) over the demo's ON span, rounded to 0.1 dB, rendered with --trim (the plug-in's own Output Trim). Then check PER BAR: every full ON bar of out within +-0.5 LU of the same bar of the master, and the demo's integrated loudness within +-0.2 LU. If a bar fails, split the demo at that bar line and give each part its own trim (the header readout changes on that bar line). Record trims in measured.json (see picture_data.measured).",
+  "peaks": "No limiter on the song. In each bar, out's true peak must not exceed the master's own true peak in that bar by more than 0.1 dB; if it does, lower that demo's trim in 0.1 dB steps.",
+  "mono": "per demo: mono fold-down of the processed guitar band loses at most 0.6 LU more than the dry band's fold-down, and L/R correlation of the processed band stays > +0.1. Width stays 100 %; if a demo fails, lower Depth in 2 % steps and update the readout values in this file.",
+  "on_screen": "'LEVEL MATCHED' is shown only for demos whose per-bar check passed (picture reads measured.json)."
+ },
+ "films": {
+  "main": {
+   "span": [
+    0.0,
+    91.216
+   ],
+   "frames": 5473,
+   "ending": {
+    "type": "fade",
+    "from": 89.9,
+    "to": 91.08,
+    "shape": "equal-power on the whole mix",
+    "then": "digital silence 91.080-91.216 (the bar-56 cymbal pickup at 91.115 must be silent); the film ends on the bar-57 line"
+   },
+   "outside_demos": "the untouched master (0.000-0.4048 is silence anyway)",
+   "demos": [
+    {
+     "id": "M01-green-mixturn",
+     "t0": 0.0,
+     "t1": 23.1075,
+     "bars": [
+      "0.4",
+      "15.1"
+     ],
+     "method": "BP",
+     "engine": "green",
+     "hq": 0,
+     "core": "Lagrange 3rd",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 0
+     },
+     "switch_in": {
+      "kind": "start",
+      "t": 0.0,
+      "note": "Mix 0 % until the first hit; identical to the master to -100 dBFS there"
+     },
+     "gestures": [
+      {
+       "param": "mix",
+       "shape": "click-steps",
+       "ramp_s": 0.09,
+       "driver": "the four kicks of bar 1",
+       "steps": [
+        {
+         "t": 0.4074,
+         "bar_beat": "1.1",
+         "from": 0,
+         "to": 10
+        },
+        {
+         "t": 0.8106,
+         "bar_beat": "1.2",
+         "from": 10,
+         "to": 20
+        },
+        {
+         "t": 1.216,
+         "bar_beat": "1.3",
+         "from": 20,
+         "to": 30
+        },
+        {
+         "t": 1.6217,
+         "bar_beat": "1.4",
+         "from": 30,
+         "to": 40
+        }
+       ]
+      },
+      {
+       "param": "trim",
+       "shape": "follows-mix",
+       "rule": "trim(t) = trim_G * mix(t)/40, i.e. 0 -> trim_G in the same four steps; header TRIM readout shows it"
+      }
+     ],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "● GUITAR · CHOROBOROS GREEN · LAGRANGE 3RD",
+     "notes": "Green lesson = the Mix turn plus the settings montage in bar 2 (readouts only, no audio move)."
+    },
+    {
+     "id": "M02-blue-offset",
+     "t0": 23.1075,
+     "t1": 26.3507,
+     "bars": [
+      "15.1",
+      "17.1"
+     ],
+     "method": "BP",
+     "engine": "blue",
+     "hq": 0,
+     "core": "Cubic",
+     "knobs_at_t0": {
+      "rate_hz": 1.23,
+      "depth_pct": 12,
+      "offset_deg": 0,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 23.1075,
+      "hit": "kick + crash 23.108 (the stop)",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [
+      {
+       "param": "offset",
+       "from": 0,
+       "to": 120,
+       "t0": 24.7291,
+       "t1": 25.5399,
+       "bar_beat": [
+        "16.1",
+        "16.3"
+       ],
+       "shape": "sine-inout"
+      }
+     ],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.0",
+     "chip": "● GUITAR · CHOROBOROS BLUE · CUBIC"
+    },
+    {
+     "id": "M03-red-hq",
+     "t0": 26.3507,
+     "t1": 29.594,
+     "bars": [
+      "17.1",
+      "19.1"
+     ],
+     "method": "BP",
+     "engine": "red",
+     "hq": 0,
+     "core": "BBD -> Tape",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 30,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 30,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "bar-line",
+      "t": 26.3507,
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade CENTRED on t (no drum hit; the picture smear covers it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "● GUITAR · CHOROBOROS RED · BBD  (-> TAPE at 27.972)",
+     "hq_switch": {
+      "t": 27.9723,
+      "bar_beat": "18.1",
+      "from": 0,
+      "to": 1,
+      "note": "BBD -> Tape; stepped in the automation; the lever animates 420 ms in picture"
+     }
+    },
+    {
+     "id": "M04-purple-color",
+     "t0": 29.594,
+     "t1": 32.8372,
+     "bars": [
+      "19.1",
+      "21.1"
+     ],
+     "method": "BP",
+     "engine": "purple",
+     "hq": 1,
+     "core": "Orbit",
+     "knobs_at_t0": {
+      "rate_hz": 0.12,
+      "depth_pct": 50,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 10,
+      "mix_pct": 30
+     },
+     "switch_in": {
+      "kind": "bar-line",
+      "t": 29.594,
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade CENTRED on t (no drum hit; the picture smear covers it)"
+     },
+     "gestures": [
+      {
+       "param": "color",
+       "from": 10,
+       "to": 45,
+       "t0": 31.2156,
+       "t1": 32.0264,
+       "bar_beat": [
+        "20.1",
+        "20.3"
+       ],
+       "shape": "sine-inout"
+      }
+     ],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.0",
+     "chip": "● GUITAR · CHOROBOROS PURPLE · ORBIT"
+    },
+    {
+     "id": "M05-black-depth",
+     "t0": 32.8372,
+     "t1": 49.0538,
+     "bars": [
+      "21.1",
+      "31.1"
+     ],
+     "method": "BP",
+     "engine": "black",
+     "hq": 1,
+     "core": "Linear Ensemble",
+     "knobs_at_t0": {
+      "rate_hz": 0.31,
+      "depth_pct": 15,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 60,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "bar-line",
+      "t": 32.8372,
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade CENTRED on t (no drum hit; the picture smear covers it)"
+     },
+     "gestures": [
+      {
+       "param": "depth",
+       "from": 15,
+       "to": 30,
+       "t0": 34.4588,
+       "t1": 35.2696,
+       "bar_beat": [
+        "22.1",
+        "22.3"
+       ],
+       "shape": "sine-inout"
+      }
+     ],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -1.1",
+     "chip": "● GUITAR · CHOROBOROS BLACK · LINEAR ENSEMBLE",
+     "notes": "Carried unchanged as the bed under cores, Create and looks (bars 23-30). The same render continues through the drum re-entry at 36.080 (BP method: no path switch)."
+    },
+    {
+     "id": "M06-green-free",
+     "t0": 49.0538,
+     "t1": 52.2962,
+     "bars": [
+      "31.1",
+      "33.1"
+     ],
+     "method": "BP",
+     "engine": "green",
+     "hq": 0,
+     "core": "Lagrange 3rd",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 49.0538,
+      "hit": "crash + kick 49.054",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "● GUITAR · CHOROBOROS GREEN · LAGRANGE 3RD"
+    },
+    {
+     "id": "M07-purple-free",
+     "t0": 52.2962,
+     "t1": 55.54,
+     "bars": [
+      "33.1",
+      "35.1"
+     ],
+     "method": "BP",
+     "engine": "purple",
+     "hq": 1,
+     "core": "Orbit",
+     "knobs_at_t0": {
+      "rate_hz": 0.12,
+      "depth_pct": 50,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 30
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 52.2962,
+      "hit": "crash + kick 52.296",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.0",
+     "chip": "● GUITAR · CHOROBOROS PURPLE · ORBIT"
+    },
+    {
+     "id": "M08-blue-trial",
+     "t0": 55.54,
+     "t1": 56.9581,
+     "bars": [
+      "35.1",
+      "35.4.5"
+     ],
+     "method": "BP",
+     "engine": "blue",
+     "hq": 0,
+     "core": "Cubic",
+     "knobs_at_t0": {
+      "rate_hz": 1.23,
+      "depth_pct": 12,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 55.54,
+      "hit": "crash + kick 55.540",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.0",
+     "chip": "● GUITAR · CHOROBOROS BLUE · CUBIC"
+    },
+    {
+     "id": "M09-red-trial",
+     "t0": 56.9581,
+     "t1": 58.784,
+     "bars": [
+      "35.4.5",
+      "37.1"
+     ],
+     "method": "BP",
+     "engine": "red",
+     "hq": 1,
+     "core": "Tape",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 30,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 30,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 56.9581,
+      "hit": "crash + kick 56.958",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "● GUITAR · CHOROBOROS RED · TAPE"
+    },
+    {
+     "id": "M10-black-trial",
+     "t0": 58.784,
+     "t1": 62.027,
+     "bars": [
+      "37.1",
+      "39.1"
+     ],
+     "method": "BP",
+     "engine": "black",
+     "hq": 1,
+     "core": "Linear Ensemble",
+     "knobs_at_t0": {
+      "rate_hz": 0.31,
+      "depth_pct": 30,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 60,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 58.784,
+      "hit": "crash + kick 58.784",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -1.1",
+     "chip": "● GUITAR · CHOROBOROS BLACK · LINEAR ENSEMBLE"
+    },
+    {
+     "id": "M11-blue-ab",
+     "t0": 62.027,
+     "t1": 71.757,
+     "bars": [
+      "39.1",
+      "45.1"
+     ],
+     "method": "BP",
+     "engine": "blue",
+     "hq": 0,
+     "core": "Cubic",
+     "knobs_at_t0": {
+      "rate_hz": 1.23,
+      "depth_pct": 12,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 62.027,
+      "hit": "crash + kick 62.027",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [],
+     "bypass": [
+      {
+       "t0": 63.447,
+       "t1": 65.27,
+       "bar_beat": [
+        "39.4.5",
+        "41.1"
+       ]
+      },
+      {
+       "t0": 66.688,
+       "t1": 68.514,
+       "bar_beat": [
+        "41.4.5",
+        "43.1"
+       ]
+      }
+     ],
+     "trim_db": "measure (section level_match); estimate -2.0",
+     "chip": "● GUITAR · CHOROBOROS BLUE · CUBIC",
+     "notes": "A/B on the crashes: ON 62.027, BYPASS 63.447, ON 65.270, BYPASS 66.688, ON 68.514 to the end of bar 44. Bypass = the master itself, bit for bit. Toggle crossfades 10 ms equal-power, midpoint 5 ms BEFORE the hit attack."
+    },
+    {
+     "id": "M12-green-price",
+     "t0": 71.757,
+     "t1": 78.244,
+     "bars": [
+      "45.1",
+      "49.1"
+     ],
+     "method": "BP",
+     "engine": "green",
+     "hq": 0,
+     "core": "Lagrange 3rd",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 71.757,
+      "hit": "crash + kick 71.757",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "● GUITAR · CHOROBOROS GREEN · LAGRANGE 3RD"
+    },
+    {
+     "id": "M13-green-end",
+     "t0": 83.31,
+     "t1": 91.216,
+     "bars": [
+      "52.1.5",
+      "57.1"
+     ],
+     "method": "BP",
+     "engine": "green",
+     "hq": 0,
+     "core": "Lagrange 3rd",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 83.31,
+      "hit": "crash + kick 83.310 (Choroboros returns for the wind-up)",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "● GUITAR · CHOROBOROS GREEN · LAGRANGE 3RD",
+     "notes": "Wind-up, the bar-53 stop, payoff and end card. The guitar plays alone from 84.729 through Green."
+    }
+   ],
+   "bypass_spans": [
+    {
+     "t0": 78.244,
+     "t1": 83.31,
+     "why": "More from Kaizen DSP (Fold, Echolalia, Stovetop): the song as it is, so nothing suggests those products are heard",
+     "xfade": "10 ms equal-power, midpoint 5 ms before each hit (78.244 crash + kick; 83.310 crash + kick)"
+    }
+   ],
+   "output": "/home/user/build/v5/master_v5.wav (48 kHz 24-bit stereo, exactly 91.216 s = 4 378 368 samples); v5.sh muxes it"
+  },
+  "tiktok": {
+   "span": [
+    123.648,
+    138.648
+   ],
+   "frames": 900,
+   "offset": 123.648,
+   "ending": {
+    "type": "fade",
+    "from": 138.243,
+    "to": 138.63,
+    "shape": "equal-power",
+    "then": "silence to 138.648; loops back into the crash at frame 0"
+   },
+   "start": "1 ms (48-sample) fade-in at 123.648; the crash + kick at 123.649 must survive (first 20 ms null against the source < -60 dB after the fade)",
+   "outside_demos": "none (Choroboros is on the guitar for the whole stretch)",
+   "demos": [
+    {
+     "id": "T01-red-hq",
+     "t0": 123.648,
+     "t1": 125.2697,
+     "bars": [
+      "77.1",
+      "78.1"
+     ],
+     "method": "BP",
+     "engine": "red",
+     "hq": 0,
+     "core": "BBD -> Tape",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 30,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 30,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "start",
+      "t": 123.648,
+      "note": "first sample of the TikTok = crash + kick 123.649; render with >= 3 s of real pre-roll so the chorus is warm on sample 1"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "RED · BBD -> RED · TAPE",
+     "hq_switch": {
+      "t": 124.865,
+      "bar_beat": "77.4",
+      "from": 0,
+      "to": 1,
+      "note": "BBD -> Tape on the snare 124.865"
+     }
+    },
+    {
+     "id": "T02-blue-offset",
+     "t0": 125.2697,
+     "t1": 126.8913,
+     "bars": [
+      "78.1",
+      "79.1"
+     ],
+     "method": "BP",
+     "engine": "blue",
+     "hq": 0,
+     "core": "Cubic",
+     "knobs_at_t0": {
+      "rate_hz": 1.23,
+      "depth_pct": 12,
+      "offset_deg": 0,
+      "width_pct": 100,
+      "color_pct": 45,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "bar-line",
+      "t": 125.2697,
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade CENTRED on t (no drum hit; the picture smear covers it)"
+     },
+     "gestures": [
+      {
+       "param": "offset",
+       "from": 0,
+       "to": 120,
+       "t0": 125.6749,
+       "t1": 126.0804,
+       "bar_beat": [
+        "78.2",
+        "78.3"
+       ],
+       "shape": "sine-inout",
+       "driver": "snare 125.675 starts it"
+      }
+     ],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.0",
+     "chip": "● GUITAR · CHOROBOROS BLUE · CUBIC"
+    },
+    {
+     "id": "T03-purple-color",
+     "t0": 126.8913,
+     "t1": 128.513,
+     "bars": [
+      "79.1",
+      "80.1"
+     ],
+     "method": "BP",
+     "engine": "purple",
+     "hq": 1,
+     "core": "Orbit",
+     "knobs_at_t0": {
+      "rate_hz": 0.12,
+      "depth_pct": 50,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 10,
+      "mix_pct": 30
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 126.892,
+      "hit": "crash + kick 126.892",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [
+      {
+       "param": "color",
+       "from": 10,
+       "to": 45,
+       "t0": 127.2966,
+       "t1": 128.1074,
+       "bar_beat": [
+        "79.2",
+        "79.4"
+       ],
+       "shape": "sine-inout",
+       "driver": "snare 127.297 starts it"
+      }
+     ],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.0",
+     "chip": "● GUITAR · CHOROBOROS PURPLE · ORBIT"
+    },
+    {
+     "id": "T04-green-mixturn",
+     "t0": 128.513,
+     "t1": 130.1345,
+     "bars": [
+      "80.1",
+      "81.1"
+     ],
+     "method": "BP",
+     "engine": "green",
+     "hq": 0,
+     "core": "Lagrange 3rd",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 0
+     },
+     "switch_in": {
+      "kind": "on-hit",
+      "t": 128.513,
+      "hit": "kick + snare 128.513 (stop-time hit)",
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade ENDS at t (the hit's attack masks it)"
+     },
+     "gestures": [
+      {
+       "param": "mix",
+       "from": 0,
+       "to": 40,
+       "t0": 129.3236,
+       "t1": 129.729,
+       "bar_beat": [
+        "80.3",
+        "80.4"
+       ],
+       "shape": "sine-inout",
+       "driver": "silence: the guitar alone"
+      },
+      {
+       "param": "trim",
+       "shape": "follows-mix",
+       "rule": "trim(t) = trim_G * mix(t)/40"
+      }
+     ],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "● GUITAR · CHOROBOROS GREEN · LAGRANGE 3RD",
+     "notes": "Dry guitar alone 128.513-129.324 (Mix 0 %), then the Mix turn in the silence; the band slams back on 129.932."
+    },
+    {
+     "id": "T05-black-color",
+     "t0": 130.1345,
+     "t1": 131.7561,
+     "bars": [
+      "81.1",
+      "82.1"
+     ],
+     "method": "BP",
+     "engine": "black",
+     "hq": 1,
+     "core": "Linear Ensemble",
+     "knobs_at_t0": {
+      "rate_hz": 0.31,
+      "depth_pct": 30,
+      "offset_deg": 120,
+      "width_pct": 100,
+      "color_pct": 20,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "bar-line",
+      "t": 130.1345,
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade CENTRED on t (no drum hit; the picture smear covers it)"
+     },
+     "gestures": [
+      {
+       "param": "color",
+       "from": 20,
+       "to": 60,
+       "t0": 130.5398,
+       "t1": 130.9452,
+       "bar_beat": [
+        "81.2",
+        "81.3"
+       ],
+       "shape": "sine-inout",
+       "driver": "snare 130.540 starts it"
+      }
+     ],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -1.1",
+     "chip": "● GUITAR · CHOROBOROS BLACK · LINEAR ENSEMBLE"
+    },
+    {
+     "id": "T06-green-offer-buy",
+     "t0": 131.7561,
+     "t1": 138.648,
+     "bars": [
+      "82.1",
+      "86.2"
+     ],
+     "method": "BP",
+     "engine": "green",
+     "hq": 0,
+     "core": "Lagrange 3rd",
+     "knobs_at_t0": {
+      "rate_hz": 0.62,
+      "depth_pct": 22,
+      "offset_deg": 90,
+      "width_pct": 100,
+      "color_pct": 35,
+      "mix_pct": 40
+     },
+     "switch_in": {
+      "kind": "bar-line",
+      "t": 131.7561,
+      "xfade_ms": 20,
+      "shape": "equal-power",
+      "align": "crossfade CENTRED on t (no drum hit; the picture smear covers it)"
+     },
+     "gestures": [],
+     "bypass": [],
+     "trim_db": "measure (section level_match); estimate -2.4",
+     "chip": "● GUITAR · CHOROBOROS GREEN · LAGRANGE 3RD",
+     "notes": "Offer, price and Buy; the guitar alone from the stop at 135.000."
+    }
+   ],
+   "output": "/home/user/build/v5/tiktok_v5.wav (48 kHz 24-bit stereo, exactly 15.000 s = 720 000 samples); v5.sh muxes it"
+  }
+ },
+ "picture_data": {
+  "scope": "/home/user/build/v5/audio/scope/ (main) and /home/user/build/v5/audio/scope-tiktok/ (TikTok): index.json + dry.i16 + wet.i16 in the existing scope.js format; v5.sh links them to /data/scope. Format (400 mid/side pairs per frame from 800 samples at 48 kHz, one fixed data gain for both films), aligned to COMPOSITION time (main: master; tiktok: master - 123.648). dry = BP(nd); wet = the guitar band as heard (choro_trim(BP(nd)) inside demos, BP(nd) in bypass and outside demos).",
+  "meter": "/home/user/build/v5/audio/scope[-tiktok]/meter.json (served as /data/scope/meter.json): per frame, the processed band's peak dBFS after trim (drives the top bar's TRIM meter).",
+  "measured": "/home/user/build/v5/audio/scope[-tiktok]/measured.json (served as /data/scope/measured.json): per demo id, trim_db actually used, per-bar LU deltas, pass/fail, mono result."
+ }
+}

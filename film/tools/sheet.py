@@ -6,7 +6,12 @@ from PIL import Image, ImageDraw, ImageFont
 d, per, cols, tw = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
 prefix = sys.argv[5] if len(sys.argv) > 5 else "sheet"
 files = sorted(glob.glob(os.path.join(d, "still-*.png")))
-th = round(tw * 9 / 16)
+# Thumbnail height from the stills' own aspect (16:9 for the landscape film, 9:16 for v5).
+if files:
+    _w, _h = Image.open(files[0]).size
+    th = round(tw * _h / _w)
+else:
+    th = round(tw * 9 / 16)
 try:
     font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf", 14)
 except Exception:

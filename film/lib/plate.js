@@ -555,6 +555,9 @@ export class Plate {
       }
     }
     drawCorner(this.body);
+    // Everything in the body except the readouts: setGrade() filters these (colour = sound, v5).
+    const readoutNodes = new Set(Object.values(this.readouts).map((r) => r.node));
+    this._gradeNodes = [...this.body.children].filter((n) => !readoutNodes.has(n));
     this.cur = {};
     this.placement = { x: 0, y: 0, scale: 1, dx: 0, dy: 0 };
     this.place(cx != null ? { cx, cy, scale } : { x, y, scale });
@@ -756,6 +759,21 @@ export class Plate {
     const r = this.controlRect(name);
     const [cx, cy] = this.toScreen(r.cx, r.cy);
     return { cx, cy, size: r.size * this.placement.scale };
+  }
+
+  /**
+   * Colour = sound (v5): a CSS filter saturate(sat) brightness(bright) on the plate body (backpanel,
+   * knobs, mix, thumb, lever), never on the readouts, which keep the product's own colour. The
+   * plate has no canvas, so the filter is seek-safe. topBar: also grade the top bar (default true).
+   * keep: names of the readouts left ungraded (default: all six).
+   */
+  setGrade({ sat = 1, bright = 1, topBar = true, keep = null } = {}) {
+    const f = sat === 1 && bright === 1 ? "" : `saturate(${+sat.toFixed(4)}) brightness(${+bright.toFixed(4)})`;
+    for (const n of this._gradeNodes) setStyle(n, "filter", f);
+    // keep: the readouts that stay in their own colour (default all of them), e.g. ["mix"].
+    for (const [name, r] of Object.entries(this.readouts)) setStyle(r.node, "filter", !keep || keep.includes(name) ? "" : f);
+    if (this.topbar && this.topbar.el) setStyle(this.topbar.el, "filter", topBar ? f : "");
+    return this;
   }
 
   /**

@@ -23,3 +23,19 @@ export { createRing } from "./ring.js";
 export { createGrain } from "./grain.js";
 export { createHero } from "./hero.js";
 export { clipSequence } from "./clips.js";
+
+// v5 portrait kit
+export * as beats from "./beats.js";
+export * as motion from "./motion.js";
+export * as portrait from "./portrait.js";
+export { loadBeats, getBeats, Beats } from "./beats.js";
+export * as demos from "./demos.js";
+export * as flash from "./flash.js";
+export * as chip from "./chip.js";
+export * as montage from "./montage.js";
+export * as slices from "./slices.js";
+export { loadDemos, getDemos } from "./demos.js";
+export { createFlash, registerFlash, resolveFlashes } from "./flash.js";
+export { createChip } from "./chip.js";
+export { createMontage } from "./montage.js";
+export { createSlice } from "./slices.js";
