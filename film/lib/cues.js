@@ -248,7 +248,7 @@ export class Cues {
   footnote(kind) {
     const r = (this.json.levelmatch && this.json.levelmatch.result) || {};
     if (kind === "opening") return r.footnote_shots_2_3 ?? (r.bars_1_4_pass ? "LEVEL MATCHED" : null);
-    if (kind === "tour") return r.footnote_tour ?? (r.bars_9_18_pass ? "SAME TAKE · LEVEL MATCHED" : "SAME TAKE");
+    if (kind === "tour") return r.footnote_tour ?? (r.bars_9_18_pass ? "LEVEL MATCHED" : ""); // v4: each engine plays the next two bars of the song
     throw new Error(`cues.footnote: unknown kind ${kind}`);
   }
 

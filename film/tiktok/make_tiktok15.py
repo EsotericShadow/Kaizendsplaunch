@@ -173,7 +173,7 @@ def cap_engine(name):
     hue = HUES[name] + (255,)
     label = name.upper() if name != "red" else "RED  ·  BBD / TAPE"
     eyebrow(d, 1385, label, fill=hue, size=52, track=0.22)
-    eyebrow(d, 1460, "SAME TAKE  ·  LEVEL MATCHED", fill=(246, 244, 239, 150), size=26, track=0.25)
+    eyebrow(d, 1460, "LEVEL MATCHED", fill=(246, 244, 239, 150), size=26, track=0.25)
     return im
 
 

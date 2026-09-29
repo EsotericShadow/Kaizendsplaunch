@@ -643,7 +643,8 @@
       "bars_9_18_pass": true,
       "bars_28_31_pass": true,
       "footnote_shots_2_3": "LEVEL MATCHED",
-      "footnote_tour": "SAME TAKE \u00b7 LEVEL MATCHED"
+      "footnote_tour": "LEVEL MATCHED",
+      "v4_note": "v4: owner's track plays through; demo bars level matched to the original mix within 0.08 LU (audio/logs/v4-song-play.json)"
     }
   },
   "master": {
