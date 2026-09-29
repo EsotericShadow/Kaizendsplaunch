@@ -17,17 +17,22 @@ Rules (dB):
   kick      kick LF delta > -29 and kick HF - LF > -26 (beater click; floor-tom bleed has none)
   snare     snare LF delta > -28 and snare HF - LF > -22 (kick/tom bleed in the snare mic has no crack)
   rack tom  rack LF delta > -24 and 4 dB above max(kick LF - 15, snare LF - 10) (their bleed in the rack mic)
-  floor tom floor LF delta > -34 and 6 dB above max(kick LF, rack LF - 17)
-  hi-hat    hat HF delta > -46 and 6 dB above the snare/tom crack the hat mic hears at that moment
-            (open if the hat mic stays within 12 dB of its peak 60-140 ms later)
-  cymbal    overhead (L+R, 6-16 kHz) level 80-300 ms after the onset > -47 dBFS, 5 dB above the 10-60 ms
-            before it, and at least 2 dB above the hat mic's own sustain (hat mic - 15 dB); "crash" when the
-            sustained rise is >= 9 dB or the sustained level >= -36 dBFS, otherwise "ride/wash".
-Times: the attack, i.e. the first sample in [-6, +15] ms where the own-mic HF envelope (full rate, 0.5 ms
-smoothing) reaches 25 % of its local peak. Velocity: own-mic peak level in dBFS (LF band for kick, snare,
+  floor tom floor LF delta > -34 and 6 dB above max(kick LF, rack LF - 17), and its own stick crack (HF)
+            no more than 2 dB under the rack/snare crack in its mic (the floor-tom mic rings in sympathy with
+            the kick and rack tom; this last rule was added after the intro showed such resonance bumps)
+  hi-hat    an onset in the hat mic itself, rising >= 10 dB within 8 ms, hat HF delta > -40 and 6 dB above
+            the snare/tom crack the hat mic hears at that moment (transfer measured at the accepted snare and
+            tom hits); open if the hat mic stays within 12 dB of its peak 60-140 ms later
+  crash     overheads (L+R, 6-16 kHz, 20 ms smoothed): a peak >= -34 dBFS that stays within 10 dB of itself
+            for >= 160 ms (bleed from snare, toms and hats falls 10 dB in < 120 ms); time = the kick/snare/tom
+            attack it lands with (its own overhead rise starts ~10 ms earlier and is kept as overhead_rise_s)
+  cymbal    other short overhead peaks (prominence >= 8 dB, >= -45 dBFS) with no snare/tom/hat hit within 25 ms
+Features are read at the cluster start (the earliest onset of any mic within 6 ms), where the thresholds
+were calibrated. Times: the attack, i.e. the first sample in [-6, +15] ms where the own-mic HF envelope
+(full rate, 0.5 ms smoothing) reaches 25 % of its local peak. Velocity: own-mic peak level in dBFS (LF band for kick, snare,
 toms; 6-16 kHz for hats and cymbals).
-Fills: runs of tom and snare hits (plus kicks inside them) at 8th-note density or faster that break the
-section's groove, found against the beat grid (film/v5/grid.json) when it exists.
+Same-piece hits closer than 35 ms are merged (neighbouring clusters can resolve to the same attack).
+Fills are found in s6_map.py, against the grid and the sections.
 """
 import json
 import os
@@ -145,7 +150,8 @@ def classify(H, L, F):
         "racktom": lambda i: dl("racktom", i) > -24 and
         dl("racktom", i) - max(dl("kick", i) - 15, dl("snare", i) - 10) > 4,
         "floortom": lambda i: dl("floortom", i) > -34 and
-        dl("floortom", i) - max(dl("kick", i), dl("racktom", i) - 17) > 6,
+        dl("floortom", i) - max(dl("kick", i), dl("racktom", i) - 17) > 6 and
+        dh("floortom", i) - max(dh("racktom", i), dh("snare", i)) > -2,
     }
     for k, rule in rules.items():
         hits[k] = [(attack(F[k], i), peak_db(L[k], i), i) for i, _ in cl if rule(i)]
@@ -158,44 +164,69 @@ def classify(H, L, F):
     feats["hat_crack_transfer_db"] = round(t_crack, 1)
     out = []
     Hh = H["hihat"].astype(np.float64)
-    for i, _ in cl:
+    for i, mem in cl:
+        if "hihat" not in mem or i < 30:
+            continue
         hh = dh("hihat", i)
         pred = max(dh("snare", i), dh("racktom", i), dh("floortom", i)) + t_crack
-        if hh > -46 and hh - pred > 6:
+        sharp = Hh[i:i + 8].max() - np.median(Hh[i - 25:i - 3])
+        if hh > -40 and hh - pred > 6 and sharp >= 10:
             pk = Hh[i:i + 15].max()
             later = Hh[i + 60:i + 140].mean() if i + 140 < len(Hh) else -120
             out.append((attack(F["hihat"], i), float(pk), i, bool(later > pk - 12)))
     hits["hihat"] = out
-    # cymbals from the overheads
-    oh = pw(H["ohl"]) + pw(H["ohr"])
-    hat = pw(H["hihat"])
-    out = []
-    for i, mem in cl:
-        if not mem & {"ohl", "ohr", "hihat"}:
-            continue
-        if i < 70 or i + 300 > len(oh):
-            continue
-        a = 10 * np.log10(oh[i + 80:i + 300].mean() + 1e-15)
-        b = 10 * np.log10(oh[i - 60:i - 10].mean() + 1e-15)
-        c = 10 * np.log10(hat[i + 80:i + 300].mean() + 1e-15) - 15
-        if a > -47 and a - b > 5 and a - c > 2:
-            j = i if H["ohl"][i:i + 15].max() >= H["ohr"][i:i + 15].max() else i
-            side = float(H["ohl"][i:i + 40].max() - H["ohr"][i:i + 40].max())
-            fl = F["ohl"] + F["ohr"]
-            crash = (a - b >= 9) or (a >= -36)
-            out.append((attack(fl, j), float(10 * np.log10(oh[i:i + 40].max())), i, crash, round(side, 1), round(a - b, 1)))
-    # merge cymbal onsets closer than 60 ms (keep the first, loudest level)
-    merged = []
-    for h in out:
-        if merged and h[0] - merged[-1][0] < 0.06:
-            if h[1] > merged[-1][1]:
-                merged[-1] = (merged[-1][0],) + h[1:]
-            continue
-        merged.append(h)
-    hits["cymbal"] = merged
+    hits["crash"], hits["ride"] = cymbals(F, hits)
     for k in ("kick", "snare", "racktom", "floortom", "hihat"):
         hits[k] = dedupe(hits[k])
     return hits, cand, feats
+
+
+def cymbals(F, hits):
+    """Crashes and other cymbal hits from the overheads (L+R, 6-16 kHz), on a 20 ms smoothed level where a
+    crash is a peak that stays within 10 dB of itself for >= 160 ms (snare, tom and hat bleed in the
+    overheads falls 10 dB in < 120 ms); measured: every peak louder than -30 dBFS with such a decay, and
+    nothing else, sits in that corner. Other cymbal hits ("ride"): short overhead peaks (prominence >= 8 dB,
+    louder than -45 dBFS) with no snare, tom, hat or crash hit within 25 ms."""
+    from scipy.signal import find_peaks
+    p = F["ohl"].astype(np.float64) ** 2 + F["ohr"].astype(np.float64) ** 2
+    c = np.convolve(p, np.ones(960) / 960, mode="same")
+    n = len(c) // 48
+    oh = 10 * np.log10(c[:n * 48].reshape(n, 48).mean(1) + 1e-15)
+    pk, pr = find_peaks(oh, prominence=6, distance=60)
+    fast = np.sqrt(p)
+    crash, ride = [], []
+    others = np.sort(np.concatenate([[h[0] for h in hits[k]] for k in ("snare", "racktom", "floortom", "hihat")]))
+    drum_t = np.sort(np.concatenate([[h[0] for h in hits[k]] for k in ("kick", "snare", "racktom", "floortom")]))
+    for q, prom in zip(pk, pr["prominences"]):
+        lvl = oh[q]
+        nxt = pk[pk > q][0] if (pk > q).any() else len(oh)
+        seg = oh[q:min(nxt, q + 1500)]
+        below = np.flatnonzero(seg < lvl - 10)
+        t10 = int(below[0]) if len(below) else len(seg)
+        a0, a1 = max(0, (q - 150) * 48), (q + 5) * 48
+        e = 20 * np.log10(np.convolve(fast[a0:a1], np.ones(96) / 96, mode="same") + 1e-9)
+        pre = np.median(e[:70 * 48])
+        k0 = 70 * 48 + int(np.argmax(e[70 * 48:] > pre + 6))
+        t_rise = (a0 + k0) / C.SR                               # overheads 6 dB over the wash before
+        j = np.searchsorted(drum_t, t_rise)
+        cand_t = drum_t[max(0, j - 2):j + 3]
+        near = cand_t[np.abs(cand_t - t_rise) < 0.035]
+        if len(near):
+            t = float(near[np.argmin(np.abs(near - t_rise - 0.012))])
+        else:                                                   # inside a wash: sharpest 3 ms rise nearby
+            b0 = max(0, int((t_rise - 0.02) * C.SR))
+            e2 = 20 * np.log10(np.convolve(fast[b0:b0 + 80 * 48], np.ones(48) / 48, mode="same") + 1e-9)
+            t = (b0 + 144 + int(np.argmax(e2[144:] - e2[:-144]))) / C.SR
+        side = float(10 * np.log10((F["ohl"][a0:a1].astype(np.float64) ** 2).sum() /
+                                   ((F["ohr"][a0:a1].astype(np.float64) ** 2).sum() + 1e-20)))
+        if t10 >= 160 and lvl >= -34:
+            crash.append((t, round(float(lvl), 1), q, round(side, 1), t10, round(t_rise, 4)))
+        elif lvl >= -45 and prom >= 8:
+            j = np.searchsorted(others, t)
+            near = min(abs(others[max(0, j - 1):j + 1] - t)) if len(others) else 1.0
+            if near > 0.025 and (not crash or t - crash[-1][0] > 0.025):
+                ride.append((t, round(float(lvl), 1), q, round(side, 1), t10, round(t_rise, 4)))
+    return crash, ride
 
 
 def dedupe(v, sep=0.035):

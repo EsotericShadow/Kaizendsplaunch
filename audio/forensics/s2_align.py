@@ -1,4 +1,4 @@
-"""Step 2: align every drum stem to master time (the second mp3 is handled by s2b_other.py).
+"""Step 2: align every drum stem to master time (the second mp3 is handled by s3_other.py).
 
 Method: band-limited GCC-PHAT between the master (mono sum) and each stem in 6 s windows spread over the
 song, searched +-60 ms around a blind envelope estimate, peak refined to a fraction of a sample by
@@ -97,7 +97,7 @@ def fit_line(t, L):
 
 
 def main():
-    """Drum stems only (the second mp3 does not hold a constant offset: see s2b_other.py)."""
+    """Drum stems only (the second mp3 does not hold a constant offset: see s3_other.py)."""
     m2 = C.master()
     m = m2.mean(axis=1)
     grid_centers = np.arange(4.0, 166.0, 6.0)
