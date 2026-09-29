@@ -23,17 +23,33 @@ BAND_Y = (H - BAND_H) // 2  # 656
 FPS = 30
 
 # (source in, source out, key) in film time; output time is cumulative.
-SEGMENTS = [
-    (1.0, 4.0, "open"),
-    (18.0, 19.0, "green"),
-    (22.0, 23.0, "blue"),
-    (25.5, 26.5, "red"),
-    (30.0, 31.0, "purple"),
-    (34.0, 35.0, "black"),
-    (50.0, 52.0, "free"),
-    (58.0, 60.0, "price"),
-    (77.0, 80.0, "end"),
-]
+V3 = os.environ.get("TIKTOK_V3", "1") == "1"
+if V3:
+    # cut to the owner's track: film/warp.json gives the bar length; every cut sits on a bar line
+    _w = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "warp.json")))
+    B = _w["bar_s"]
+    P = 36 * B + 8.0
+    SEGMENTS = [(0.5 * B, 3 * B, "open")]
+    for k, eng in enumerate(["green", "blue", "red", "purple", "black"]):
+        a = 8 * B + 2 * k * B + B          # the second bar of each engine block (its knob move)
+        SEGMENTS.append((a, a + B, eng))
+    SEGMENTS += [(28 * B, 29 * B, "free"), (P + 4 * B, P + 5 * B, "end")]
+    TURN = 1.974 - 0.5 * B                # Mix turn starts this far into the opening segment
+    VIDEO = os.environ.get("TIKTOK_VIDEO", "/home/user/build/film/out/v3-preview.mp4")
+    MASTER = os.environ.get("TIKTOK_AUDIO", "/home/user/build/film/v3/master.wav")
+else:
+    SEGMENTS = [
+        (1.0, 4.0, "open"),
+        (18.0, 19.0, "green"),
+        (22.0, 23.0, "blue"),
+        (25.5, 26.5, "red"),
+        (30.0, 31.0, "purple"),
+        (34.0, 35.0, "black"),
+        (50.0, 52.0, "free"),
+        (58.0, 60.0, "price"),
+        (77.0, 80.0, "end"),
+    ]
+    TURN = 1.25
 
 INK = (246, 244, 239, 255)
 ACCENT = (208, 189, 255, 255)
@@ -133,7 +149,7 @@ def layer():
 def cap_open_a():
     im = layer(); d = ImageDraw.Draw(im)
     eyebrow(d, 250, "SOUND ON")
-    centered_line(d, 470, [("A dry guitar.", font("Fraunces-600.ttf", 112), INK)])
+    centered_line(d, 470, [("Bypassed." if V3 else "A dry guitar.", font("Fraunces-600.ttf", 112), INK)])
     return im
 
 
@@ -229,16 +245,17 @@ def main():
     overlays = []  # (png, t0, t1)
     w = {k: (t0, t1) for t0, t1, _, _, k in windows}
     o0, o1 = w["open"]
-    cap_open_a().save(L("open-a.png")); overlays.append(("open-a.png", o0, o0 + 1.25))
-    cap_open_b().save(L("open-b.png")); overlays.append(("open-b.png", o0 + 1.25, o1))
+    cap_open_a().save(L("open-a.png")); overlays.append(("open-a.png", o0, o0 + TURN))
+    cap_open_b().save(L("open-b.png")); overlays.append(("open-b.png", o0 + TURN, o1))
     cap_engines_top().save(L("engines.png")); overlays.append(("engines.png", w["green"][0], w["black"][1]))
     for k in ["green", "blue", "red", "purple", "black"]:
         cap_engine(k).save(L(f"eng-{k}.png")); overlays.append((f"eng-{k}.png", *w[k]))
     cap_free().save(L("free.png")); overlays.append(("free.png", *w["free"]))
-    cap_price().save(L("price.png")); overlays.append(("price.png", *w["price"]))
+    if "price" in w:
+        cap_price().save(L("price.png")); overlays.append(("price.png", *w["price"]))
     cap_end().save(L("end.png")); overlays.append(("end.png", *w["end"]))
     # ring pulse on the button when the final chord lands (film 78.00 = 1.0 s into the end segment)
-    e0 = w["end"][0] + 1.0
+    e0 = w["end"][0] + (0.0 if V3 else 1.0)
     for i, f in enumerate(np.linspace(0, 1, 12)):
         ring(None, f).save(L(f"ring-{i:02d}.png"))
         overlays.append((f"ring-{i:02d}.png", e0 + i * 0.06, e0 + (i + 1) * 0.06))
@@ -281,7 +298,7 @@ def main():
         fc.append(f"[{cur}][{idx[png]}:v]overlay=0:0:enable='between(t,{t0:.4f},{t1 - 1e-4:.4f})'[{nxt}]")
         cur = nxt
     fc.append(f"[{cur}]format=yuv420p[vout]")
-    out = os.path.join(BUILD, "choroboros-tiktok-15s.mp4")
+    out = os.path.join(BUILD, "choroboros-tiktok-15s-v3.mp4" if V3 else "choroboros-tiktok-15s.mp4")
     args += ["-filter_complex", ";".join(fc), "-map", "[vout]", "-map", "1:a",
              "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", "17",
              "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
