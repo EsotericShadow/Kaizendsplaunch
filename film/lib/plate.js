@@ -60,8 +60,9 @@ const RC = {
 };
 const RC_FLIP = {"main":{"ms":60,"travel":0.25,"travelOut":0.5,"travelIn":0.5,"shear":0.3,"minScale":0.8},"color":{"ms":60,"travel":0.25,"travelOut":0.5,"travelIn":0.5,"shear":0.3,"minScale":0.8},"mix":{"ms":60,"travel":0.25,"travelOut":0.5,"travelIn":0.5,"shear":0.3,"minScale":0.8}};
 
-// The clean white Create draft keeps the factory layout it was opened from (Green); its value
-// text colour is #303030 (CreateDocumentFactory, clean-white source).
+// The clean white Create draft ("New Engine", CreateDocumentFactory): white main and mix sheets,
+// the shared lever sheet, the default (green) COLOR thumb and value text in #303030. It is drawn on
+// the Green factory geometry (not verified against a render: Create needs a licence).
 RC.white = RC.green;
 const ENGINE_NAMES = { green: "Green", blue: "Blue", red: "Red", purple: "Purple", black: "Black" };
 
@@ -426,19 +427,25 @@ export class Plate {
   /**
    * engine: green | blue | red | purple | black | white (Create).
    * opts: { parent, scale, x, y (window top-left) or cx, cy (window centre), header (default true:
-   * the top bar), hiRes ("auto" (default): the prepared 2x backpanel whenever the plate is drawn
-   * above scale 1, the shipped 1400 px bitmap otherwise; true: always 2x; false: never), thumb,
-   * readouts, state (initial state; its frames are prepared) }.
+   * the top bar), hiRes (true: also load the prepared 2x backpanel and show it whenever the plate
+   * is drawn above scale 1, the shipped 1400 px bitmap otherwise; "always": the 2x plate at any
+   * scale; false: never; default: true when the plate is built above scale 1. Pass true for a plate
+   * built small that focus() pushes in later: the 2x art is decoded before frame 0 like any image,
+   * so it costs about 32 MB of decoded pixels per plate), litPlate ("editor" (default): the lit
+   * plate at the 638 x 330 the editor's HQLitOverlay caches it at, magnified like the app, so the
+   * HQ-on plate is as soft as in the app; "full": the 1400 px lit bitmap), thumb, readouts, state
+   * (initial state; its frames are prepared) }.
    */
-  constructor(engine, { parent = null, scale = 1, x = 0, y = 0, cx = null, cy = null, header = true, hiRes = "auto", thumb = null, readouts = null, className = "", state = null } = {}) {
+  constructor(engine, { parent = null, scale = 1, x = 0, y = 0, cx = null, cy = null, header = true, hiRes = null, litPlate = "editor", thumb = null, readouts = null, className = "", state = null } = {}) {
     if (!RC[engine]) throw new Error(`plate: unknown engine ${engine}`);
     this.engine = engine;
     this.G = RC[engine];
     this.white = engine === "white";
     this.art = artFor(engine);
-    this.hiRes = this.art.plate2x ? hiRes : false;
-    this.showThumb = thumb ?? !this.white;
-    this.showReadouts = readouts ?? !this.white;
+    const hr = hiRes ?? scale > 1.0001;
+    this.hiRes = !this.art.plate2x || !hr ? false : hr === "always" ? "always" : "auto";
+    this.showThumb = thumb ?? true;
+    this.showReadouts = readouts ?? true;
     this.headerH = header ? HEADER_PX : 0;
     this.width = PLATE_W;
     this.height = BODY_PX_H + this.headerH;
@@ -475,8 +482,9 @@ export class Plate {
       });
     const panel = (key) => {
       const wrap = el("div", { parent: this.body, style: { position: "absolute", left: "0px", top: "0px", width: px(PLATE_W), height: px(BODY_PX_H) } });
-      const lo = plateBg(this.art[key], wrap);
-      const hi = this.art.plate2x ? plateBg(this.art.plate2x[key], wrap) : null;
+      const src = key === "plateOn" && litPlate === "editor" ? this.art.plateOnEditor : this.art[key];
+      const lo = plateBg(src, wrap);
+      const hi = this.hiRes ? plateBg(this.art.plate2x[key], wrap) : null;
       return { wrap, lo, hi };
     };
     this.plateOff = panel("plateOff");
@@ -505,7 +513,8 @@ export class Plate {
       // LookAndFeel_V2::getSliderLayout indents a horizontal slider by getSliderThumbRadius
       // (min(12, h / 2)) at each end; drawLinearSlider / drawSliderThumb then draw the thumb at
       // the full height, image aspect (200 x 400), at most 20 % of that width, travelling between
-      // 11.5 % insets.
+      // 11.5 % insets. drawSliderThumb hands its float x, y, w, h to the int overload of
+      // Graphics::drawImage, so the drawn rectangle is truncated to whole editor px (setState).
       const [sx0, sy, sw0, sh] = this.G.color;
       const indent = Math.min(12, Math.floor(sh * 0.5));
       const sx = sx0 + indent;
@@ -517,14 +526,16 @@ export class Plate {
         parent: this.body,
         style: {
           position: "absolute",
-          top: px(by(this.thumbGeom.y)),
-          width: px(tw * KX),
-          height: px(th * KY),
+          top: px(by(Math.trunc(this.thumbGeom.y))),
+          width: px(Math.trunc(tw) * KX),
+          height: px(Math.trunc(th) * KY),
           backgroundImage: `url("${this.art.thumb}")`,
           backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
         },
       });
+      // Until a state sets COLOR, the thumb rests at the factory default (50 %).
+      this.thumb.style.left = px(bx(Math.trunc((this.thumbGeom.x0 + this.thumbGeom.x1) / 2 - tw / 2)));
     }
     {
       const [x0, y0, w, h] = rect(this.G.hq);
@@ -628,8 +639,8 @@ export class Plate {
 
   /** The image URLs this plate draws (for preloading). */
   urls() {
-    const u = [this.art.plateOff, this.art.plateOn];
-    if (this.art.plate2x && this.hiRes) u.push(this.art.plate2x.plateOff, this.art.plate2x.plateOn);
+    const u = [...new Set([this.plateOff.lo, this.plateOn.lo].map((n) => n.style.backgroundImage.slice(5, -2)))];
+    if (this.hiRes) u.push(this.art.plate2x.plateOff, this.art.plate2x.plateOn);
     if (this.art.thumb && this.showThumb) u.push(this.art.thumb);
     for (const k of KNOBS) {
       u.push(...this.knobs[k].off.urls());
@@ -663,17 +674,23 @@ export class Plate {
     return this;
   }
 
-  // Shipped 1400 px backpanel up to scale 1 (what the product draws), the 2x art above it.
+  // The product's plates up to scale 1, the 2x art above it. The unlit 2x plate reduces to the
+  // shipped bitmap, so it switches at scale 1 invisibly; the lit 2x plate is sharper than the
+  // editor's 638 px lit cache, so it fades in over scale 1.0 to 1.25 instead of popping.
   _pickArt() {
-    if (!this.art.plate2x) return;
+    if (!this.hiRes) return;
     const s = this.placement.scale * (this.outerScale || 1);
-    const hi = this.hiRes === true || (this.hiRes === "auto" && s > 1.0001);
-    if (hi === this._hi) return;
-    this._hi = hi;
-    for (const p of [this.plateOff, this.plateOn]) {
-      setStyle(p.lo, "visibility", hi ? "hidden" : "");
-      setStyle(p.hi, "visibility", hi ? "" : "hidden");
-    }
+    const always = this.hiRes === "always";
+    const offHi = always || s > 1.0001;
+    const onA = always ? 1 : clamp((s - 1) / 0.25);
+    const key = `${offHi}:${onA.toFixed(4)}`;
+    if (key === this._hiKey) return;
+    this._hiKey = key;
+    setStyle(this.plateOff.lo, "visibility", offHi ? "hidden" : "");
+    setStyle(this.plateOff.hi, "visibility", offHi ? "" : "hidden");
+    setStyle(this.plateOn.lo, "visibility", onA >= 1 ? "hidden" : "");
+    setStyle(this.plateOn.hi, "visibility", onA > 0 ? "" : "hidden");
+    setStyle(this.plateOn.hi, "opacity", onA >= 1 ? "" : String(+onA.toFixed(4)));
   }
 
   /**
@@ -786,7 +803,7 @@ export class Plate {
       const cxE = t.x0 + clamp(pFromValue("color", state.color)) * (t.x1 - t.x0);
       if (c.thumbCx !== cxE) {
         c.thumbCx = cxE;
-        this.thumb.style.left = px(bx(cxE - t.w / 2));
+        this.thumb.style.left = px(bx(Math.trunc(cxE - t.w / 2)));
       }
     }
     if (this.showReadouts) {

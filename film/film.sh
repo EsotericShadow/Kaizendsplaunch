@@ -32,7 +32,8 @@ gui() {
 
 prep() {
   mkdir -p "$DATA/scope" "$DATA/frames" "$OUT/out" "$OUT/stills"
-  [[ -f "$DATA/gui/index.json" ]] || gui
+  # (Re)slice when the index is missing or predates the 2x close-up plates.
+  grep -q '"lit1x"' "$DATA/gui/index.json" 2>/dev/null || gui
   python3 - "$DATA" <<'PY'
 import json, os, sys
 data = sys.argv[1]

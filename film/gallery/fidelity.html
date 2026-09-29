@@ -14,14 +14,22 @@
   // text it drew and the COLOR position (written by the fidelity tooling next to those renders).
   // A plate without the header (older API) is dropped by the header height so that its body lines
   // up with the reference body. Seconds 0..n-1: the states; then one second per engine in the
-  // switch-panel pose (HQ lit, knobs at 12 o'clock) for the owner's full-panel renders.
+  // switch-panel pose (HQ lit, knobs at 12 o'clock) for the owner's full-panel renders; then the
+  // close-ups (plate.focus, hi-res art): Green Rate knob at 2x (HQ off), Green Mix at 2x (lit),
+  // Purple Depth readout at 3x (lit), Green HQ lever at 2x (lit), each centred on the stage.
   import * as lib from "/film/lib/index.js";
   const cues = await lib.loadCues("/film/cues.json");
   const states = await (await fetch("/data/fidelity/states.json")).json();
   const stage = lib.stage.makeStage(document.body, { background: "#000000" });
   const PANEL = ["green", "blue", "red", "purple", "black", "white"];
   const HEADER_OLD = (56 * 1400) / 638;
-  const n = states.length + PANEL.length;
+  const ZOOMS = [
+    { engine: "green", on: "rate", zoom: 2, st: { switchFrame: 17, rate: 0.6, depth: 20, offset: 90, width: 130, color: 35, mix: 45 } },
+    { engine: "green", on: "mix", zoom: 2, st: { switchFrame: 0, rate: 0.45, depth: 30, offset: 100, width: 150, color: 55, mix: 50 } },
+    { engine: "purple", on: "depthValue", zoom: 3, st: { switchFrame: 0, rate: 0.12, depth: 60, offset: 90, width: 140, color: 25, mix: 35 } },
+    { engine: "green", on: "hq", zoom: 2, st: { switchFrame: 0, rate: 0.45, depth: 30, offset: 100, width: 150, color: 55, mix: 50 } },
+  ];
+  const n = states.length + PANEL.length + ZOOMS.length;
   const scene = {
     id: "fidelity",
     t0: 0,
@@ -42,6 +50,11 @@
           ? { switchFrame: 0, frames: { rate: 50, depth: 50, offset: 50, width: 50 }, mix: 50, color: 50 }
           : { switchFrame: 0, color: 50, frames: { rate: 50, depth: 50, offset: 50, width: 50, mix: 78 }, readouts: { rate: "1.00 Hz", depth: "50%", offset: "90°", width: "100%", color: "50%", mix: "50%" } };
         plates.push(mk(e, st));
+      }
+      for (const z of ZOOMS) {
+        const p = lib.createPlate({ engine: z.engine, ...z.st }, { parent: L, scale: 1, x: 0, y: 0, hiRes: true });
+        p.focus({ on: z.on, zoom: z.zoom, at: [960, 540] });
+        plates.push(p);
       }
       return {
         render(t) {

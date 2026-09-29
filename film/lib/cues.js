@@ -38,8 +38,8 @@ export function pFromValue(param, v) {
 // Filmstrip frames (visual-assets 3.2). The plugin snaps to the nearest frame.
 export const knobFrameMain = (p) => Math.round(((14 + 332 * clamp(p)) / 360) * 99);
 export const knobFrameMix = (p) => Math.round(155 - ((14 + 332 * clamp(p)) / 360) * 155);
-/** White Create mix sheet: 100 frames, read in reverse like the other mix sheets. */
-export const knobFrameWhiteMix = (p) => Math.round(99 - ((14 + 332 * clamp(p)) / 360) * 99);
+/** White Create mix sheet (1632 px): 10 x 10 frames read FORWARD, like the main knobs. */
+export const knobFrameWhiteMix = (p) => knobFrameMain(p);
 /** COLOR thumb centre x on the 1400x725 plate. */
 export const thumbX = (p) => 473.8 + 498.5 * clamp(p);
 

@@ -18,9 +18,13 @@ outside the repo through URL mounts, and every output (videos, stills, extracted
 | `scenes/shotNN-name.js` | One module per shot (see "Adding a scene"). |
 | `lib/` | Shared components. Scenes get them as `ctx.lib`. |
 | `gallery/index.html` | An 8-second test composition that exercises every component. |
-| `gallery/verify.html` | Plates in the state of the real plugin captures, plus text-baseline, hero and macro checks. |
-| `tools/prep_gui.py` | Slices the plugin's filmstrip sheets into one image per frame. |
-| `tools/verify_plate.py` | Measures the plates against the real captures and other references. |
+| `gallery/verify.html` | Legacy: plates in the state of the old plugin captures (superseded by `gallery/fidelity.html`). |
+| `gallery/fidelity.html` | The UI-fidelity bench: plates in the states of the real editor renders, the owner's panel pose and four close-ups. |
+| `UI_FIDELITY.md` | What the plate was checked against, the measured differences and how to repeat the checks. |
+| `tools/prep_gui.py` | Slices the plugin's filmstrip sheets into one image per frame; prepares the 2x close-up plates and the editor-size lit plates. |
+| `tools/rc_layout.py` | The editor's layout code as Python: the plate geometry table, and `--check` against component dumps. |
+| `tools/fidelity_compare.py`, `tools/fidelity_offsets.py`, `tools/fidelity_panels.py` | Plate against editor renders (side by side, blend, diff, zooms), per-element registration, and plate against the owner's panels. |
+| `tools/verify_plate.py` | Legacy: measures the plates against the old captures. |
 | `tools/qc_picture.mjs`, `tools/qc_picture.py` | Picture QC (treatment 11, gates 5-9 and 11) into `qc-picture.json`. |
 | `tools/sheet.py` | Contact sheets (12 stills each) for `film.sh stills`. |
 | `qc-picture.json` | The latest picture QC report. |
@@ -32,9 +36,9 @@ The renderer serves these prefixes. Code uses the prefixes, never file paths.
 
 | Prefix | Folder | Used for |
 |---|---|---|
-| `/art/rc` | `/home/user/choroboros-rc/Assets` | Plates, slider thumbs, `Technology.ttf` from the September release candidate |
+| `/art/rc` | `/home/user/choroboros-rc/Assets` | Plates, slider thumbs, top-bar fonts, icons and wordmark from the September release candidate |
 | `/art/site` | `/home/user/kaizendsp/public` | Hero frames, grain tile, VST logo, product stills |
-| `/data` | `/home/user/build/film/data` | Generated data: `gui/` frames, `scope/`, `frames/` from product clips, `available.json` |
+| `/data` | `/home/user/build/film/data` | Generated data: `gui/` frames and prepared plates, `scope/`, `frames/` from product clips, `available.json` |
 | `/` | the repo | `film/`, `cues.json` |
 | `/__render/`, `/__node_modules/` | the runtime and npm packages | `composition.js`, GSAP, fontsource fonts |
 
@@ -113,13 +117,18 @@ Rules from the render pipeline (`docs/brief/render-pipeline.md` 7.1):
   without a jump. `plateStateAt()` also adds readouts with the plugin's 60 ms digit flip.
   `footnote("opening" | "tour")` returns the level-match footnote text that the audio log allows.
   `formatReadout()`, the frame maps and `thumbX()` are exported for direct use.
-- `plate.js`: the GUI rebuild for green, blue, red, purple, black and the white Create canvas.
-  Values in display units map to knob frames, thumb position and readouts. The switch uses each
-  engine's own lever sheet, as the release-candidate editor does. The lit plate and the `_on` knob
-  frames fade with the lever (`1 - frame/17`), and the lever moves with the plugin's smootherstep.
-  Readouts reproduce the editor's character slots, glow and clipped digit flip. Filmstrip frames
-  are separate images that must be prepared in `build()` with `require()`, `requireFrames()` or
-  `requireRender()`; `setState()` throws on a frame that was not prepared.
+- `plate.js` (+ `topbar.js`): the editor window rebuilt for green, blue, red, purple, black and the
+  white Create canvas: the release top bar over the body, 1400 x 847.02 at scale 1 (638 x 386
+  editor px x 1400 / 638; body 724.14 px high, `plate.height` / `HEADER_PX`). Values in display
+  units map to knob frames, thumb position and readouts as in the editor. The switch uses each
+  engine's own lever sheet. The lit plate (at the 638 x 330 the editor caches it at) and the `_on`
+  knob frames blend with the lever (`1 - frame/17`), and the lever moves with the plugin's
+  smootherstep. Readouts are JetBrains Mono SemiBold with the editor's character slots, glow,
+  reflections and clipped digit flip. `plate.focus({ on: "rate", zoom: 2, at: [x, y] })` frames a
+  close-up; above scale 1 the plate shows prepared 2x backpanels (pass `hiRes: true` to a plate
+  built small that is pushed in later). Filmstrip frames are separate images that must be prepared
+  in `build()` with `require()`, `requireFrames()` or `requireRender()`; `setState()` throws on a
+  frame that was not prepared. See `UI_FIDELITY.md`.
 - `chorustype.js`: the italic accent as a static dry layer plus wet copies in the engine hue, under
   the SINE, STEP, WOW and ORBIT laws (G3), with Black's ensemble layers.
 - `scope.js`: the goniometer (G7), reading `/data/scope`. On top of the data's fixed gain it
@@ -167,21 +176,14 @@ and rewrites `/data/available.json`. Direct `node tools/render.mjs` calls work t
 
 ## Checking the plates
 
-`film/film.sh stills verify 0.5,1.5,2.5,3.5,4.5,5.5 film/gallery/verify.html` followed by
-`tools/verify_plate.py` measures every knob, the mix knob, the COLOR thumb and the readouts against
-the real plugin captures (`public/engines/<e>-on.png`), the earlier Pillow rebuild and the site's v2
-composites. It writes a JSON report and blend images next to the stills. Against the real captures,
-knobs, mix and thumb land within about 2 px on the 1400 px plate, and readouts within 1 px
-vertically and 2 px at their right edge. The v2 composites place controls by their own
-measurements and differ by up to 12 px, so they are not used as the reference.
+`UI_FIDELITY.md` has the method, the results against renders of the real editor and the commands
+(`gallery/fidelity.html` with `tools/fidelity_compare.py`, `fidelity_offsets.py` and
+`fidelity_panels.py`). The older `gallery/verify.html` and `tools/verify_plate.py` measure against
+captures of an older build and are kept only for reference.
 
 ## Open points
 
-- The release-candidate editor draws the readouts in JetBrains Mono SemiBold:
-  `ProductTypography::valueTextFont` maps the "technology" font id to the production mono face,
-  and no RC code loads `Technology.ttf`. The treatment and brief specify `Technology.ttf`, so that
-  is the default. `createPlate(e, { readoutFont: "jetbrains" })` switches to the RC face. A 1.0.5
-  screenshot from the owner settles it (treatment 13.12).
-- The treatment names `switch_a_spritesheet.png` for every engine. The RC editor loads one lever
-  sheet per engine (`factorySwitchSpriteSheet`), and so do the site's v2 faceplates, so the plate
-  uses those. The shared sheet is used only for the white Create canvas, as the editor does.
+- The readouts use JetBrains Mono SemiBold, as the release-candidate editor draws them (the layout's
+  "technology" font id maps to it; the editor never loads `Technology.ttf`). The remaining measured
+  differences from the real editor, and what a 1.0.5 screenshot would settle, are listed in
+  `UI_FIDELITY.md`.
