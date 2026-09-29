@@ -114,6 +114,7 @@ export function pillLabel(parent, text, { size = 26, fill = null, color = COLOR.
     text,
     cls: "v5-pill",
     style: {
+      font: `600 ${size}px ${type.FONT.mono}`, // before lineHeight: the shorthand resets it
       position: "absolute",
       left: px(x),
       top: px(y),
@@ -121,7 +122,6 @@ export function pillLabel(parent, text, { size = 26, fill = null, color = COLOR.
       lineHeight: h ? px(h - (border ? 4 : 0)) : "1.5",
       padding: `0 ${px(padX)} 0 ${px(padX + size * 0.12)}`,
       boxSizing: "border-box",
-      font: `600 ${size}px ${type.FONT.mono}`,
       letterSpacing: "0.12em",
       color,
       background: fill || "transparent",

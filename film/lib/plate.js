@@ -831,6 +831,7 @@ export class Plate {
         else if (state[r] != null) this.readouts[r].set(formatReadout(r, state[r]));
       }
     }
+    if (state.trim != null && this.topbar && this.topbar.setTrim) this.topbar.setTrim(state.trim);
     return this;
   }
 }

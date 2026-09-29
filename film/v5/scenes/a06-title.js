@@ -4,7 +4,8 @@
 // SHAKE 10 px (type 2 px, in S05's type layer), a SMEAR burst on the plate (the peak on the hit
 // frame, clear in 0.125 s), and "Choroboros." lands as chorustype (150 px italic, lavender, Green
 // wet copies at the heard settings), baseline 580. The dek STAMPs on the snare 13.780.
-// Kicks PUNCH (plate). Snares spread the chorustype's wet copies +30 % and relax over 150 ms.
+// Kicks PUNCH (plate). Snares spread the chorustype's wet copies +30 % (and brighten them) and
+// relax over 150 ms.
 // The double kicks (14.190 + 14.390, 15.812 + 16.012) SWEEP the plate in, +1.5 % a step.
 // crash + kick 14.796 (f887): FLASH Green (0.30).
 // "Meet" and the eyebrow hold (owned by a05-meet.js to 16.621).
@@ -54,7 +55,9 @@ export default {
     const flash = lib.createFlash(FL);
 
     const TL = ctx.layer("type", 40);
-    const title = lib.type.headline({ text: "", accent: "Choroboros.", size: 150, parent: TL, x: 72, baseline: 580 });
+    // x 78, not 72: the wet copies swing up to 21 px left of the dry word (Depth 22 % x 0.5 em x the
+    // +30 % snare spread) and must stay inside the text-safe edge, x 60.
+    const title = lib.type.headline({ text: "", accent: "Choroboros.", size: 150, parent: TL, x: 78, baseline: 580 });
     title.el.style.transformOrigin = "0% 80%";
     const ct = lib.createChorusType(title.accent, { law: "SINE", engine: "green" });
     const dek = lib.util.el("div", { parent: TL, style: { position: "absolute", left: "0px", top: "0px", width: "1080px", height: "1920px", transformOrigin: "72px 1330px" } });
@@ -99,6 +102,8 @@ export default {
         }
         const s = demos.settingsAt(t);
         ct.render(t, { ...s, depth: s.depth * (1 + 0.3 * spread * spread) });
+        // ...and glow with the spread (wet opacity up to x2.5 on the hit frame), so the snare reads.
+        if (spread > 0) for (const n of ct.wet) setStyle(n, "opacity", String(+Math.min(1, 0.6 * (s.mix / 100) * (1 + 1.5 * spread * spread)).toFixed(4)));
         applyStamp(dek, M.stamp(t, dekHit));
       },
     };

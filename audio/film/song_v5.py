@@ -941,6 +941,9 @@ def write_outputs(R, master, log):
                    "peak_dbfs": [round(float(v), 1) for v in pkdb]}, open(os.path.join(sdir, "meter.json"), "w"))
         meas = {"about": "Level match results per demo (film/v5/demos.json level_match). The picture shows LEVEL MATCHED only where level_matched is true.",
                 "film": fname, "demos": res["measured"]}
+        a4 = report["A4"].get(fname) or {}
+        # QC-A4 for the picture (S18 eyebrow "DRUMS UNTOUCHED" is shown only when this is true)
+        meas["drums_untouched"] = bool(a4.get("pass_onset_below_0.05") and a4.get("pass_envelope_below_0.05"))
         json.dump(meas, open(os.path.join(sdir, "measured.json"), "w"), indent=1)
         # the spec's paths (TREATMENT s3): /home/user/build/v5/audio/scope[-tiktok] -> the same folders
         alias = os.path.join(V5, "audio", "scope" if fname == "main" else "scope-tiktok")

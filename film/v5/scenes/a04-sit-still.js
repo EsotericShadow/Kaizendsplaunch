@@ -51,7 +51,8 @@ export default {
     const TL = ctx.layer("type", 40);
     lib.type.headline({ text: "Great sound", size: 120, parent: TL, x: 72, baseline: 400 });
     lib.type.headline({ text: "doesn’t", size: 104, parent: TL, x: 72, baseline: 520 });
-    const sit = lib.type.headline({ text: "", accent: "sit still.", size: 120, parent: TL, x: 72, baseline: 650 });
+    // x 74: the wet copies swing 13 px left of the dry word and must stay inside x 60.
+    const sit = lib.type.headline({ text: "", accent: "sit still.", size: 120, parent: TL, x: 74, baseline: 650 });
     sit.el.style.transformOrigin = "0% 80%";
     const ct = lib.createChorusType(sit.accent, { law: "SINE", engine: "green" });
 

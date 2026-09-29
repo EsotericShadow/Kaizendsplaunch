@@ -99,8 +99,12 @@ export default {
           const df = f - h.frame;
           if (df >= 0 && df <= 8) k = 1.12 + 0.06 * Math.sin((Math.PI * df) / 8);
         }
+        // f108 (floor + rack): the ring lets go on its frame (alpha drops to 0.6 and it opens out
+        // 1.12 -> 1.36), then fades to nothing over 0.3 s, so the release reads on the hit frame.
         const out = b.since(t, ringOut.t);
-        const ra = out < 0 ? 1 : Math.max(0, 1 - out / 0.3);
+        const u = out < 0 ? 0 : Math.min(1, out / 0.3);
+        const ra = out < 0 ? 1 : 0.6 * (1 - u);
+        if (out >= 0) k = 1.12 + 0.12 * (0.5 + 0.5 * u);
         ring.render({ cx: r.cx, cy: r.cy, d: r.size * KNOB_VISIBLE * k, alpha: ra });
 
         // Scope: an empty graticule until the first hit, then the trace.

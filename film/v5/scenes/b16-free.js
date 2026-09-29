@@ -7,7 +7,8 @@
 // corner). f3137 (crash + kick 52.296): FLASH Purple (0.30); colour = sound swaps (M07: Purple lit,
 // Green dimmed). Kicks PUNCH both plates. Every snare re-stamps the heard plate's pill and spreads
 // the wet copies of "free." (+30 %, relaxing over 150 ms): the backbeat events of the verse. The
-// pickups 55.338 and 55.417 SWEEP both plates up and out (two steps of 400 px).
+// pickups 55.338 and 55.417 SWEEP both plates up and out (two steps of 400 px; they fade over the
+// second step, since 800 px leaves the Purple plate under the headline).
 // Type: "Green and Purple / are free." on f2943 ("free." is chorustype at the heard engine's law);
 // "No card or licence key needed." on 50.469, on a band over the Purple plate's lower edge.
 
@@ -98,6 +99,10 @@ export default {
         };
         const gTL = place(green, "green", PLATE.green, -1);
         const pTL = place(purple, "purple", PLATE.purple, 1);
+        // Two 400 px steps leave the Purple plate under the headline, so the plates also fade over
+        // the second step: the last frames before the S17 cut are the type alone.
+        const fade = Math.max(0, Math.min(1, 2 - M.sweep(t, pickups)));
+        for (const p of [green, purple]) setStyle(p.el, "opacity", fade >= 1 ? "" : String(+fade.toFixed(4)));
 
         // FREE pills at each plate's top-left corner; the heard plate's pill re-stamps on the backbeat.
         const pill = (n, tl, tagHit, engine) => {
@@ -109,7 +114,10 @@ export default {
           }
           setStyle(n, "left", px(tl.x + 16));
           setStyle(n, "top", px(tl.y + 14));
-          applyStamp(n, { ...st, scale: s });
+          // The pills leave with the plates on the pickups: they fade over the first 400 px step.
+          const out = M.sweep(t, pickups);
+          applyStamp(n, { ...st, scale: s, opacity: st.opacity * Math.max(0, 1 - out) });
+          if (out >= 1) setStyle(n, "visibility", "hidden");
         };
         pill(pills.green, gTL, tagG, "green");
         pill(pills.purple, pTL, tagP, "purple");

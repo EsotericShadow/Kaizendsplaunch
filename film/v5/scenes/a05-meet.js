@@ -3,7 +3,7 @@
 // kick + rack 10.135: CUT to the whole Green plate at scale 0.66 (924 x 559), centred at x 540,
 // y 700 to 1259, lit (colour = sound: Green is heard). It pushes 1.00 -> 1.05 across bars 7 and 8
 // (sine.inOut): tension. Kicks PUNCH (plate, x 0.6 in the tom groove).
-// The rack-tom accents (10.548, 10.950, 11.553, 12.164) flash the four knob readouts left to right
+// The rack-tom accents (10.540, 10.946, 11.554, 12.164) flash the four knob readouts left to right
 // (+70 % for 4 frames): S02's readout blink, walking the knob row, one designed event per 2 beats.
 // The bar-8 fill: three CUTs to 2x macros, each held to the next hit: Blue OFFSET (snare + floor +
 // rack 12.767), Red HQ lever (kick + snare 12.973), Purple COLOR thumb (floor 13.173). Not heard, so
@@ -35,12 +35,14 @@ export default {
     this.t0 = T0;
     this.t1 = T1;
     const kicks = b.hitsIn("kick", cut.t - 0.01, next.t - 0.01);
-    const racks = [10.5478, 10.9502, 11.5535, 12.1637].map((x) => b.hitNear("racktom", x));
+    // The rack accents, each keyed to the earliest attack of its cluster (kick + rack lands on the
+    // kick's frame): kick + rack 10.540, kick + rack 10.946, rack 11.554, kick + rack 12.164.
+    const racks = [b.hitNear("kick", 10.5404), b.hitNear("kick", 10.9459), b.hitNear("racktom", 11.5535), b.hitNear("kick", 12.1636)];
     const fill = [b.hitNear("snare", 12.7668), b.hitNear("kick", 12.9735), b.hitNear("floortom", 13.1732)];
     this.events.push(
       { t: cut.tm, kind: "cut", hit: "kick + rack 10.135 (Green plate)" },
       { t: cut.tm, kind: "stamp", hit: "kick + rack 10.135 (eyebrow, Meet)" },
-      ...racks.map((h, i) => ({ t: h.tm, kind: "sweep", hit: `rack ${h.tm} (readout ${["rate", "depth", "offset", "width"][i]})` })),
+      ...racks.map((h, i) => ({ t: h.tm, kind: "sweep", hit: `${h.piece === "kick" ? "kick + rack" : "rack"} ${h.tm} (readout ${["rate", "depth", "offset", "width"][i]})` })),
       { t: fill[0].tm, kind: "cut", hit: "snare + floor + rack 12.767 (Blue OFFSET macro)" },
       { t: fill[1].tm, kind: "cut", hit: "kick + snare 12.973 (Red HQ macro)" },
       { t: fill[2].tm, kind: "cut", hit: "floor 13.173 (Purple COLOR macro)" },
@@ -114,7 +116,7 @@ export default {
         const f = b.frameAt(t);
         racks.forEach((h, i) => {
           const blink = f >= h.frame && f < h.frame + 4;
-          setStyle(plate.readouts[READ[i]].node, "filter", blink ? "brightness(1.7)" : "");
+          setStyle(plate.readouts[READ[i]].node, "filter", blink ? "brightness(2.2) drop-shadow(0 0 10px rgba(126,224,160,0.9))" : "");
         });
       },
     };

@@ -268,7 +268,15 @@ export class TopBar {
     const segW = (m[2] - 23) / 24;
     for (let i = 0; i < 24; i++) sv("rect", { x: m[0] + i * (segW + 1), y: m[1], width: segW, height: m[3], rx: 0.7, fill: rgba(TEXT_SECONDARY, 0.32) }, this.svg);
     // Readout: drawFittedText in (x, y + 23, w, 11) expanded by 1 px vertically, centred.
-    this._text("0.00 dB", [x, y + 22, w, 13], cond, 12.4, rgba(TEXT_PRIMARY, 0.86), "center");
+    this.trimText = this._text("0.00 dB", [x, y + 22, w, 13], cond, 12.4, rgba(TEXT_PRIMARY, 0.86), "center");
+  }
+
+  /** The Output Trim readout in dB ("-2.30 dB"); the 16:9 film never calls it, so it stays "0.00 dB". */
+  setTrim(db) {
+    if (!this.trimText || db == null || !Number.isFinite(db)) return;
+    const v = Math.abs(db) < 0.005 ? 0 : db;
+    const text = `${v.toFixed(2)} dB`;
+    if (this.trimText.textContent !== text) this.trimText.textContent = text;
   }
 
   /** A text run centred vertically on its ascent + descent box, like JUCE drawText. */

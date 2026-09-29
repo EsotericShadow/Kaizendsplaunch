@@ -39,3 +39,8 @@ export { createFlash, registerFlash, resolveFlashes } from "./flash.js";
 export { createChip } from "./chip.js";
 export { createMontage } from "./montage.js";
 export { createSlice } from "./slices.js";
+// v5 Unit B kit modules
+export * as endcard from "./endcard.js";
+export * as abtoggle from "./abtoggle.js";
+export { createEndcard } from "./endcard.js";
+export { createABToggle } from "./abtoggle.js";

@@ -69,7 +69,10 @@ export class Demos {
   /** The demo playing at composition time t (null outside every demo). */
   demoAt(t) {
     const tm = t + this.offset;
-    for (const d of this.demos) if (tm >= this._onset(d.t0) && tm < this._onset(d.t1)) return d;
+    // A demo that runs to the film's end holds through the last frame (main: M13 ends at 91.216,
+    // inside frame 5472, which starts at 91.200; the end card's last frame is the thumbnail).
+    const end = (this.film.span && this.film.span[1]) ?? Infinity;
+    for (const d of this.demos) if (tm >= this._onset(d.t0) && (tm < this._onset(d.t1) || d.t1 >= end - 1e-6)) return d;
     return null;
   }
 
@@ -224,6 +227,10 @@ export class Demos {
       s[p] = this.valueIn(d, p, t);
       s.readouts[p] = this.readoutIn(d, p, t);
     }
+    // The plugin's Output Trim (top bar readout): the measured trim, scaled by Mix where it follows Mix.
+    const followsMix = (d.gestures || []).some((g) => g.param === "trim" && g.shape === "follows-mix");
+    const trimG = this.trimOf(d, t);
+    s.trim = followsMix ? (trimG * s.mix) / 40 : trimG;
     return s;
   }
 

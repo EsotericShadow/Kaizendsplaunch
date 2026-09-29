@@ -9,7 +9,8 @@
 // f2554 (kick 42.567): CUT to the real Create capture core-recipe.webp (936 px wide, centred at
 // y 900); the white plate shrinks into zone S (scale 0.40, y 1250 to 1590, picture only, behind a
 // band that keeps the lines readable). f2650 (floor + kick 44.171): CUT to review.webp. Kicks PUNCH
-// the captures at 1.02; the kick + rack hits step a push-in (SWEEP, +5 % each).
+// the captures at 1.02; the kick + rack hits step a push-in (SWEEP, +4 % each, anchored on the capture's top edge so it
+// never grows into the headline).
 // Type: "Build your own / engines / in Create." (96 px) STAMP on f2359; the Inter lines on 40.934,
 // replaced by the mono trial lines on 42.974. Heard: Black (M05).
 
@@ -80,7 +81,7 @@ export default {
     const CL = ctx.layer("capture", 16);
     const cap = (src, w, h) => {
       const H = (936 / w) * h;
-      const n = el("img", { parent: CL, attrs: { src, alt: "", draggable: "false" }, style: { position: "absolute", left: px(72), top: px(900 - H / 2), width: px(936), height: px(H), borderRadius: "14px", boxShadow: "0 24px 80px rgba(0,0,0,0.6)", transformOrigin: "50% 50%" } });
+      const n = el("img", { parent: CL, attrs: { src, alt: "", draggable: "false" }, style: { position: "absolute", left: px(72), top: px(900 - H / 2), width: px(936), height: px(H), borderRadius: "14px", boxShadow: "0 24px 80px rgba(0,0,0,0.6)", transformOrigin: "50% 0%" } });
       return n;
     };
     const imgA = cap("/art/site/product/create/core-recipe.webp", 1151, 768);
@@ -92,7 +93,7 @@ export default {
     const h1 = headLine(TL, fit, { text: "Build your own", size: 96, baseline: 380 });
     const h2 = headLine(TL, fit, { text: "engines", size: 96, baseline: 480 });
     const h3 = headLine(TL, fit, { text: "in ", accent: "Create.", size: 96, baseline: 580 });
-    const bandL = band(TL, 1336, 1528, 0.8);
+    const bandL = band(TL, 1336, 1528, 0.9);
     setStyle(bandL, "zIndex", "-1");
     const b1 = bodyLine(TL, fit, "Choose one or two cores.", { size: 40, baseline: 1380 });
     const b2 = bodyLine(TL, fit, "Modify recipes. Pair them with artwork.", { size: 40, baseline: 1430 });
@@ -139,8 +140,8 @@ export default {
         const showB = f >= capB.frame;
         vis(imgA, showA);
         vis(imgB, showB);
-        if (showA) setStyle(imgA, "transform", `scale(${+((1 + 0.05 * M.sweep(t, pushA)) * k).toFixed(5)})`);
-        if (showB) setStyle(imgB, "transform", `scale(${+((1 + 0.05 * M.sweep(t, pushB)) * k).toFixed(5)})`);
+        if (showA) setStyle(imgA, "transform", `scale(${+((1 + 0.04 * M.sweep(t, pushA)) * k).toFixed(5)})`);
+        if (showB) setStyle(imgB, "transform", `scale(${+((1 + 0.04 * M.sweep(t, pushB)) * k).toFixed(5)})`);
 
         // Type.
         const st = M.stamp(t, cut);

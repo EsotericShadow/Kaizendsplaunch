@@ -60,7 +60,7 @@ export default {
         // Floor-tom blink: the framed readout +40 % brightness for 3 frames.
         const f = b.frameAt(t);
         const blink = toms.some((h) => f >= h.frame && f < h.frame + 3);
-        for (const n of NAMES) setStyle(montage.plate.readouts[n].node, "filter", blink && n === NAMES[k] ? "brightness(1.4)" : "");
+        for (const n of NAMES) setStyle(montage.plate.readouts[n].node, "filter", blink && n === NAMES[k] ? "brightness(1.8) drop-shadow(0 0 10px rgba(126,224,160,0.9))" : "");
         scope.draw(t, { stem: "wet", color: COLOR.hue.green });
       },
     };

@@ -293,7 +293,240 @@ export function sliderCentre(lib, engine) {
   return [(x + w / 2) * K, (y + h / 2 - 56) * K];
 }
 
+/**
+ * Body plate px of the point halfway between a knob's top and its readout's bottom: a macro
+ * anchored here frames the knob AND the value it sets.
+ */
+export function knobAnchor(lib, engine, name) {
+  const G = lib.plate.plateGeometry(engine);
+  const K = lib.plate.K;
+  const [kx, ky, kw] = G[name];
+  const [, vy, , vh] = G.values[name];
+  return [(kx + kw / 2) * K, ((ky + vy + vh) / 2 + 1 - 56) * K];
+}
+
 /** Hide/show several layers. */
 export function showAll(layers, on) {
   for (const l of layers) setStyle(l, "visibility", on ? "" : "hidden");
+}
+
+// ---------------------------------------------------------------------------------------------
+// ACT III, the tour (S09-S12): one builder for the four L-TOUR shots (TREATMENT section 2).
+//
+// Layout (L-TOUR): eyebrow baseline 300, headline 104 px baseline 420 (the accent is chorustype at
+// the heard engine's law), BEST FOR baseline 490; the scope 520 px centred at (540, 800) (810 when
+// BEST FOR takes two lines); the plate at scale 0.60 (840 x 508) at x 120, y 1030; the caption
+// (mono 32 px, engine hue) or LEVEL MATCHED (mono 26 px, 60 % white) at x 72, baseline 1000.
+// Each engine has two bars: bar A beat 1 is a SMEAR (0.5 s centred on the bar line: the outgoing
+// scene draws its plate as "out" for 0.25 s past its end, the incoming one draws "in" from 0.25 s
+// before its start); bar B runs the gesture from beat 1 to beat 3 (demos.json), zone S hard-cuts
+// to a macro of the moving control (clip box 1080 x 510 at y 1030) from bar B beat 1 to beat 4, and
+// the RING comes in 0.1 s before the gesture and leaves 0.3 s after it.
+// Stillness from 24.0: no PUNCH, SHAKE or FLASH; only data moves (scope, readouts, chorustype).
+
+// The guitar-alone trace is small at the film's one data gain: the tour draws it 1.6x (display only).
+const SCOPE_ZOOM = 1.6;
+const TOUR = { plate: { x: 120, y: 1030, scale: 0.6 }, macroBox: { x: 0, y: 1030, w: 1080, h: 510 }, scope: { cx: 540, cy: 800, size: 520 } };
+
+export function tourScene(cfg) {
+  const scene = {
+    id: cfg.id,
+    t0: cfg.f0 / 60,
+    t1: cfg.f1 / 60,
+    events: [],
+    async build(ctx) {
+      return buildTour(scene, ctx, cfg);
+    },
+  };
+  return scene;
+}
+
+async function buildTour(scene, ctx, cfg) {
+  const { lib, beats: b, demos, motion: M } = ctx;
+  const { COLOR } = ctx.portrait;
+  const { show, lerp } = lib.util;
+  const E = cfg.engine;
+  const hue = COLOR.hue[E];
+  const d = demos.demoById(cfg.demoId);
+  const barA = cfg.barA;
+  const tA = b.bar(barA);
+  const tB = b.bar(barA + 1);
+  const tNext = b.bar(barA + 2);
+  const startHit = cfg.startHit ? b.hitNear(...cfg.startHit) : null;
+  const endHit = cfg.endHit ? b.hitNear(...cfg.endHit) : null;
+  const T0 = startHit ? startHit.tf : b.onsetTime(tA);
+  const T1 = endHit ? endHit.tf : b.onsetTime(tNext);
+  scene.t0 = T0;
+  scene.t1 = T1;
+  // The move: a knob gesture (demos.json), or the HQ throw (the lever's 420 ms).
+  const gest = d._g.find((g) => !g.steps);
+  const g0 = gest ? b.comp(gest.t0) : b.comp(d.hq_switch.t);
+  const g1 = gest ? b.comp(gest.t1) : g0 + 0.42;
+  const macroOut = b.beat(barA + 1, 4);
+  const SM = 0.25;
+  const smearIn = !!cfg.smearIn;
+  const smearOut = !!cfg.smearOut;
+  const lm = demos.levelMatched(d.id);
+  const captionFrom = lm ? g0 - 0.1 : T0;
+  const pullFrom = cfg.pullBack ? macroOut : null;
+
+  scene.events.push(
+    ...(startHit ? [{ t: startHit.tm, kind: "cut", hit: `${startHit.piece} ${startHit.tm} (${E} L-TOUR)` }] : [{ t: b.master(tA), kind: "cut", hit: `bar line ${b.master(tA).toFixed(3)} (smear into ${E})` }]),
+    { t: b.master(g0), kind: "gesture", hit: `bar ${barA + 1}.1 ${b.master(g0).toFixed(3)} (${gest ? gest.param : "hq"} move)` },
+    { t: b.master(g0), kind: "cut", hit: `bar ${barA + 1}.1 (zone S macro in)` },
+    { t: b.master(macroOut), kind: "cut", hit: `bar ${barA + 1}.4 ${b.master(macroOut).toFixed(3)} (macro out)` },
+  );
+  if (cfg.eyebrows && cfg.eyebrows.length > 1) scene.events.push({ t: b.master(g0), kind: "text", hit: `${cfg.eyebrows[1][0]} (eyebrow)` });
+  if (startHit) {
+    scene.events.push({ t: startHit.tm, kind: "flash", hit: `${startHit.tm} (${E} 0.30)` });
+    lib.registerFlash({ t: startHit.t, peak: 0.3, color: COLOR.fill[E], id: `${cfg.id}-flash` });
+  }
+
+  // Zone S: the plate (with its smear copies).
+  const PL = ctx.layer("plate", 10);
+  const plate = new PlateSmear(PL, lib, E, { scale: TOUR.plate.scale, hiRes: false });
+  plate.require(demos.statesIn(T0 - SM, T1 + SM, d.id, 120));
+  // Zone S macro: a hi-res plate in a 1080 x 510 clip box.
+  const ML = ctx.layer("macro", 11);
+  const box = clipBox(ML, TOUR.macroBox);
+  box.el.style.background = "#050506";
+  const macro = lib.createPlate(E, { parent: box.el, scale: cfg.macroZoom, hiRes: true, header: false });
+  macro.require(demos.statesIn(g0 - 0.2, macroOut + 0.05, d.id, 240));
+  // Knob macros frame the knob AND its readout (the value the viewer hears change), so the anchor
+  // is the middle of the span from the knob's top to the readout's bottom.
+  const knobAndReadout = (name) => {
+    const G = lib.plate.plateGeometry(E);
+    const K = lib.plate.K;
+    const [kx, ky, kw] = G[name];
+    const [, vy, , vh] = G.values[name];
+    return [(kx + kw / 2) * K, ((ky + vy + vh) / 2 + 1 - 56) * K];
+  };
+  const macroOn = Array.isArray(cfg.macroOn) ? cfg.macroOn : cfg.macroOn === "slider" ? sliderCentre(lib, E) : cfg.withReadout ? knobAndReadout(cfg.macroOn) : cfg.macroOn;
+
+  // Zone H: the scope.
+  const SL = ctx.layer("scope", 14);
+  const scopeCy = TOUR.scope.cy + (cfg.best.length > 1 ? 10 : 0);
+  const scope = lib.createScope(SL, { cx: TOUR.scope.cx, cy: scopeCy, size: TOUR.scope.size, stem: "guitar", color: hue, disc: "rgba(5,5,6,0.6)", labelSize: 18 });
+
+  const RL = ctx.layer("ring", 16);
+  const ring = lib.createRing(RL, { color: COLOR.lavender, width: 3, factor: 1.12 });
+
+  let FL = null;
+  let flash = null;
+  if (startHit) {
+    FL = ctx.layer("flash", 30);
+    flash = lib.createFlash(FL);
+  }
+
+  // Zone T.
+  const TL = ctx.layer("type", 40);
+  const head = el("div", { parent: TL, style: { position: "absolute", left: "0px", top: "0px", width: "1080px", height: "1920px", transformOrigin: "72px 420px" } });
+  const brows = (cfg.eyebrows || []).map(([text, from]) => ({ node: lib.type.eyebrow(text, { parent: head, size: 30, color: COLOR.purple, x: 72, baseline: 300 }), from }));
+  const h = lib.type.headline({ text: cfg.word, accent: cfg.accent, size: 104, parent: head, x: 72, baseline: 420 });
+  const law = (t) => (typeof cfg.law === "function" ? cfg.law(t, { b, g0 }) : cfg.law);
+  const ct = lib.createChorusType(h.accent, { law: law(T0), engine: E });
+  const bf = bestFor(head, cfg.best, { baseline: 490 });
+  const caption = monoLine(TL, cfg.caption, { x: 72, baseline: 1000, size: 32, color: hue, tracking: 0.04 });
+  const level = monoLine(TL, "LEVEL MATCHED", { x: 72, baseline: 1000, size: 26, color: "rgba(246,244,239,0.6)" });
+  caption.style.textShadow = level.style.textShadow = "0 0 12px rgba(5,5,6,0.9)";
+
+  const OPEN = 10; // frames: the Blue strip opens into L-TOUR (S09)
+  const pulled = [PL, ML, RL, TL];
+
+  return {
+    setup() {
+      fitNodes([{ node: h.el, min: 96 }], { label: cfg.id });
+      for (const n of bf.slice(1)) if (n.getBoundingClientRect().right - document.getElementById("stage").getBoundingClientRect().left > 928.5) console.warn(`[v5 ${cfg.id}] BEST FOR line passes x 928: "${n.textContent}"`);
+      checkSafe([TL], cfg.id);
+    },
+    render(t) {
+      const inWin = t >= T0 && t < T1;
+      const plateWin = t >= (smearIn ? tA - SM : T0) && t < (smearOut ? tNext + SM : T1);
+      const macroNow = inWin && b.after(t, g0) && !b.after(t, macroOut);
+      show(PL, plateWin && !macroNow);
+      show(ML, macroNow);
+      show(SL, inWin);
+      show(RL, inWin);
+      show(TL, inWin);
+      if (FL) show(FL, inWin);
+
+      // Frame pull-back into the drums (S12): 1 -> 0.97, sine.in, about the frame centre.
+      let pb = 1;
+      if (pullFrom != null && t >= pullFrom) pb = lerp(1, 0.97, ease("sine.in", clamp((t - pullFrom) / (T1 - pullFrom))));
+      for (const l of pulled) setStyle(l, "transform", pb === 1 ? "" : `scale(${+pb.toFixed(5)})`);
+      for (const l of pulled) setStyle(l, "transformOrigin", "540px 960px");
+
+      const st = demos.plateState(t, d.id);
+      if (plateWin && !macroNow) {
+        plate.setState(st);
+        plate.setGrade(demos.grade(E, t));
+        let role = null;
+        let u = 0;
+        if (smearIn && t < tA + SM) {
+          role = "in";
+          u = (t - (tA - SM)) / (2 * SM);
+        } else if (smearOut && t >= tNext - SM) {
+          role = "out";
+          u = (t - (tNext - SM)) / (2 * SM);
+        } else if (startHit) {
+          u = 0.5 + b.since(t, startHit.t) / 0.25;
+          role = u < 1 ? "burst" : null;
+        }
+        // S09: the Blue strip (a08's geometry) opens into the L-TOUR plate over OPEN frames.
+        const P = TOUR.plate;
+        const W = 1400 * P.scale;
+        const H = 847.02 * P.scale;
+        if (cfg.openFrom) {
+          const k = b.frameAt(t) - startHit.frame;
+          const uo = ease("expo.out", clamp((k + 1) / OPEN));
+          const S = cfg.openFrom;
+          const row = lib.slices.knobRowCentre(E) + lib.plate.HEADER_PX;
+          const x0 = 540 - 700 * S.scale;
+          const y0 = S.y + S.h / 2 - row * S.scale;
+          const sc = lerp(S.scale, P.scale, uo);
+          plate.place({ x: lerp(x0, P.x, uo), y: lerp(y0, P.y, uo), scale: sc });
+          if (uo < 1) {
+            const cx0 = lerp(S.x, P.x, uo);
+            const cy0 = lerp(S.y, P.y, uo);
+            const cw = lerp(S.w, W, uo);
+            const ch = lerp(S.h, H, uo);
+            setStyle(plate.root, "clipPath", `inset(${px(cy0)} ${px(1080 - cx0 - cw)} ${px(1920 - cy0 - ch)} ${px(cx0)})`);
+          } else setStyle(plate.root, "clipPath", "");
+        } else plate.place({ x: P.x, y: P.y, scale: P.scale });
+        plate.render(u, role);
+      }
+      if (macroNow) {
+        macro.setState(st);
+        macro.setGrade(demos.grade(E, t));
+        macro.focus({ on: macroOn, zoom: cfg.macroZoom, at: [540, TOUR.macroBox.h / 2] });
+      }
+      if (!inWin) return;
+
+      // Ring on the moving control (the macro's while it is on).
+      let rect = null;
+      if (macroNow) {
+        const r = macro.controlScreenRect(cfg.ring);
+        rect = { cx: r.cx, cy: r.cy + TOUR.macroBox.y, size: r.size };
+      } else rect = plate.centre.controlScreenRect(cfg.ring);
+      ring.render(t, { t0: g0, t1: g1, rect });
+
+      scope.moveTo(540 + (TOUR.scope.cx - 540) * pb, 960 + (scopeCy - 960) * pb);
+      scope.draw(t, { stem: "guitar", color: hue, zoom: SCOPE_ZOOM * pb });
+
+      if (flash) flash.render(t, M.flash(t, [startHit], { peak: 0.3 }), COLOR.fill[E], lib.flash.flashMode(`${cfg.id}-flash`));
+
+      // Type: the S09 stamp on the stop hit; eyebrow swaps (Red: BBD CORE -> TAPE CORE at 18.1).
+      if (startHit) applyStamp(head, M.stamp(t, startHit));
+      let cur = 0;
+      brows.forEach((br, i) => {
+        if (br.from != null && b.after(t, br.from)) cur = i;
+      });
+      brows.forEach((br, i) => setStyle(br.node, "visibility", i === cur ? "" : "hidden"));
+      ct.setLaw(law(t));
+      ct.render(t, demos.settingsAt(t));
+      const capOn = t >= captionFrom;
+      setStyle(caption, "visibility", capOn ? "" : "hidden");
+      setStyle(level, "visibility", lm && !capOn ? "" : "hidden");
+    },
+  };
 }

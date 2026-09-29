@@ -87,7 +87,7 @@ export default {
         if (!on) return;
         const f = b.frameAt(t);
         const collapsing = f >= stop.frame;
-        const uf = clamp((f - fan.frame) / FAN_FRAMES);
+        const uf = clamp((f - fan.frame + 1) / FAN_FRAMES); // moving on the hit frame
         const u = ease("expo.out", uf);
         const step = collapsing ? 1 + 0.008 * 4 : 1 + 0.008 * M.sweep(t, doubles);
         setStyle(group, "transform", step === 1 ? "" : `scale(${+step.toFixed(5)})`);
