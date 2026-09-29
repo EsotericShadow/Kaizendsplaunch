@@ -1,0 +1,304 @@
+{
+ "target_lufs": -9.5,
+ "ceiling_dbtp": -1.5,
+ "chain": "The owner's mix sits at -11 LUFS but carries most of its energy below 300 Hz and little above\n8 kHz, so on a phone speaker (which plays almost nothing below ~250 Hz) it reads as quiet and dull.\nThe chain:",
+ "film": {
+  "in_lufs": -11.05,
+  "out_lufs": -9.51,
+  "in_phone_lufs_hp250": -14.85,
+  "out_phone_lufs_hp250": -11.98,
+  "out_tp": -1.6,
+  "dynamics": {
+   "makeup_db": 8.1,
+   "comp_gr_db_median": 3.34,
+   "comp_gr_db_p99": 4.88,
+   "limiter_gr_db_median": 2.01,
+   "limiter_gr_db_p99": 5.24,
+   "limiter_gr_db_max": 7.38,
+   "safety_limiter": {
+    "passes": 1,
+    "true_peak_dbtp": -1.5997716589295483,
+    "max_gain_reduction_db": 9.643274665532871e-16
+   }
+  },
+  "bands_in": {
+   "20-100": -5.4,
+   "100-300": -3.3,
+   "300-1000": -7.4,
+   "1000-3000": -13.9,
+   "3000-8000": -15.9,
+   "8000-16000": -24.7
+  },
+  "bands_out": {
+   "20-100": -7.1,
+   "100-300": -3.6,
+   "300-1000": -6.2,
+   "1000-3000": -10.9,
+   "3000-8000": -13.8,
+   "8000-16000": -23.3
+  },
+  "levelmatch_after_chain": {
+   "M01-green-mixturn": {
+    "bars_delta_lu": [
+     0.122,
+     -0.142,
+     0.295,
+     -0.173,
+     0.184,
+     0.015,
+     0.141,
+     -0.261,
+     -0.179,
+     0.025,
+     -0.059,
+     -0.266,
+     0.092
+    ],
+    "demo_delta_lu": [
+     -0.052
+    ],
+    "worst_bar": 0.295,
+    "worst_demo": 0.052
+   },
+   "M02-blue-offset": {
+    "bars_delta_lu": [
+     0.181,
+     -0.186
+    ],
+    "demo_delta_lu": [
+     -0.042
+    ],
+    "worst_bar": 0.186,
+    "worst_demo": 0.042
+   },
+   "M03-red-hq": {
+    "bars_delta_lu": [
+     -0.115,
+     0.021
+    ],
+    "demo_delta_lu": [
+     0.009
+    ],
+    "worst_bar": 0.115,
+    "worst_demo": 0.009
+   },
+   "M04-purple-color": {
+    "bars_delta_lu": [
+     -0.436,
+     0.147
+    ],
+    "demo_delta_lu": [
+     -0.025
+    ],
+    "worst_bar": 0.436,
+    "worst_demo": 0.025
+   },
+   "M05-black-depth": {
+    "bars_delta_lu": [
+     -0.081,
+     0.355,
+     -0.009,
+     0.137,
+     0.189,
+     0.003,
+     -0.1,
+     0.006,
+     0.082,
+     0.023
+    ],
+    "demo_delta_lu": [
+     0.013
+    ],
+    "worst_bar": 0.355,
+    "worst_demo": 0.013
+   },
+   "M06-green-free": {
+    "bars_delta_lu": [
+     0.009,
+     0.089
+    ],
+    "demo_delta_lu": [
+     0.045
+    ],
+    "worst_bar": 0.089,
+    "worst_demo": 0.045
+   },
+   "M07-purple-free": {
+    "bars_delta_lu": [
+     0.263,
+     -0.373
+    ],
+    "demo_delta_lu": [
+     -0.016
+    ],
+    "worst_bar": 0.373,
+    "worst_demo": 0.016
+   },
+   "M08-blue-trial": {
+    "bars_delta_lu": [],
+    "demo_delta_lu": [
+     0.15
+    ],
+    "worst_bar": 0.0,
+    "worst_demo": 0.15
+   },
+   "M09-red-trial": {
+    "bars_delta_lu": [
+     0.119
+    ],
+    "demo_delta_lu": [
+     0.043
+    ],
+    "worst_bar": 0.119,
+    "worst_demo": 0.043
+   },
+   "M10-black-trial": {
+    "bars_delta_lu": [
+     0.131,
+     -0.078
+    ],
+    "demo_delta_lu": [
+     0.032
+    ],
+    "worst_bar": 0.131,
+    "worst_demo": 0.032
+   },
+   "M11-blue-ab": {
+    "bars_delta_lu": [
+     0.234
+    ],
+    "demo_delta_lu": [
+     -0.134,
+     0.18,
+     0.048
+    ],
+    "worst_bar": 0.234,
+    "worst_demo": 0.18
+   },
+   "M12-green-price": {
+    "bars_delta_lu": [
+     -0.199,
+     0.071,
+     -0.042,
+     0.066
+    ],
+    "demo_delta_lu": [
+     -0.03
+    ],
+    "worst_bar": 0.199,
+    "worst_demo": 0.03
+   },
+   "M13-green-end": {
+    "bars_delta_lu": [
+     0.221,
+     0.037,
+     0.309
+    ],
+    "demo_delta_lu": [
+     -0.172
+    ],
+    "worst_bar": 0.309,
+    "worst_demo": 0.172
+   }
+  }
+ },
+ "tiktok": {
+  "in_lufs": -10.05,
+  "out_lufs": -9.52,
+  "in_phone_lufs_hp250": -16.11,
+  "out_phone_lufs_hp250": -13.83,
+  "out_tp": -1.6,
+  "dynamics": {
+   "makeup_db": 7.68,
+   "comp_gr_db_median": 4.02,
+   "comp_gr_db_p99": 4.87,
+   "limiter_gr_db_median": 1.66,
+   "limiter_gr_db_p99": 4.52,
+   "limiter_gr_db_max": 7.47,
+   "safety_limiter": {
+    "passes": 1,
+    "true_peak_dbtp": -1.5999123343423503,
+    "max_gain_reduction_db": 9.643274665532871e-16
+   }
+  },
+  "bands_in": {
+   "20-100": -4.7,
+   "100-300": -2.7,
+   "300-1000": -10.6,
+   "1000-3000": -19.1,
+   "3000-8000": -17.4,
+   "8000-16000": -25.9
+  },
+  "bands_out": {
+   "20-100": -5.6,
+   "100-300": -2.7,
+   "300-1000": -9.4,
+   "1000-3000": -15.5,
+   "3000-8000": -14.0,
+   "8000-16000": -23.4
+  },
+  "levelmatch_after_chain": {
+   "T01-red-hq": {
+    "bars_delta_lu": [
+     -0.195
+    ],
+    "demo_delta_lu": [
+     -0.195
+    ],
+    "worst_bar": 0.195,
+    "worst_demo": 0.195
+   },
+   "T02-blue-offset": {
+    "bars_delta_lu": [
+     -0.061
+    ],
+    "demo_delta_lu": [
+     -0.061
+    ],
+    "worst_bar": 0.061,
+    "worst_demo": 0.061
+   },
+   "T03-purple-color": {
+    "bars_delta_lu": [
+     0.028
+    ],
+    "demo_delta_lu": [
+     0.028
+    ],
+    "worst_bar": 0.028,
+    "worst_demo": 0.028
+   },
+   "T04-green-mixturn": {
+    "bars_delta_lu": [],
+    "demo_delta_lu": [
+     NaN
+    ],
+    "worst_bar": 0.0,
+    "worst_demo": 0.0
+   },
+   "T05-black-color": {
+    "bars_delta_lu": [
+     0.019
+    ],
+    "demo_delta_lu": [
+     0.018
+    ],
+    "worst_bar": 0.019,
+    "worst_demo": 0.018
+   },
+   "T06-green-offer-buy": {
+    "bars_delta_lu": [
+     -0.081,
+     0.202,
+     0.038,
+     0.191
+    ],
+    "demo_delta_lu": [
+     0.086
+    ],
+    "worst_bar": 0.202,
+    "worst_demo": 0.086
+   }
+  }
+ }
+}
