@@ -57,10 +57,12 @@ HONESTY_V = [(0.0, 14.0)]
 PLAN_VERTICAL = {
     "honesty": HONESTY_V,
     "tour": None,
+    # 24.00, as in the main film: the final strum's attack sits 5 dB down and rides back up over 1 s while the pad
+    # blooms in under it, so the chord gets its level from the whole chord and its attack stays under the drop's
     "faders": {
-        "gtr": [(0.0, 3.0), (14.0, 5.0), (17.0, 4.8), (20.0, 4.4), (22.0, 3.4)],
+        "gtr": [(0.0, 3.0), (14.0, 5.0), (17.0, 4.8), (20.0, 4.4), (22.0, 3.4), (24.0, -1.6), (25.0, 3.4, 1.0)],
         "gtr_oct": [(0.0, 1.0)],
-        "pad": [(0.0, 0.0), (14.0, 2.0), (17.0, 1.5), (20.0, 0.5), (22.0, -6.0), (24.0, -6.0)],
+        "pad": [(0.0, 0.0), (14.0, 2.0), (17.0, 1.5), (20.0, 0.5), (22.0, -6.0), (24.0, -7.0), (25.0, -3.5, 1.0)],
         "ep": [(0.0, 0.5)],
         "lead": [(0.0, 9.0)],
         "pluck": [(0.0, -1.0)],
@@ -88,13 +90,15 @@ PLAN_VERTICAL = {
     },
     "returns": {"plate": 0.0, "hall": 0.0, "delay": -3.0},
     "room": {"send_db": -15.0, "return_db": 0.0},
-    "low_end": {"shelf_hz": 80.0, "gain_db": -3.0, "q": 0.8},      # the same sub shelf as the main film
+    # the main film's sub shelf, 0.5 dB deeper: the vertical's groove carries more sub (63 Hz band 7.0 dB over 125 Hz
+    # before the shelf, 6.3 in the main), and this takes it the same 2 dB down
+    "low_end": {"shelf_hz": 80.0, "gain_db": -3.5, "q": 0.8},
     "sidechain": {"targets": ["pad", "arp"], "span": (14.0, 22.0), "depth_db": 3.5},
     "glue": {"target_mean_gr_db": 2.5, "target_span": (14.0, 22.0), "ratio": 2.0, "attack_ms": 20.0,
              "release_ms": 160.0, "threshold_offsets": [(0.0, 2.0), (14.0, 0.0), (22.0, 4.0)]},
     "zones": [(0.0, 14.0), (14.0, 17.0), (17.0, 20.0), (20.0, 22.0), (22.0, 24.0), (24.0, 28.0)],
     "zone_level": {(0.0, 14.0): -4.0, (14.0, 17.0): 1.5, (17.0, 20.0): -1.5, (20.0, 22.0): -2.5, (22.0, 24.0): -3.5,
-                   (24.0, 28.0): -1.0},
+                   (24.0, 28.0): 0.0},
     "fade": (27.00, 28.00),
 }
 

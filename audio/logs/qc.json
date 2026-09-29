@@ -383,7 +383,7 @@
       }
     },
     "10_master": {
-      "integrated_lufs": -14.413,
+      "integrated_lufs": -14.412,
       "target": -14.0,
       "tolerance": 0.5,
       "true_peak_dbtp": -1.1,
@@ -392,7 +392,7 @@
       "clipped_runs_3_samples_at_fs": 0,
       "samples_at_or_over_full_scale": 0,
       "non_finite": 0,
-      "limiter_max_gain_reduction_db": 0.868,
+      "limiter_max_gain_reduction_db": 0.845,
       "format": {
         "samplerate": 48000,
         "channels": 2,
@@ -406,7 +406,7 @@
         "ebur128_TP": -1.1,
         "loudnorm_I": -14.44,
         "loudnorm_TP": -1.1,
-        "loudnorm_LRA": 5.4
+        "loudnorm_LRA": 5.3
       },
       "pass": true
     },
@@ -422,7 +422,7 @@
         ]
       ],
       "featured_gtr_is_render_times_gain": {
-        "max_rel_error": 5.181497960404453e-08,
+        "max_rel_error": 5.093885986993628e-08,
         "pass": true,
         "note": "stem_gtr == Choroboros edit x one scalar gain curve (level match, fader, zone level, master, limiter), identical in L and R"
       },
@@ -468,10 +468,10 @@
   },
   "checks": {
     "mono_fold": {
-      "integrated_lufs_stereo": -14.413,
-      "integrated_lufs_mono_fold": -15.511,
-      "drop_lu": 1.098,
-      "correlation_overall": 0.6184,
+      "integrated_lufs_stereo": -14.412,
+      "integrated_lufs_mono_fold": -15.509,
+      "drop_lu": 1.097,
+      "correlation_overall": 0.6223,
       "sections": [
         {
           "name": "cold-open",
@@ -492,14 +492,14 @@
           "t0": 3.0,
           "t1": 7.85,
           "drop_lu": 1.56,
-          "correlation": 0.406
+          "correlation": 0.405
         },
         {
           "name": "title",
           "t0": 8.0,
           "t1": 12.0,
-          "drop_lu": 1.16,
-          "correlation": 0.66
+          "drop_lu": 1.15,
+          "correlation": 0.674
         },
         {
           "name": "lineup",
@@ -561,15 +561,15 @@
           "name": "looks",
           "t0": 46.0,
           "t1": 49.85,
-          "drop_lu": 1.15,
-          "correlation": 0.569
+          "drop_lu": 1.21,
+          "correlation": 0.553
         },
         {
           "name": "free",
           "t0": 50.0,
           "t1": 54.0,
-          "drop_lu": 0.6,
-          "correlation": 0.781
+          "drop_lu": 0.59,
+          "correlation": 0.803
         },
         {
           "name": "trial",
@@ -596,8 +596,8 @@
           "name": "echolalia",
           "t0": 64.5,
           "t1": 67.0,
-          "drop_lu": 1.25,
-          "correlation": 0.568
+          "drop_lu": 1.24,
+          "correlation": 0.571
         },
         {
           "name": "stovetop",
@@ -624,8 +624,8 @@
           "name": "hold",
           "t0": 78.0,
           "t1": 86.0,
-          "drop_lu": 1.52,
-          "correlation": 0.461
+          "drop_lu": 1.63,
+          "correlation": 0.46
         }
       ],
       "worst_section_drop_lu": 1.97
@@ -673,18 +673,18 @@
           "kind": "start",
           "master": {
             "rel_db": -1.4,
-            "abs_dbfs": -26.6
+            "abs_dbfs": -26.9
           },
           "gtr": {
             "rel_db": -86.7,
-            "abs_dbfs": -119.7
+            "abs_dbfs": -120.0
           }
         },
         {
           "t": 16.0,
           "kind": "join",
           "master": {
-            "rel_db": -2.0,
+            "rel_db": -1.9,
             "abs_dbfs": -30.4
           },
           "gtr": {
@@ -709,7 +709,7 @@
           "kind": "join",
           "master": {
             "rel_db": -2.4,
-            "abs_dbfs": -30.1
+            "abs_dbfs": -30.0
           },
           "gtr": {
             "rel_db": -10.7,
@@ -749,11 +749,11 @@
           },
           "gtr": {
             "rel_db": -87.1,
-            "abs_dbfs": -134.5
+            "abs_dbfs": -134.4
           },
           "pad": {
             "rel_db": -67.5,
-            "abs_dbfs": -141.5
+            "abs_dbfs": -141.4
           }
         },
         {
@@ -772,39 +772,39 @@
           "t": 49.85,
           "kind": "cut",
           "master": {
-            "rel_db": -12.0,
-            "abs_dbfs": -33.5
+            "rel_db": -12.2,
+            "abs_dbfs": -35.3
           },
           "gtr": {
             "rel_db": -24.0,
-            "abs_dbfs": -77.1
+            "abs_dbfs": -77.3
           },
           "pad": {
             "rel_db": -33.1,
-            "abs_dbfs": -71.4
+            "abs_dbfs": -71.7
           }
         },
         {
           "t": 50.0,
           "kind": "start",
           "master": {
-            "rel_db": -0.9,
-            "abs_dbfs": -31.2
+            "rel_db": -1.2,
+            "abs_dbfs": -30.7
           },
           "gtr": {
-            "rel_db": -9.4,
-            "abs_dbfs": -45.9
+            "rel_db": -9.3,
+            "abs_dbfs": -45.6
           },
           "pad": {
             "rel_db": -30.0,
-            "abs_dbfs": -98.5
+            "abs_dbfs": -98.3
           }
         },
         {
           "t": 54.0,
           "kind": "join",
           "master": {
-            "rel_db": -0.7,
+            "rel_db": -0.8,
             "abs_dbfs": -32.7
           },
           "gtr": {
@@ -812,7 +812,7 @@
             "abs_dbfs": -50.2
           },
           "pad": {
-            "rel_db": -27.2,
+            "rel_db": -27.4,
             "abs_dbfs": -64.4
           },
           "ep": {
@@ -824,16 +824,16 @@
           "t": 58.0,
           "kind": "join",
           "master": {
-            "rel_db": 3.7,
+            "rel_db": 3.8,
             "abs_dbfs": -26.1
           },
           "gtr": {
             "rel_db": -8.8,
-            "abs_dbfs": -48.2
+            "abs_dbfs": -48.1
           },
           "pad": {
             "rel_db": -17.2,
-            "abs_dbfs": -63.2
+            "abs_dbfs": -63.1
           },
           "ep": {
             "rel_db": -9.5,
@@ -841,7 +841,7 @@
           },
           "pluck": {
             "rel_db": -1.5,
-            "abs_dbfs": -34.7
+            "abs_dbfs": -34.6
           }
         },
         {
@@ -849,27 +849,27 @@
           "kind": "join",
           "master": {
             "rel_db": -1.7,
-            "abs_dbfs": -28.1
+            "abs_dbfs": -28.0
           },
           "gtr": {
             "rel_db": -75.6,
-            "abs_dbfs": -131.4
+            "abs_dbfs": -131.3
           },
           "pad": {
             "rel_db": -7.5,
-            "abs_dbfs": -56.3
+            "abs_dbfs": -56.2
           },
           "ep": {
             "rel_db": -36.0,
-            "abs_dbfs": -121.7
+            "abs_dbfs": -121.6
           },
           "lead": {
             "rel_db": -84.3,
-            "abs_dbfs": -130.1
+            "abs_dbfs": -130.0
           },
           "pluck": {
             "rel_db": -17.5,
-            "abs_dbfs": -53.4
+            "abs_dbfs": -53.3
           }
         },
         {
@@ -897,19 +897,19 @@
           "kind": "join",
           "master": {
             "rel_db": -7.1,
-            "abs_dbfs": -43.1
+            "abs_dbfs": -43.0
           },
           "gtr": {
             "rel_db": -5.6,
-            "abs_dbfs": -43.0
+            "abs_dbfs": -42.9
           },
           "pad": {
             "rel_db": -41.8,
-            "abs_dbfs": -130.8
+            "abs_dbfs": -130.7
           }
         }
       ],
-      "worst_master_rel_db": 3.7
+      "worst_master_rel_db": 3.8
     },
     "p_block_identical": {
       "pass": true,
@@ -946,7 +946,7 @@
             "B",
             "C#"
           ],
-          "bed_lufs": -26.7,
+          "bed_lufs": -26.6,
           "bed_chroma_top": [
             "A#",
             "G",
@@ -976,7 +976,7 @@
             "A#",
             "B"
           ],
-          "bed_lufs": -25.8,
+          "bed_lufs": -25.7,
           "bed_chroma_top": [
             "A#",
             "A",
@@ -1006,9 +1006,9 @@
     },
     "arc_log": "/home/user/Kaizendsplaunch/audio/logs/arc.json",
     "stems_sum_to_mix": {
-      "max_abs_diff": 6.137997843325138e-08
+      "max_abs_diff": 5.960464477539063e-08
     },
-    "master_24bit_vs_float_max_diff": 1.189723661809694e-07
+    "master_24bit_vs_float_max_diff": 1.1897632851143314e-07
   },
   "pass": true
 }

@@ -362,7 +362,7 @@
       }
     },
     "10_master": {
-      "integrated_lufs": -14.416,
+      "integrated_lufs": -14.413,
       "target": -14.0,
       "tolerance": 0.5,
       "true_peak_dbtp": -1.1,
@@ -371,7 +371,7 @@
       "clipped_runs_3_samples_at_fs": 0,
       "samples_at_or_over_full_scale": 0,
       "non_finite": 0,
-      "limiter_max_gain_reduction_db": 0.851,
+      "limiter_max_gain_reduction_db": 0.839,
       "format": {
         "samplerate": 48000,
         "channels": 2,
@@ -381,9 +381,9 @@
       },
       "ffmpeg_ebur128": {
         "ebur128_I": -14.4,
-        "ebur128_LRA": 6.0,
+        "ebur128_LRA": 6.1,
         "ebur128_TP": -1.1,
-        "loudnorm_I": -14.65,
+        "loudnorm_I": -14.61,
         "loudnorm_TP": -1.1,
         "loudnorm_LRA": 6.4
       },
@@ -397,7 +397,7 @@
         ]
       ],
       "featured_gtr_is_render_times_gain": {
-        "max_rel_error": 3.4249552239749964e-08,
+        "max_rel_error": 3.401936047348809e-08,
         "pass": true,
         "note": "stem_gtr == Choroboros edit x one scalar gain curve (level match, fader, zone level, master, limiter), identical in L and R"
       },
@@ -431,10 +431,10 @@
   },
   "checks": {
     "mono_fold": {
-      "integrated_lufs_stereo": -14.416,
-      "integrated_lufs_mono_fold": -15.422,
-      "drop_lu": 1.006,
-      "correlation_overall": 0.6507,
+      "integrated_lufs_stereo": -14.413,
+      "integrated_lufs_mono_fold": -15.451,
+      "drop_lu": 1.038,
+      "correlation_overall": 0.6352,
       "sections": [
         {
           "name": "mix-turn",
@@ -447,74 +447,74 @@
           "name": "title",
           "t0": 2.0,
           "t1": 4.0,
-          "drop_lu": 0.8,
-          "correlation": 0.846
+          "drop_lu": 0.81,
+          "correlation": 0.842
         },
         {
           "name": "green",
           "t0": 4.0,
           "t1": 6.0,
-          "drop_lu": 0.96,
-          "correlation": 0.714
+          "drop_lu": 0.98,
+          "correlation": 0.703
         },
         {
           "name": "blue",
           "t0": 6.0,
           "t1": 8.0,
-          "drop_lu": 0.54,
-          "correlation": 0.862
+          "drop_lu": 0.55,
+          "correlation": 0.856
         },
         {
           "name": "red",
           "t0": 8.0,
           "t1": 10.0,
-          "drop_lu": 0.97,
-          "correlation": 0.672
+          "drop_lu": 0.99,
+          "correlation": 0.664
         },
         {
           "name": "purple",
           "t0": 10.0,
           "t1": 12.0,
-          "drop_lu": 0.36,
-          "correlation": 0.901
+          "drop_lu": 0.37,
+          "correlation": 0.897
         },
         {
           "name": "black",
           "t0": 12.0,
           "t1": 14.0,
-          "drop_lu": 1.1,
-          "correlation": 0.652
+          "drop_lu": 1.12,
+          "correlation": 0.64
         },
         {
           "name": "free",
           "t0": 14.0,
           "t1": 17.0,
-          "drop_lu": 0.76,
-          "correlation": 0.751
+          "drop_lu": 0.77,
+          "correlation": 0.745
         },
         {
           "name": "trial",
           "t0": 17.0,
           "t1": 20.0,
-          "drop_lu": 1.32,
-          "correlation": 0.536
+          "drop_lu": 1.33,
+          "correlation": 0.528
         },
         {
           "name": "price",
           "t0": 20.0,
           "t1": 22.0,
           "drop_lu": 1.12,
-          "correlation": 0.576
+          "correlation": 0.571
         },
         {
           "name": "endcard",
           "t0": 22.0,
           "t1": 28.0,
-          "drop_lu": 1.81,
-          "correlation": 0.341
+          "drop_lu": 1.87,
+          "correlation": 0.305
         }
       ],
-      "worst_section_drop_lu": 1.81
+      "worst_section_drop_lu": 1.87
     },
     "digital_silences": {
       "pass": true,
@@ -528,7 +528,7 @@
           "kind": "join",
           "master": {
             "rel_db": 5.1,
-            "abs_dbfs": -31.5
+            "abs_dbfs": -31.4
           },
           "gtr": {
             "rel_db": -8.8,
@@ -539,12 +539,12 @@
           "t": 6.0,
           "kind": "join",
           "master": {
-            "rel_db": 0.9,
-            "abs_dbfs": -33.4
+            "rel_db": 1.0,
+            "abs_dbfs": -33.3
           },
           "gtr": {
             "rel_db": -18.9,
-            "abs_dbfs": -54.7
+            "abs_dbfs": -54.6
           }
         },
         {
@@ -564,11 +564,11 @@
           "kind": "join",
           "master": {
             "rel_db": 0.6,
-            "abs_dbfs": -34.0
+            "abs_dbfs": -33.9
           },
           "gtr": {
             "rel_db": -15.2,
-            "abs_dbfs": -52.0
+            "abs_dbfs": -51.9
           }
         },
         {
@@ -576,11 +576,11 @@
           "kind": "join",
           "master": {
             "rel_db": 2.2,
-            "abs_dbfs": -32.3
+            "abs_dbfs": -32.2
           },
           "gtr": {
             "rel_db": -12.2,
-            "abs_dbfs": -49.6
+            "abs_dbfs": -49.5
           }
         },
         {
@@ -588,14 +588,14 @@
           "kind": "join",
           "master": {
             "rel_db": -6.3,
-            "abs_dbfs": -26.6
+            "abs_dbfs": -26.5
           },
           "gtr": {
             "rel_db": -15.2,
             "abs_dbfs": -50.7
           },
           "pad": {
-            "rel_db": -62.3,
+            "rel_db": -62.4,
             "abs_dbfs": -131.8
           }
         },
@@ -603,12 +603,12 @@
           "t": 17.0,
           "kind": "join",
           "master": {
-            "rel_db": -1.0,
-            "abs_dbfs": -30.0
+            "rel_db": -0.6,
+            "abs_dbfs": -29.7
           },
           "gtr": {
             "rel_db": -10.0,
-            "abs_dbfs": -51.2
+            "abs_dbfs": -51.1
           },
           "pad": {
             "rel_db": -25.0,
@@ -624,11 +624,11 @@
           "kind": "join",
           "master": {
             "rel_db": 1.1,
-            "abs_dbfs": -26.2
+            "abs_dbfs": -26.1
           },
           "gtr": {
             "rel_db": -9.7,
-            "abs_dbfs": -46.7
+            "abs_dbfs": -46.6
           },
           "pad": {
             "rel_db": -19.6,
@@ -640,7 +640,7 @@
           },
           "pluck": {
             "rel_db": -1.3,
-            "abs_dbfs": -30.8
+            "abs_dbfs": -30.7
           }
         },
         {
@@ -648,19 +648,19 @@
           "kind": "join",
           "master": {
             "rel_db": -8.3,
-            "abs_dbfs": -37.9
+            "abs_dbfs": -37.7
           },
           "gtr": {
             "rel_db": -9.6,
-            "abs_dbfs": -49.2
+            "abs_dbfs": -49.1
           },
           "pad": {
             "rel_db": -15.1,
-            "abs_dbfs": -62.2
+            "abs_dbfs": -62.1
           },
           "ep": {
             "rel_db": -51.5,
-            "abs_dbfs": -130.5
+            "abs_dbfs": -130.4
           },
           "lead": {
             "rel_db": -165.1,
@@ -668,7 +668,7 @@
           },
           "pluck": {
             "rel_db": -27.3,
-            "abs_dbfs": -61.7
+            "abs_dbfs": -61.6
           }
         }
       ],
@@ -676,9 +676,9 @@
     },
     "arc_log": "/home/user/Kaizendsplaunch/audio/logs/arc-vertical.json",
     "stems_sum_to_mix": {
-      "max_abs_diff": 5.9138983488082886e-08
+      "max_abs_diff": 5.483889253810048e-08
     },
-    "master_24bit_vs_float_max_diff": 1.189624891095864e-07
+    "master_24bit_vs_float_max_diff": 1.1897509102909432e-07
   },
   "pass": true
 }

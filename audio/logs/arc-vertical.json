@@ -4,8 +4,8 @@
     {
       "bar": 1,
       "t0": 0.0,
-      "lufs": -20.0,
-      "short_term_end": -20.0,
+      "lufs": -19.94,
+      "short_term_end": -19.94,
       "crest_db": 14.9,
       "onsets": 5,
       "mono_drop_lu": 0.48
@@ -13,89 +13,89 @@
     {
       "bar": 2,
       "t0": 2.0,
-      "lufs": -16.22,
+      "lufs": -16.23,
       "short_term_end": -16.8,
       "crest_db": 14.1,
-      "onsets": 18,
-      "mono_drop_lu": 0.8
+      "onsets": 17,
+      "mono_drop_lu": 0.81
     },
     {
       "bar": 3,
       "t0": 4.0,
-      "lufs": -17.39,
-      "short_term_end": -17.18,
+      "lufs": -17.42,
+      "short_term_end": -17.19,
       "crest_db": 13.5,
       "onsets": 10,
-      "mono_drop_lu": 0.96
+      "mono_drop_lu": 0.98
     },
     {
       "bar": 4,
       "t0": 6.0,
-      "lufs": -17.04,
-      "short_term_end": -17.33,
-      "crest_db": 13.7,
+      "lufs": -17.07,
+      "short_term_end": -17.35,
+      "crest_db": 13.8,
       "onsets": 10,
-      "mono_drop_lu": 0.54
+      "mono_drop_lu": 0.55
     },
     {
       "bar": 5,
       "t0": 8.0,
       "lufs": -17.46,
-      "short_term_end": -17.22,
+      "short_term_end": -17.21,
       "crest_db": 15.3,
       "onsets": 8,
-      "mono_drop_lu": 0.97
+      "mono_drop_lu": 0.99
     },
     {
       "bar": 6,
       "t0": 10.0,
-      "lufs": -16.93,
-      "short_term_end": -17.25,
-      "crest_db": 13.6,
-      "onsets": 11,
-      "mono_drop_lu": 0.36
+      "lufs": -16.96,
+      "short_term_end": -17.28,
+      "crest_db": 13.8,
+      "onsets": 9,
+      "mono_drop_lu": 0.37
     },
     {
       "bar": 7,
       "t0": 12.0,
-      "lufs": -16.1,
-      "short_term_end": -16.32,
-      "crest_db": 13.4,
+      "lufs": -16.12,
+      "short_term_end": -16.33,
+      "crest_db": 13.5,
       "onsets": 15,
-      "mono_drop_lu": 1.1
+      "mono_drop_lu": 1.12
     },
     {
       "bar": 8,
       "t0": 14.0,
-      "lufs": -11.3,
-      "short_term_end": -12.03,
-      "crest_db": 12.3,
-      "onsets": 12,
-      "mono_drop_lu": 0.72
+      "lufs": -11.33,
+      "short_term_end": -12.05,
+      "crest_db": 12.4,
+      "onsets": 13,
+      "mono_drop_lu": 0.73
     },
     {
       "bar": 9,
       "t0": 16.0,
       "lufs": -11.16,
-      "short_term_end": -11.19,
-      "crest_db": 12.3,
-      "onsets": 13,
-      "mono_drop_lu": 0.95
+      "short_term_end": -11.2,
+      "crest_db": 12.4,
+      "onsets": 14,
+      "mono_drop_lu": 0.96
     },
     {
       "bar": 10,
       "t0": 18.0,
-      "lufs": -11.69,
-      "short_term_end": -11.72,
+      "lufs": -11.66,
+      "short_term_end": -11.69,
       "crest_db": 12.6,
       "onsets": 13,
-      "mono_drop_lu": 1.43
+      "mono_drop_lu": 1.44
     },
     {
       "bar": 11,
       "t0": 20.0,
-      "lufs": -12.1,
-      "short_term_end": -12.08,
+      "lufs": -12.06,
+      "short_term_end": -12.05,
       "crest_db": 13.6,
       "onsets": 13,
       "mono_drop_lu": 1.12
@@ -103,29 +103,29 @@
     {
       "bar": 12,
       "t0": 22.0,
-      "lufs": -17.25,
-      "short_term_end": -14.71,
+      "lufs": -17.2,
+      "short_term_end": -14.66,
       "crest_db": 14.0,
       "onsets": 4,
-      "mono_drop_lu": 2.01
+      "mono_drop_lu": 2.02
     },
     {
       "bar": 13,
       "t0": 24.0,
-      "lufs": -14.62,
-      "short_term_end": -14.66,
-      "crest_db": 15.8,
-      "onsets": 3,
-      "mono_drop_lu": 1.71
+      "lufs": -14.33,
+      "short_term_end": -14.83,
+      "crest_db": 14.5,
+      "onsets": 6,
+      "mono_drop_lu": 1.88
     },
     {
       "bar": 14,
       "t0": 26.0,
-      "lufs": -22.46,
-      "short_term_end": -20.61,
-      "crest_db": 14.4,
+      "lufs": -19.27,
+      "short_term_end": -17.58,
+      "crest_db": 14.7,
       "onsets": 0,
-      "mono_drop_lu": 2.11
+      "mono_drop_lu": 2.35
     }
   ]
 }

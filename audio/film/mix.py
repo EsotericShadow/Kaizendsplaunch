@@ -59,23 +59,27 @@ PLAN_MAIN = {
     "tour": {"blocks": [16.0, 20.0, 24.0, 28.0], "stop_block": 32.0, "end": 36.0},
     "faders": {   # (t, dB) steps; each change ramps over the 20 ms ending at t ((t, dB, s): over s seconds)
         "gtr": [(0.0, 3.0), (8.0, 3.6), (16.0, 4.6), (36.0, 4.6), (42.0, 2.2), (50.0, 4.5), (54.0, 4.8), (58.0, 4.4),
-                (62.0, 4.4), (70.0, 3.0), (78.0, 0.5), (78.6, 3.0, 0.6), (81.5, 9.0)],
-        # 78.00: the strum's attack sits 2.5 dB down and the ringing chord rides back up over 0.6 s (the zone's peak is
-        # the strum attack, so this buys the whole final chord level); 81.5: the lone F#4 at 82.00 (the gtr is silent
-        # from 81 to 82)
+                (62.0, 4.4), (70.0, 3.0), (78.0, -1.0), (78.8, 3.0, 0.8), (81.5, 9.5)],
+        # 78.00: the strum's attack sits 4 dB down and the ringing chord rides back up over 0.8 s, while the pad blooms
+        # in under it (below), so the final chord gets its level from the whole chord, not from the first pick
+        # transient, and its attack stays under the drop's; 81.5: the lone F#4 at 82.00 (the gtr is silent 81-82)
         "gtr_oct": [(0.0, 1.0)],
         "pad": [(0.0, 0.0), (36.0, -5.0), (46.0, -4.5), (48.0, -3.0), (50.0, 5.5), (54.0, 3.0), (58.0, 0.5),
-                (62.0, -10.0), (70.0, -10.0), (74.0, -16.0), (78.0, -2.0), (81.0, -7.0, 2.0)],
+                (62.0, -10.0), (70.0, -10.0), (74.0, -16.0), (78.0, -4.0), (79.0, -0.5, 1.0),
+                (81.0, -7.0, 2.0)],      # 78-79: the pad blooms into the final chord, then thins out
         "ep": [(0.0, 0.5)],
         "lead": [(0.0, 9.0)],
         "pluck": [(0.0, -1.0)],
-        "arp": [(0.0, 1.0), (40.0, 0.0), (48.0, 2.0), (50.0, 3.5), (58.0, -1.0)],
+        "arp": [(0.0, 1.0), (40.0, 0.0), (48.0, 1.0), (50.0, 3.5), (58.0, -1.0)],
         "bells": [(0.0, 0.0)],
         "bass": [(0.0, -9.5), (8.0, -11.0), (16.0, -11.0), (36.0, -15.0), (46.0, -14.0), (48.0, -12.0), (50.0, -9.0),
-                 (62.0, -15.0), (74.0, -18.0), (78.0, -8.0), (81.0, -14.0, 2.0)],
+                 (62.0, -15.0), (74.0, -18.0), (78.0, -7.5), (81.0, -14.0, 2.0)],
         "drums": [(0.0, 0.0), (8.0, 1.0), (16.0, 1.0), (36.0, -2.0), (48.0, 0.5), (50.0, 2.0), (58.0, 1.5),
-                  (62.0, -2.0), (74.0, -4.0), (78.0, 3.0)],
-        "fx": [(0.0, 0.0), (6.0, -1.5), (8.0, 0.0), (46.0, -3.0), (50.0, 0.0)],   # the risers sit under the hits
+                  (62.0, -2.0), (74.0, -4.0), (78.0, 2.0)],
+        # fx: the risers sit under the hits. 50-54: the drop's impact and downlifter. The fx are absolute-level stems,
+        # so the drop zone's peak trim (about 8.5 dB under its design level) also pulled the impact down, to 11 dB
+        # under the title's and under the riser before it; the +10 dB puts it back on top of the build.
+        "fx": [(0.0, 0.0), (6.0, -1.5), (8.0, 0.0), (46.0, -5.0), (50.0, 10.0), (54.0, 0.0)],
         "clips": [(0.0, 0.0)],
     },
     "sends": {    # stem -> bus -> [(t, dB)] (post-fader); gated to silence inside the honesty zones
@@ -111,10 +115,12 @@ PLAN_MAIN = {
              "threshold_offsets": [(0.0, 2.0), (36.0, 4.0), (46.0, 3.0), (50.0, 0.0), (62.0, 4.0), (70.0, 4.0)]},
     "zones": [(0.0, 8.0), (8.0, 16.0), (16.0, 36.0), (36.0, 40.0), (40.0, 46.0), (46.0, 50.0), (50.0, 54.0),
               (54.0, 58.0), (58.0, 62.0), (62.0, 70.0), (70.0, 74.0), (74.0, 78.0), (78.0, 86.0)],
-    "zone_level": {(0.0, 8.0): -5.8, (8.0, 16.0): -6.1, (16.0, 36.0): -4.4, (36.0, 40.0): -4.5, (40.0, 46.0): -6.6,
-                   (46.0, 50.0): -7.5,
+    # the drop (50-54) is the loudest moment on every measure (section, bar, 3 s and 400 ms windows): the title (8-16)
+    # and the build (46-50) sit just under it, and the final chord (78-86) lands 2 LU over the end card below it
+    "zone_level": {(0.0, 8.0): -5.8, (8.0, 16.0): -7.0, (16.0, 36.0): -4.4, (36.0, 40.0): -4.5, (40.0, 46.0): -6.6,
+                   (46.0, 50.0): -7.9,
                    (50.0, 54.0): 1.5, (54.0, 58.0): -3.6, (58.0, 62.0): -7.9, (70.0, 74.0): -5.0, (74.0, 78.0): -5.8,
-                   (78.0, 86.0): -6.5},
+                   (78.0, 86.0): -7.3},
     "fade": (84.50, 86.00),
 }
 
