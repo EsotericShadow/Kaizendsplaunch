@@ -60,9 +60,46 @@ def main():
         side.resize((side.width // 2, side.height // 2), Image.LANCZOS).save(os.path.join(out_dir, f"{tag}-{st['name']}-side.png"))
         Image.blend(ref, ours, 0.5).save(os.path.join(out_dir, f"{tag}-{st['name']}-blend.png"))
         Image.fromarray(np.clip(d * 4, 0, 255).astype(np.uint8)).save(os.path.join(out_dir, f"{tag}-{st['name']}-diff.png"))
+        zooms(ref, ours, os.path.join(out_dir, f"{tag}-{st['name']}-zoom.png"))
     with open(os.path.join(out_dir, f"{tag}-report.json"), "w") as f:
         json.dump(report, f, indent=1)
     print(json.dumps(report, indent=1))
+
+
+# Detail regions in editor px (x, y, w, h), 638 x 386 window.
+REGIONS = [
+    ("drawer + preset", (0, 0, 240, 56)),
+    ("wordmark + engine", (240, 0, 272, 56)),
+    ("trim", (506, 0, 132, 56)),
+    ("rate readout", (46, 240, 100, 46)),
+    ("width readout", (508, 240, 100, 46)),
+    ("color thumb + readout", (180, 262, 190, 96)),
+    ("hq switch", (262, 86, 132, 170)),
+    ("mix", (520, 300, 118, 86)),
+]
+
+
+def zooms(ref, ours, path, k=W / 638, mag=2):
+    """Real | plate | |difference| x4 for each detail region, stacked."""
+    rows = []
+    for name, (x, y, w, h) in REGIONS:
+        box = (round(x * k), round(y * k), round((x + w) * k), round((y + h) * k))
+        a = ref.crop(box)
+        b = ours.crop(box)
+        d = Image.fromarray(np.clip(np.abs(np.asarray(a, np.float32) - np.asarray(b, np.float32)) * 4, 0, 255).astype(np.uint8))
+        size = (a.width * mag, a.height * mag)
+        row = Image.new("RGB", (size[0] * 3 + 40, size[1] + 24), (24, 24, 24))
+        for i, im in enumerate((a, b, d)):
+            row.paste(im.resize(size, Image.NEAREST), (i * (size[0] + 20), 24))
+        ImageDraw.Draw(row).text((4, 4), f"{name}: real | plate | diff x4", fill=(255, 255, 255))
+        rows.append(row)
+    wmax = max(r.width for r in rows)
+    out = Image.new("RGB", (wmax, sum(r.height for r in rows)), (24, 24, 24))
+    yy = 0
+    for r in rows:
+        out.paste(r, (0, yy))
+        yy += r.height
+    out.save(path)
 
 
 if __name__ == "__main__":

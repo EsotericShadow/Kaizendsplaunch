@@ -47,7 +47,7 @@ export default {
     const labels = TOUR.map((s, i) =>
       type.mono(s.engine.toUpperCase(), { parent: typeL, size: 18, color: type.HUE[s.engine], x: XS[i], baseline: LABEL_BASELINE, align: "center", tracking: 0.3 }),
     );
-    const foot = type.mono("EVERY CHOROBOROS DEMO IN THIS FILM STARTS MONO AND DRY.", { parent: typeL, size: 18, color: type.C.muted, tracking: 0.1, x: 960, baseline: 1000, align: "center" });
+    const foot = type.mono("EVERY ENGINE DEMO STARTS FROM THE SAME MONO SOURCE.", { parent: typeL, size: 18, color: type.C.muted, tracking: 0.1, x: 960, baseline: 1000, align: "center" });
 
     return {
       render(t) {

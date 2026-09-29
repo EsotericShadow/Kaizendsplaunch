@@ -28,7 +28,7 @@ export default {
       [0, type.C.fg],
       [1, type.HUE.green],
     ].map(([i, fill]) => {
-      const p = type.pill(["DRY", "CHOROBOROS"], { parent: layer, x: OPEN.pill.x, y: OPEN.pill.y, w: OPEN.pill.w, h: OPEN.pill.h, size: OPEN.pill.size, active: i, fill });
+      const p = type.pill(["BYPASS", "CHOROBOROS"], { parent: layer, x: OPEN.pill.x, y: OPEN.pill.y, w: OPEN.pill.w, h: OPEN.pill.h, size: OPEN.pill.size, active: i, fill });
       p.el.style.background = "rgba(5,5,6,0.72)";
       return p.el;
     });

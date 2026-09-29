@@ -251,16 +251,19 @@ export class TopBar {
     return el("div", {
       parent: this.el,
       text,
+      // Longhands only: the `font` shorthand would reset line-height.
       style: {
         position: "absolute",
         left: px(x * k),
         top: px(y * k),
         width: px(w * k),
         height: px(h * k),
+        fontFamily: `"${font.family}"`,
+        fontWeight: String(font.weight),
+        fontSize: px(juceH * font.emPerHeight * k),
         lineHeight: px(h * k),
         textAlign: align,
         whiteSpace: "pre",
-        font: `${font.weight} ${+(juceH * font.emPerHeight * k).toFixed(4)}px "${font.family}"`,
         color: colour,
       },
     });

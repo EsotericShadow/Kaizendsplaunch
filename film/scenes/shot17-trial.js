@@ -48,7 +48,8 @@ export default {
     const scopeL = ctx.layer("scopes", 30);
     const typeL = ctx.layer("type", 40);
     const { layer: grainL, grain } = sceneGrain(ctx, lib);
-    const layers = [plateL, ringL, scopeL, typeL, grainL];
+    const layers = [plateL, ringL, typeL, grainL];
+    scopeL.style.display = "none"; // v3: one mix, no per-engine scopes
 
     const items = PLATES.map((d) => {
       const plate = lib.createPlate(d.engine, { parent: plateL, scale: SCALE, x: d.x, y: d.y });
@@ -89,9 +90,9 @@ export default {
           const s = cues.plateStateAt(it.render, t);
           it.plate.place({ dx: lib.driftPx(s) });
           it.plate.setState(s);
-          it.scope.draw(t, { stem: it.stem, render: it.render });
+          /* v3: one mix, no per-engine scopes */
         }
-        ring.renderGesture(t, widthGesture, black.plate.controlScreenRect("width"));
+        if (widthGesture) ring.renderGesture(t, widthGesture, black.plate.controlScreenRect("width"));
         setAlpha(head.el, 1);
         setAlpha(sub, fadeIn(t, 54.75));
         hair.render(t, [cues.cyclesAt("R03", t), cues.cyclesAt("R10", t), cues.cyclesAt("R09", t)]);

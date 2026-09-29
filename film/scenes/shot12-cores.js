@@ -90,6 +90,7 @@ export default {
 
     // Tag next to the lagrange5 icon, which it follows round the ring.
     const tag = type.mono("NOW PLAYING · LAGRANGE 5TH", { parent: typeL, size: 18, weight: 600, color: "#7ee0a0", tracking: 0.14, x: 0, baseline: 0 });
+    tag.style.display = "none"; // v3: the music is the owner's mix here, not a Lagrange 5th render
 
     const bottom = type.body("The ten cores inside the prebuilt engines, plus seven more.", {
       parent: typeL,

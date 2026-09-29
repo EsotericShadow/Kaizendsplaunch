@@ -35,7 +35,8 @@ export default {
     const typeL = ctx.layer("type", 40);
     const bloomL = ctx.layer("bloom", 60);
     const { layer: grainL, grain } = sceneGrain(ctx, lib);
-    const layers = [glowL, plateL, scopeL, typeL, bloomL, grainL];
+    const layers = [glowL, plateL, typeL, bloomL, grainL];
+    scopeL.style.display = "none"; // v3: one mix, no per-engine scopes
 
     const W = 1400 * SCALE;
     const H = 725 * SCALE;
@@ -85,7 +86,7 @@ export default {
           const s = cues.plateStateAt(it.render, t);
           it.plate.place({ dx: lib.driftPx(s) });
           it.plate.setState(s);
-          it.scope.draw(t, { stem: it.stem, render: it.render });
+          /* v3: one mix, no per-engine scopes */
         }
         setAlpha(brow, 1);
         setAlpha(head.el, 1);

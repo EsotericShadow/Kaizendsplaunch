@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Still Life (cut to the owner's track)</title>
+<link rel="stylesheet" href="/film/lib/base.css">
+</head>
+<body>
+<!-- Same scenes as main/index.html. film/warp.json maps film time to composition time so every cut
+     lands on the song's bar lines; the renderer asks for film time and the page seeks the warped time. -->
+<script src="/__node_modules/gsap/dist/gsap.min.js"></script>
+<script type="module">
+  import * as lib from "/film/lib/index.js";
+
+  const cues = await lib.loadCues("/film/cues.json");
+  const warp = await (await fetch("/film/warp.json")).json();
+  const manifest = await (await fetch("/film/scenes/manifest.json")).json();
+  const scenes = [];
+  for (const file of manifest.scenes) {
+    const mod = await import(`/film/scenes/${file}`);
+    scenes.push(mod.default);
+  }
+  const stage = lib.stage.makeStage(document.body);
+  await lib.stage.runScenes({ stage, scenes, cues, lib, duration: cues.duration, fps: cues.fps });
+
+  const F = warp.film, C = warp.comp;
+  const toComp = (t) => {
+    if (t <= F[0]) return C[0];
+    for (let i = 1; i < F.length; i++) {
+      if (t <= F[i]) return C[i - 1] + ((t - F[i - 1]) / (F[i] - F[i - 1])) * (C[i] - C[i - 1]);
+    }
+    return C[C.length - 1];
+  };
+  const comp = window.__composition;
+  const seekComp = comp.seek.bind(comp);
+  comp.duration = warp.film_duration;
+  comp.seek = (t) => seekComp(toComp(t));
+</script>
+</body>
+</html>
