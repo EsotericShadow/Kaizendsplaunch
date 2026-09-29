@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>UI fidelity</title>
+<link rel="stylesheet" href="/film/lib/base.css">
+</head>
+<body>
+<script src="/__node_modules/gsap/dist/gsap.min.js"></script>
+<script type="module">
+  // UI-fidelity bench (film/UI_FIDELITY.md). One plate per second at scale 1.0, top-left at (0, 0),
+  // in the exact states of the reference renders of the real editor: /data/fidelity/states.json
+  // holds, per state, the filmstrip frames from the editor's own slider positions, the readout
+  // text it drew and the COLOR position (written by the fidelity tooling next to those renders).
+  // A plate without the header (older API) is dropped by the header height so that its body lines
+  // up with the reference body. Seconds 0..n-1: the states; then one second per engine in the
+  // switch-panel pose (HQ lit, knobs at 12 o'clock) for the owner's full-panel renders.
+  import * as lib from "/film/lib/index.js";
+  const cues = await lib.loadCues("/film/cues.json");
+  const states = await (await fetch("/data/fidelity/states.json")).json();
+  const stage = lib.stage.makeStage(document.body, { background: "#000000" });
+  const PANEL = ["green", "blue", "red", "purple", "black", "white"];
+  const HEADER_OLD = (56 * 1400) / 638;
+  const n = states.length + PANEL.length;
+  const scene = {
+    id: "fidelity",
+    t0: 0,
+    t1: n,
+    async build(ctx) {
+      const L = ctx.layer("plates", 1);
+      lib.util.show(L, true);
+      const mk = (engine, state) => {
+        const p = lib.createPlate({ engine, ...state }, { parent: L, scale: 1, x: 0, y: 0 });
+        if (p.headerH == null) p.place({ x: 0, y: HEADER_OLD });
+        return p;
+      };
+      const plates = states.map((s) =>
+        mk(s.engine, { switchFrame: s.hq ? 0 : 17, color: s.color, frames: s.frames, readouts: s.readouts }),
+      );
+      for (const e of PANEL) {
+        const st = e === "white"
+          ? { switchFrame: 0, frames: { rate: 50, depth: 50, offset: 50, width: 50 }, mix: 50, color: 50 }
+          : { switchFrame: 0, color: 50, frames: { rate: 50, depth: 50, offset: 50, width: 50, mix: 78 }, readouts: { rate: "1.00 Hz", depth: "50%", offset: "90°", width: "100%", color: "50%", mix: "50%" } };
+        plates.push(mk(e, st));
+      }
+      return {
+        render(t) {
+          const i = Math.min(plates.length - 1, Math.floor(t + 1e-6));
+          plates.forEach((p, k) => lib.util.show(p.el, k === i));
+        },
+      };
+    },
+  };
+  await lib.stage.runScenes({ stage, scenes: [scene], cues, lib, duration: n });
+</script>
+</body>
+</html>
