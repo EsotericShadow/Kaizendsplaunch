@@ -15,6 +15,7 @@
       "L_after": -25.719,
       "residual": 0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -31,6 +32,7 @@
       "L_after": -25.636,
       "residual": 0.013,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -47,6 +49,7 @@
       "L_after": -24.748,
       "residual": 0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -63,6 +66,7 @@
       "L_after": -24.843,
       "residual": -0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -79,6 +83,7 @@
       "L_after": -25.719,
       "residual": -0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -95,6 +100,7 @@
       "L_after": -24.785,
       "residual": -0.003,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -111,6 +117,7 @@
       "L_after": -25.719,
       "residual": -0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -127,6 +134,7 @@
       "L_after": -24.775,
       "residual": 0.006,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -143,6 +151,7 @@
       "L_after": -25.719,
       "residual": 0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -159,6 +168,7 @@
       "L_after": -24.781,
       "residual": 0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -175,6 +185,7 @@
       "L_after": -25.719,
       "residual": 0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -191,6 +202,7 @@
       "L_after": -24.784,
       "residual": -0.002,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -207,6 +219,7 @@
       "L_after": -25.719,
       "residual": 0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -223,6 +236,7 @@
       "L_after": -24.784,
       "residual": -0.002,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "gtr",
       "reference": "dry"
     },
@@ -239,6 +253,7 @@
       "L_after": -21.795,
       "residual": -0.007,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "pad",
       "reference": "R09ref"
     },
@@ -255,6 +270,7 @@
       "L_after": -20.351,
       "residual": -0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "pad",
       "reference": "R09ref"
     },
@@ -271,6 +287,7 @@
       "L_after": -19.776,
       "residual": 0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "pad",
       "reference": "R09ref"
     },
@@ -287,6 +304,7 @@
       "L_after": -20.461,
       "residual": 0.0,
       "pass": true,
+      "pre_gesture_gain_db": null,
       "stem": "pad",
       "reference": "R09ref"
     }

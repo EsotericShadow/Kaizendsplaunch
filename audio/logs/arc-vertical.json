@@ -1,0 +1,131 @@
+{
+  "note": "per bar: BS.1770 loudness of the 2 s bar, short-term (3 s) at the bar end, crest (sample peak/RMS), onset count, mono-fold drop",
+  "bars": [
+    {
+      "bar": 1,
+      "t0": 0.0,
+      "lufs": -20.36,
+      "short_term_end": -20.36,
+      "crest_db": 14.9,
+      "onsets": 5,
+      "mono_drop_lu": 0.48
+    },
+    {
+      "bar": 2,
+      "t0": 2.0,
+      "lufs": -16.14,
+      "short_term_end": -16.78,
+      "crest_db": 13.9,
+      "onsets": 16,
+      "mono_drop_lu": 0.71
+    },
+    {
+      "bar": 3,
+      "t0": 4.0,
+      "lufs": -17.19,
+      "short_term_end": -17.05,
+      "crest_db": 13.2,
+      "onsets": 11,
+      "mono_drop_lu": 0.83
+    },
+    {
+      "bar": 4,
+      "t0": 6.0,
+      "lufs": -16.85,
+      "short_term_end": -17.18,
+      "crest_db": 12.8,
+      "onsets": 10,
+      "mono_drop_lu": 0.47
+    },
+    {
+      "bar": 5,
+      "t0": 8.0,
+      "lufs": -17.43,
+      "short_term_end": -17.22,
+      "crest_db": 15.1,
+      "onsets": 8,
+      "mono_drop_lu": 0.88
+    },
+    {
+      "bar": 6,
+      "t0": 10.0,
+      "lufs": -16.77,
+      "short_term_end": -17.11,
+      "crest_db": 12.9,
+      "onsets": 11,
+      "mono_drop_lu": 0.32
+    },
+    {
+      "bar": 7,
+      "t0": 12.0,
+      "lufs": -15.94,
+      "short_term_end": -16.23,
+      "crest_db": 12.5,
+      "onsets": 14,
+      "mono_drop_lu": 0.96
+    },
+    {
+      "bar": 8,
+      "t0": 14.0,
+      "lufs": -11.21,
+      "short_term_end": -11.98,
+      "crest_db": 11.8,
+      "onsets": 14,
+      "mono_drop_lu": 0.67
+    },
+    {
+      "bar": 9,
+      "t0": 16.0,
+      "lufs": -11.2,
+      "short_term_end": -11.19,
+      "crest_db": 12.0,
+      "onsets": 13,
+      "mono_drop_lu": 0.89
+    },
+    {
+      "bar": 10,
+      "t0": 18.0,
+      "lufs": -11.84,
+      "short_term_end": -11.86,
+      "crest_db": 12.5,
+      "onsets": 12,
+      "mono_drop_lu": 1.36
+    },
+    {
+      "bar": 11,
+      "t0": 20.0,
+      "lufs": -12.33,
+      "short_term_end": -12.28,
+      "crest_db": 13.4,
+      "onsets": 14,
+      "mono_drop_lu": 1.08
+    },
+    {
+      "bar": 12,
+      "t0": 22.0,
+      "lufs": -17.52,
+      "short_term_end": -14.98,
+      "crest_db": 13.7,
+      "onsets": 4,
+      "mono_drop_lu": 1.96
+    },
+    {
+      "bar": 13,
+      "t0": 24.0,
+      "lufs": -14.78,
+      "short_term_end": -14.86,
+      "crest_db": 15.5,
+      "onsets": 3,
+      "mono_drop_lu": 1.64
+    },
+    {
+      "bar": 14,
+      "t0": 26.0,
+      "lufs": -22.55,
+      "short_term_end": -20.6,
+      "crest_db": 13.9,
+      "onsets": 0,
+      "mono_drop_lu": 1.59
+    }
+  ]
+}

@@ -1198,11 +1198,11 @@
       "swoosh_t": 10.54,
       "other_main_events_in_section": 0
     },
-    "seconds": 5.9
+    "seconds": 15.5
   },
   "R01": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/gtr.wav --out /home/user/build/film/audio/vertical/renders/R01.wav --engine green --hq 0 --rate 0.6 --depth 20% --offset 90 --width 130% --color 35% --mix 0% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R01.json --quiet --automation /home/user/build/film/audio/vertical/auto/R01.json",
-    "seconds": 0.34,
+    "seconds": 0.66,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1257,13 +1257,13 @@
         }
       },
       "core": "Lagrange 3rd",
-      "outPeakDb": -6.456100344657898,
+      "outPeakDb": -6.033161878585815,
       "engineSwitchesDuringRender": 0
     }
   },
   "R02": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/gtr.wav --out /home/user/build/film/audio/vertical/renders/R02.wav --engine green --hq 0 --rate 0.6 --depth 20% --offset 90 --width 130% --color 35% --mix 45% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R02.json --quiet --automation /home/user/build/film/audio/vertical/auto/R02.json",
-    "seconds": 0.42,
+    "seconds": 0.69,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1318,13 +1318,13 @@
         }
       },
       "core": "Lagrange 3rd",
-      "outPeakDb": -6.375839114189148,
+      "outPeakDb": -7.038050889968872,
       "engineSwitchesDuringRender": 0
     }
   },
   "R03": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/gtr.wav --out /home/user/build/film/audio/vertical/renders/R03.wav --engine blue --hq 0 --rate 0.8 --depth 15% --offset 0 --width 140% --color 45% --mix 40% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R03.json --quiet --automation /home/user/build/film/audio/vertical/auto/R03.json",
-    "seconds": 0.41,
+    "seconds": 0.5,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1379,13 +1379,13 @@
         }
       },
       "core": "Cubic",
-      "outPeakDb": -7.974517941474915,
+      "outPeakDb": -7.680146098136902,
       "engineSwitchesDuringRender": 0
     }
   },
   "R04": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/gtr.wav --out /home/user/build/film/audio/vertical/renders/R04.wav --engine red --hq 0 --rate 0.55 --depth 35% --offset 90 --width 120% --color 30% --mix 50% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R04.json --quiet --automation /home/user/build/film/audio/vertical/auto/R04.json",
-    "seconds": 0.45,
+    "seconds": 0.52,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1440,13 +1440,13 @@
         }
       },
       "core": "Tape",
-      "outPeakDb": -6.782099008560181,
+      "outPeakDb": -6.466623544692993,
       "engineSwitchesDuringRender": 1
     }
   },
   "R05": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/gtr.wav --out /home/user/build/film/audio/vertical/renders/R05.wav --engine purple --hq 1 --rate 0.12 --depth 60% --offset 90 --width 140% --color 25% --mix 35% --block 128 --preroll 6.5 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R05.json --quiet --automation /home/user/build/film/audio/vertical/auto/R05.json",
-    "seconds": 0.45,
+    "seconds": 0.68,
     "preroll": 6.5,
     "verify": {
       "pass": true,
@@ -1501,13 +1501,13 @@
         }
       },
       "core": "Orbit",
-      "outPeakDb": -8.603739142417908,
+      "outPeakDb": -8.701342344284058,
       "engineSwitchesDuringRender": 0
     }
   },
   "R06": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/gtr.wav --out /home/user/build/film/audio/vertical/renders/R06.wav --engine black --hq 1 --rate 0.5 --depth 30% --offset 120 --width 170% --color 20% --mix 55% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R06.json --quiet --automation /home/user/build/film/audio/vertical/auto/R06.json",
-    "seconds": 0.34,
+    "seconds": 0.54,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1562,13 +1562,13 @@
         }
       },
       "core": "Linear Ensemble",
-      "outPeakDb": -9.143255352973938,
+      "outPeakDb": -9.653293490409851,
       "engineSwitchesDuringRender": 0
     }
   },
   "R07": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/pad.wav --out /home/user/build/film/audio/vertical/renders/R07.wav --engine green --hq 1 --rate 0.45 --depth 30% --offset 100 --width 150% --color 55% --mix 50% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R07.json --quiet",
-    "seconds": 0.46,
+    "seconds": 0.55,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1623,13 +1623,13 @@
         }
       },
       "core": "Lagrange 5th",
-      "outPeakDb": -11.718065738677979,
+      "outPeakDb": -10.248490571975708,
       "engineSwitchesDuringRender": 0
     }
   },
   "R08": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/pad.wav --out /home/user/build/film/audio/vertical/renders/R08.wav --engine purple --hq 1 --rate 0.12 --depth 60% --offset 90 --width 140% --color 25% --mix 35% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R08.json --quiet",
-    "seconds": 0.49,
+    "seconds": 0.53,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1684,13 +1684,13 @@
         }
       },
       "core": "Orbit",
-      "outPeakDb": -12.73740291595459,
+      "outPeakDb": -11.874446868896484,
       "engineSwitchesDuringRender": 0
     }
   },
   "R09": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/pad.wav --out /home/user/build/film/audio/vertical/renders/R09.wav --engine black --hq 1 --rate 0.5 --depth 30% --offset 120 --width 100% --color 60% --mix 55% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R09.json --quiet --automation /home/user/build/film/audio/vertical/auto/R09.json",
-    "seconds": 0.37,
+    "seconds": 0.45,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1745,13 +1745,13 @@
         }
       },
       "core": "Linear Ensemble",
-      "outPeakDb": -13.667588233947754,
+      "outPeakDb": -11.309221982955933,
       "engineSwitchesDuringRender": 0
     }
   },
   "R09ref": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/pad.wav --out /home/user/build/film/audio/vertical/renders/R09ref.wav --engine black --hq 1 --rate 0.5 --depth 30% --offset 120 --width 100% --color 60% --mix 55% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R09ref.json --quiet",
-    "seconds": 0.36,
+    "seconds": 0.42,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1806,13 +1806,13 @@
         }
       },
       "core": "Linear Ensemble",
-      "outPeakDb": -12.803455591201782,
+      "outPeakDb": -11.309221982955933,
       "engineSwitchesDuringRender": 0
     }
   },
   "R10": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/ep.wav --out /home/user/build/film/audio/vertical/renders/R10.wav --engine red --hq 1 --rate 0.4 --depth 35% --offset 90 --width 140% --color 55% --mix 50% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R10.json --quiet",
-    "seconds": 0.42,
+    "seconds": 0.57,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1867,13 +1867,13 @@
         }
       },
       "core": "Tape",
-      "outPeakDb": -11.560906171798706,
+      "outPeakDb": -12.790882587432861,
       "engineSwitchesDuringRender": 0
     }
   },
   "R11": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/lead.wav --out /home/user/build/film/audio/vertical/renders/R11.wav --engine blue --hq 1 --rate 0.35 --depth 30% --offset 120 --width 160% --color 35% --mix 50% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R11.json --quiet",
-    "seconds": 0.65,
+    "seconds": 0.71,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1928,13 +1928,13 @@
         }
       },
       "core": "Thiran Allpass",
-      "outPeakDb": -20.51069736480713,
+      "outPeakDb": -19.109294414520264,
       "engineSwitchesDuringRender": 0
     }
   },
   "R12": {
     "cmd": "choro-render --in /home/user/build/film/audio/vertical/stems/pluck.wav --out /home/user/build/film/audio/vertical/renders/R12.wav --engine purple --hq 1 --rate 0.12 --depth 60% --offset 90 --width 140% --color 25% --mix 35% --block 128 --preroll 2 --tail 3 --meta /home/user/build/film/audio/vertical/renders/R12.json --quiet",
-    "seconds": 0.41,
+    "seconds": 0.58,
     "preroll": 2.0,
     "verify": {
       "pass": true,
@@ -1989,7 +1989,7 @@
         }
       },
       "core": "Orbit",
-      "outPeakDb": -13.284389972686768,
+      "outPeakDb": -13.467681407928467,
       "engineSwitchesDuringRender": 0
     }
   }

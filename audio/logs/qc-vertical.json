@@ -94,12 +94,12 @@
         "guitar_bars_1_7_pass": true,
         "pad_width_spans_pass": true
       },
-      "worst_residual_lu": 0.219,
+      "worst_residual_lu": 0.015,
       "ffmpeg_crosscheck": {
         "file": "gtr edit after level gain, 0.0-14.0 s",
-        "meter_py_lufs": -23.407,
-        "ffmpeg_ebur128_lufs": -23.4,
-        "delta_lu": -0.007
+        "meter_py_lufs": -25.063,
+        "ffmpeg_ebur128_lufs": -25.1,
+        "delta_lu": 0.037
       }
     },
     "3_render_meta": {
@@ -362,7 +362,7 @@
       }
     },
     "10_master": {
-      "integrated_lufs": -14.402,
+      "integrated_lufs": -14.416,
       "target": -14.0,
       "tolerance": 0.5,
       "true_peak_dbtp": -1.1,
@@ -371,7 +371,7 @@
       "clipped_runs_3_samples_at_fs": 0,
       "samples_at_or_over_full_scale": 0,
       "non_finite": 0,
-      "limiter_max_gain_reduction_db": 0.862,
+      "limiter_max_gain_reduction_db": 0.835,
       "format": {
         "samplerate": 48000,
         "channels": 2,
@@ -381,101 +381,140 @@
       },
       "ffmpeg_ebur128": {
         "ebur128_I": -14.4,
-        "ebur128_LRA": 5.1,
+        "ebur128_LRA": 5.9,
         "ebur128_TP": -1.1,
-        "loudnorm_I": -14.63,
+        "loudnorm_I": -14.68,
         "loudnorm_TP": -1.1,
-        "loudnorm_LRA": 5.9
+        "loudnorm_LRA": 6.4
+      },
+      "pass": true
+    },
+    "honesty_zones": {
+      "zones": [
+        [
+          0.0,
+          14.0
+        ]
+      ],
+      "featured_gtr_is_render_times_gain": {
+        "max_rel_error": 3.5695400286230966e-08,
+        "pass": true,
+        "note": "stem_gtr == Choroboros edit x one scalar gain curve (level match, fader, zone level, master, limiter), identical in L and R"
+      },
+      "no_limiting_in_zones": {
+        "min_limiter_gain": 0.9999999999999999,
+        "pass": true
+      },
+      "no_reverb_delay_or_other_music_in_zones": {
+        "max_abs": {
+          "plate": 0.0,
+          "hall": 0.0,
+          "delay": 0.0,
+          "gtr_oct": 0.0,
+          "pad": 0.0,
+          "ep": 0.0,
+          "lead": 0.0,
+          "pluck": 0.0,
+          "arp": 0.0,
+          "bells": 0.0
+        },
+        "pass": true
+      },
+      "backing_mono_in_zones": {
+        "correlation": [
+          1.0
+        ],
+        "pass": true
       },
       "pass": true
     }
   },
   "checks": {
     "mono_fold": {
-      "integrated_lufs_stereo": -14.402,
-      "integrated_lufs_mono_fold": -15.391,
-      "drop_lu": 0.989,
-      "correlation_overall": 0.6888,
+      "integrated_lufs_stereo": -14.416,
+      "integrated_lufs_mono_fold": -15.376,
+      "drop_lu": 0.96,
+      "correlation_overall": 0.6956,
       "sections": [
         {
           "name": "mix-turn",
           "t0": 0.0,
           "t1": 2.0,
-          "drop_lu": 0.56,
-          "correlation": 0.738
+          "drop_lu": 0.48,
+          "correlation": 0.814
         },
         {
           "name": "title",
           "t0": 2.0,
           "t1": 4.0,
-          "drop_lu": 0.75,
-          "correlation": 0.873
+          "drop_lu": 0.71,
+          "correlation": 0.866
         },
         {
           "name": "green",
           "t0": 4.0,
           "t1": 6.0,
-          "drop_lu": 0.85,
-          "correlation": 0.764
+          "drop_lu": 0.83,
+          "correlation": 0.772
         },
         {
           "name": "blue",
           "t0": 6.0,
           "t1": 8.0,
-          "drop_lu": 0.52,
-          "correlation": 0.864
+          "drop_lu": 0.47,
+          "correlation": 0.893
         },
         {
           "name": "red",
           "t0": 8.0,
           "t1": 10.0,
-          "drop_lu": 0.75,
-          "correlation": 0.792
+          "drop_lu": 0.88,
+          "correlation": 0.721
         },
         {
           "name": "purple",
           "t0": 10.0,
           "t1": 12.0,
-          "drop_lu": 0.31,
-          "correlation": 0.917
+          "drop_lu": 0.32,
+          "correlation": 0.922
         },
         {
           "name": "black",
           "t0": 12.0,
           "t1": 14.0,
-          "drop_lu": 1.04,
-          "correlation": 0.706
+          "drop_lu": 0.96,
+          "correlation": 0.716
         },
         {
           "name": "free",
           "t0": 14.0,
           "t1": 17.0,
-          "drop_lu": 0.86,
-          "correlation": 0.752
+          "drop_lu": 0.71,
+          "correlation": 0.785
         },
         {
           "name": "trial",
           "t0": 17.0,
           "t1": 20.0,
-          "drop_lu": 1.42,
-          "correlation": 0.537
+          "drop_lu": 1.24,
+          "correlation": 0.586
         },
         {
           "name": "price",
           "t0": 20.0,
           "t1": 22.0,
-          "drop_lu": 1.21,
-          "correlation": 0.554
+          "drop_lu": 1.08,
+          "correlation": 0.602
         },
         {
           "name": "endcard",
           "t0": 22.0,
           "t1": 28.0,
-          "drop_lu": 1.51,
-          "correlation": 0.469
+          "drop_lu": 1.74,
+          "correlation": 0.381
         }
       ],
-      "worst_section_drop_lu": 1.51
+      "worst_section_drop_lu": 1.74
     },
     "digital_silences": {
       "pass": true,
@@ -488,92 +527,92 @@
           "t": 4.0,
           "kind": "join",
           "master": {
-            "rel_db": -0.2,
-            "abs_dbfs": -33.9
+            "rel_db": 4.7,
+            "abs_dbfs": -32.1
           },
           "gtr": {
-            "rel_db": -7.2,
-            "abs_dbfs": -48.7
+            "rel_db": -8.8,
+            "abs_dbfs": -47.9
           }
         },
         {
           "t": 6.0,
           "kind": "join",
           "master": {
-            "rel_db": -0.2,
+            "rel_db": 0.7,
             "abs_dbfs": -33.8
           },
           "gtr": {
-            "rel_db": -18.1,
-            "abs_dbfs": -56.3
+            "rel_db": -18.9,
+            "abs_dbfs": -55.0
           }
         },
         {
           "t": 8.0,
           "kind": "join",
           "master": {
-            "rel_db": -0.3,
-            "abs_dbfs": -34.1
+            "rel_db": 4.3,
+            "abs_dbfs": -31.1
           },
           "gtr": {
-            "rel_db": -8.0,
-            "abs_dbfs": -49.7
+            "rel_db": -10.5,
+            "abs_dbfs": -50.4
           }
         },
         {
           "t": 10.0,
           "kind": "join",
           "master": {
-            "rel_db": -0.3,
-            "abs_dbfs": -34.0
+            "rel_db": 0.3,
+            "abs_dbfs": -34.5
           },
           "gtr": {
-            "rel_db": -17.8,
-            "abs_dbfs": -56.2
+            "rel_db": -15.2,
+            "abs_dbfs": -52.3
           }
         },
         {
           "t": 12.0,
           "kind": "join",
           "master": {
-            "rel_db": -1.9,
-            "abs_dbfs": -35.1
+            "rel_db": 1.9,
+            "abs_dbfs": -33.0
           },
           "gtr": {
-            "rel_db": -11.4,
-            "abs_dbfs": -48.9
+            "rel_db": -12.2,
+            "abs_dbfs": -49.9
           }
         },
         {
           "t": 14.0,
           "kind": "join",
           "master": {
-            "rel_db": -1.8,
-            "abs_dbfs": -29.9
+            "rel_db": -6.7,
+            "abs_dbfs": -27.0
           },
           "gtr": {
-            "rel_db": -13.2,
-            "abs_dbfs": -51.4
+            "rel_db": -15.2,
+            "abs_dbfs": -50.9
           },
           "pad": {
-            "rel_db": -49.6,
-            "abs_dbfs": -134.2
+            "rel_db": -62.2,
+            "abs_dbfs": -132.0
           }
         },
         {
           "t": 17.0,
           "kind": "join",
           "master": {
-            "rel_db": -4.1,
+            "rel_db": -2.2,
             "abs_dbfs": -32.1
           },
           "gtr": {
-            "rel_db": -6.5,
-            "abs_dbfs": -43.9
+            "rel_db": -10.2,
+            "abs_dbfs": -51.5
           },
           "pad": {
-            "rel_db": -43.3,
-            "abs_dbfs": -80.2
+            "rel_db": -25.2,
+            "abs_dbfs": -66.8
           },
           "ep": {
             "rel_db": null,
@@ -584,61 +623,62 @@
           "t": 20.0,
           "kind": "join",
           "master": {
-            "rel_db": -2.3,
-            "abs_dbfs": -29.0
+            "rel_db": 1.2,
+            "abs_dbfs": -26.5
           },
           "gtr": {
-            "rel_db": -9.5,
-            "abs_dbfs": -46.7
+            "rel_db": -9.7,
+            "abs_dbfs": -47.0
           },
           "pad": {
-            "rel_db": -39.2,
-            "abs_dbfs": -83.5
+            "rel_db": -19.6,
+            "abs_dbfs": -64.5
           },
           "ep": {
-            "rel_db": -5.4,
-            "abs_dbfs": -60.5
-          },
-          "lead": {
-            "rel_db": null,
-            "abs_dbfs": null
+            "rel_db": -5.3,
+            "abs_dbfs": -55.6
           },
           "pluck": {
-            "rel_db": -1.4,
-            "abs_dbfs": -31.5
+            "rel_db": -1.3,
+            "abs_dbfs": -31.2
           }
         },
         {
           "t": 22.0,
           "kind": "join",
           "master": {
-            "rel_db": -7.2,
-            "abs_dbfs": -37.8
+            "rel_db": -8.8,
+            "abs_dbfs": -39.2
           },
           "gtr": {
-            "rel_db": -8.9,
-            "abs_dbfs": -47.5
+            "rel_db": -9.6,
+            "abs_dbfs": -49.5
           },
           "pad": {
-            "rel_db": -15.0,
-            "abs_dbfs": -58.2
+            "rel_db": -15.1,
+            "abs_dbfs": -62.5
+          },
+          "ep": {
+            "rel_db": -51.5,
+            "abs_dbfs": -130.8
           },
           "lead": {
-            "rel_db": -66.8,
-            "abs_dbfs": -118.9
+            "rel_db": -165.1,
+            "abs_dbfs": -205.4
           },
           "pluck": {
-            "rel_db": -25.5,
-            "abs_dbfs": -60.7
+            "rel_db": -27.3,
+            "abs_dbfs": -62.0
           }
         }
       ],
-      "worst_master_rel_db": -0.2
+      "worst_master_rel_db": 4.7
     },
+    "arc_log": "/home/user/Kaizendsplaunch/audio/logs/arc-vertical.json",
     "stems_sum_to_mix": {
-      "max_abs_diff": 5.552283255383372e-08
+      "max_abs_diff": 5.960464477539063e-08
     },
-    "master_24bit_vs_float_max_diff": 1.1896190699189901e-07
+    "master_24bit_vs_float_max_diff": 1.1897439869401616e-07
   },
   "pass": true
 }

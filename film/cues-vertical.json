@@ -5,7 +5,7 @@
   "sr": 48000,
   "block": 128,
   "duration": 28.0,
-  "note": "Vertical cutdown timings (treatment 9), same schema as cues.json. Same take, instruments, seeds and Choroboros settings as the main film, gestures shifted. Written by audio/film/vertical.py.",
+  "note": "Vertical cutdown timings (treatment 9), same schema as cues.json. Same take (the hook), instruments, seeds and Choroboros settings as the main film, gestures shifted. Honesty zone 0.00-14.00. Written by audio/film/vertical.py.",
 
   "renders": {
     "R01": {"stem": "gtr", "engine": "green", "hq": 0, "knobs": {"rate": 0.6, "depth": 20, "offset": 90, "width": 130, "color": 35, "mix": 0}, "role": "Green (a) guitar; Mix turn at 1.00-1.50 (V1), V2, V8, V10, V11"},
@@ -14,7 +14,7 @@
     "R04": {"stem": "gtr", "engine": "red", "hq": 0, "knobs": {"rate": 0.55, "depth": 35, "offset": 90, "width": 120, "color": 30, "mix": 50}, "role": "Red block V5, BBD then Tape at 9.00"},
     "R05": {"stem": "gtr", "engine": "purple", "hq": 1, "knobs": {"rate": 0.12, "depth": 60, "offset": 90, "width": 140, "color": 25, "mix": 35}, "role": "Purple block V6 (Orbit), Rate gesture; pre-roll swept", "preroll_sweep": {"range": [0.0, 8.25], "step": 0.25, "window": [10.25, 10.85], "section_start": 10.0, "clear_until": 11.0}, "preroll": 6.5, "swoosh_t": 10.54},
     "R06": {"stem": "gtr", "engine": "black", "hq": 1, "knobs": {"rate": 0.5, "depth": 30, "offset": 120, "width": 170, "color": 20, "mix": 55}, "role": "Black block V7 (Ensemble), Color gesture"},
-    "R07": {"stem": "pad", "engine": "green", "hq": 1, "knobs": {"rate": 0.45, "depth": 30, "offset": 100, "width": 150, "color": 55, "mix": 50}, "role": "Pad, Green (b) Lagrange 5th, final chord"},
+    "R07": {"stem": "pad", "engine": "green", "hq": 1, "knobs": {"rate": 0.45, "depth": 30, "offset": 100, "width": 150, "color": 55, "mix": 50}, "role": "Pad, Green (b) Lagrange 5th, V11 and the final chord"},
     "R08": {"stem": "pad", "engine": "purple", "hq": 1, "knobs": {"rate": 0.12, "depth": 60, "offset": 90, "width": 140, "color": 25, "mix": 35}, "role": "Pad, Purple (a) Orbit, free card (V8)"},
     "R09": {"stem": "pad", "engine": "black", "hq": 1, "knobs": {"rate": 0.5, "depth": 30, "offset": 120, "width": 100, "color": 60, "mix": 55}, "role": "Pad, Black (b), Width gesture at 17.00-18.00 (V9)"},
     "R09ref": {"stem": "pad", "engine": "black", "hq": 1, "knobs": {"rate": 0.5, "depth": 30, "offset": 120, "width": 100, "color": 60, "mix": 55}, "role": "Level reference for R09 (Width fixed 100%)"},
@@ -60,7 +60,8 @@
     {"t0": 22.0, "t1": 28.0, "shot": "V11", "name": "endcard", "audio": {"gtr": "R01", "pad": "R07"}}
   ],
 
-  "bars": {"1": "D", "2": "Bm", "3": "D", "4": "Bm", "5": "D", "6": "Bm", "7": "D", "8": "G", "9": "A", "10": "G", "11": "D", "12": "D", "13": "D", "14": "D"},
+  "bars": {"1": [[0, "D"]], "2": [[0, "Bm"]], "3": [[0, "D"]], "4": [[0, "Bm"]], "5": [[0, "D"]], "6": [[0, "Bm"]], "7": [[0, "D"]], "8": [[0, "G"]], "9": [[0, "A7s4"], [1.5, "A7"]], "10": [[0, "G"]], "11": [[0, "D"]], "12": [[0, "A7s4"], [1.0, "A7"]], "13": [[0, "D"]], "14": [[0, "D"]]},
+  "honesty_zones": [[0.0, 14.0]],
 
   "scope": {
     "note": "Goniometer data written by the audio build. One int16 file per stem as heard in the final mix (after level gain and the section edit), aligned to film time. Frame f covers samples [800f, 800f+800) at 48 kHz, decimated to 400 points, interleaved (mid, side). value = clamp(x * gain, -1, 1) * 32767 with one fixed film gain where -12 dBFS maps to 0.45.",

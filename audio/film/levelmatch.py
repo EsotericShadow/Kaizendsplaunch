@@ -60,30 +60,36 @@ def eased(g, t):
     return sine_inout(u)
 
 
-def build_curve(n, bars, gains, prev_gain, plan_rid, cues, ramp=0.020):
+def build_curve(n, bars, gains, prev_gain, plan_rid, cues, ramp=0.020, pres=None):
     """Gain curve in dB over the matched range. bars: list of (bar, t0, t1).
-    Before each bar's start the previous gain holds; each bar's gain arrives
-    with a 20 ms ramp ending on its bar line, or, when a gesture starts in that
-    bar, stays at the previous gain until the gesture and follows its ease to
-    the bar's gain by the gesture end."""
+    Each bar's gain arrives with a 20 ms ramp ending on its bar line. When a
+    gesture starts inside a bar, the gain holds a pre-gesture value until the
+    gesture and follows the gesture's ease to the bar's gain by its end. The
+    pre-gesture value is the previous bar's gain when the same render continues,
+    or the bar's own pre-gesture gain (pres[i], matched on the span before the
+    gesture) when the bar starts a new section (a new engine)."""
     t = np.arange(n) / SR
     g = np.full(n, np.nan)
     last = prev_gain
-    for (b, t0, t1), gb in zip(bars, gains):
+    k = smp(ramp)
+    for i, ((b, t0, t1), gb) in enumerate(zip(bars, gains)):
         s0, s1 = smp(t0), smp(t1)
         rid = plan_rid(t0)
         ge = gesture_for(cues, rid, t0, t1)
         seg_t = t[s0:s1]
+        pre = pres[i] if pres is not None and pres[i] is not None else None
         if ge is not None and ge["ease"] != "step":
+            start = last if pre is None else pre
             e = eased(ge, seg_t)
-            g[s0:s1] = last + (gb - last) * e
+            g[s0:s1] = start + (gb - start) * e
+            target = start
         else:
             g[s0:s1] = gb
-            k = smp(ramp)
-            a = max(0, s0 - k)
-            if a < s0 and not np.isnan(g[a]):
-                u = (np.arange(s0 - a) + 1) / (s0 - a)
-                g[a:s0] = g[a:s0] + (gb - g[a:s0]) * sine_inout(u)
+            target = gb
+        a = max(0, s0 - k)
+        if a < s0 and not np.isnan(g[a]) and (ge is None or ge["ease"] == "step" or pre is not None):
+            u = (np.arange(s0 - a) + 1) / (s0 - a)
+            g[a:s0] = g[a:s0] + (target - g[a:s0]) * sine_inout(u)
         last = gb
     return g
 
@@ -102,9 +108,20 @@ def solve(film, cues, stem, bars, ref, proc, prev_gain, max_iter=12):
     L_ref = [lufs(ref[smp(t0):smp(t1)]) for (_, t0, t1) in bars]
     L_proc = [lufs(proc[smp(t0):smp(t1)]) for (_, t0, t1) in bars]
     gains = [lr - lp for lr, lp in zip(L_ref, L_proc)]
+    # own pre-gesture gain for a bar that opens a new section with a mid-bar gesture
+    pres = []
+    for i, (b, t0, t1) in enumerate(bars):
+        rid = plan_rid(t0)
+        ge = gesture_for(cues, rid, t0, t1)
+        new_sec = i > 0 and plan_rid(bars[i - 1][1]) != rid
+        if ge is not None and ge["ease"] != "step" and float(ge["t0"]) > t0 + 0.25 and new_sec:
+            gt = float(ge["t0"])
+            pres.append(lufs(ref[smp(t0):smp(gt)]) - lufs(proc[smp(t0):smp(gt)]))
+        else:
+            pres.append(None)
     lo, hi = smp(bars[0][1]), smp(bars[-1][2])
     for it in range(max_iter):
-        curve = build_curve(n, bars, gains, prev_gain, plan_rid, cues)
+        curve = build_curve(n, bars, gains, prev_gain, plan_rid, cues, pres=pres)
         seg = proc[lo:hi] * (10 ** (curve[lo:hi] / 20))[:, None]
         L_after = [lufs(seg[smp(t0) - lo:smp(t1) - lo]) for (_, t0, t1) in bars]
         res = [la - lr for la, lr in zip(L_after, L_ref)]
@@ -112,14 +129,15 @@ def solve(film, cues, stem, bars, ref, proc, prev_gain, max_iter=12):
             break
         gains = [g - r for g, r in zip(gains, res)]
     rows = []
-    for (b, t0, t1), lr, lp, g, la in zip(bars, L_ref, L_proc, gains, L_after):
+    for (b, t0, t1), lr, lp, g, la, pr in zip(bars, L_ref, L_proc, gains, L_after, pres):
         sec = [s["name"] for s in cues["sections"] if s["t0"] - 1e-9 <= t0 < s["t1"] - 1e-9]
         rid = plan_rid(t0)
         ge = gesture_for(cues, rid, t0, t1)
         rows.append({"bar": b, "t0": t0, "t1": t1, "section": sec[0] if sec else None, "render": rid,
                      "gesture": f"{ge['param']} {ge['from']}->{ge['to']} {ge['t0']}-{ge['t1']}" if ge else None,
                      "L_reference": round(lr, 3), "L_processed": round(lp, 3), "gain_db": round(g, 3),
-                     "L_after": round(la, 3), "residual": round(la - lr, 3), "pass": bool(abs(la - lr) <= TOL)})
+                     "L_after": round(la, 3), "residual": round(la - lr, 3), "pass": bool(abs(la - lr) <= TOL),
+                     "pre_gesture_gain_db": None if pr is None else round(pr, 3)})
     return rows, gains, curve, it + 1
 
 
