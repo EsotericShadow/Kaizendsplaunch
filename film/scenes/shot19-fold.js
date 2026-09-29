@@ -1,4 +1,4 @@
-// Shot 19, 62.00-64.50: Fold. The Fold clip (1080x640) at 1.25 scale, centred (960, 615), as a
+// Shot 19, 62.00-64.50: Fold. The Fold clip (1080x640) at 1.25 scale, centred (960, 628), as a
 // floating window: radius 14 (clipped inside the canvas draw), product shadow, green glow 12%.
 // 62.00-62.25 frozen on clip time 1.00 at 15% saturation; from 62.25 the clip plays 1.00-3.25 at 1x
 // in full colour. The window cuts before the clip's orange CLIP label.
@@ -10,7 +10,7 @@ import { inFrames, setAlpha, sceneGrain, roundRectPath } from "./kit-late.js";
 const T0 = 62.0;
 const T1 = 64.5;
 const FAMILY_T1 = 69.5;
-const WIN = { cx: 960, cy: 615, w: 1350, h: 800, r: 14 };
+const WIN = { cx: 960, cy: 628, w: 1350, h: 800, r: 14 }; // 13 px below the treatment's 615: air under the headline
 const GREEN = "#64e28b";
 
 export default {
@@ -57,7 +57,7 @@ export default {
     const brow = type.eyebrow("FOLD · COMING SOON", { parent: typeL, color: GREEN, x: 120, baseline: 118 });
     const head = type.headline({ parent: typeL, text: "A free spectral ", accent: "stereo shaper.", accentColor: GREEN, size: 60, x: 120, baseline: 185 });
 
-    const family = type.eyebrow("MORE FROM KAIZEN DSP", { parent: familyL, size: 16, color: "rgba(246,244,239,0.5)", x: 120, baseline: 80 });
+    const family = type.eyebrow("MORE FROM KAIZEN DSP", { parent: familyL, size: 18, color: "rgba(246,244,239,0.6)", x: 120, baseline: 80 });
 
     const draw = (tc, saturate) => {
       const i = Math.round((tc - clip.meta.start) * clip.meta.fps);

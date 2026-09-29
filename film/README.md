@@ -122,8 +122,13 @@ Rules from the render pipeline (`docs/brief/render-pipeline.md` 7.1):
   `requireRender()`; `setState()` throws on a frame that was not prepared.
 - `chorustype.js`: the italic accent as a static dry layer plus wet copies in the engine hue, under
   the SINE, STEP, WOW and ORBIT laws (G3), with Black's ensemble layers.
-- `scope.js`: the goniometer (G7), reading `/data/scope`. Until the audio build writes it, the
-  scope draws a placeholder from the cue sheet and labels it PLACEHOLDER on the canvas.
+- `scope.js`: the goniometer (G7), reading `/data/scope`. On top of the data's fixed gain it
+  applies one fixed display gain for the whole film (`DISPLAY_GAIN`, with a radial tanh soft limit,
+  so typical frames fill about 55-80% of the circle and nothing clips flat). It draws its own
+  graticule (outline, M/S crosshair, L/R rim ticks, L / R / M / S labels) in the pro orientation
+  (M up, L upper-left), a Catmull-Rom trace with an additive glow in the hue, and the 50%/25%
+  persistence of the two previous frames. Mono stays on the vertical axis. Until the audio build
+  writes the data, the scope draws a placeholder from the cue sheet and labels it PLACEHOLDER.
 - `smear.js`: the engine-change smear (G4) as a `SmearGroup` of three copies.
 - `ring.js`: the gesture ring (G6).
 - `type.js`: brand tokens, baseline placement (`placeText`), eyebrow, headline with italic accent,

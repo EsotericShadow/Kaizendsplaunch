@@ -89,7 +89,7 @@ export default {
     const cores = type.mono("SOUND CORES", { parent: typeL, size: 20, weight: 600, color: type.C.purple, tracking: 0.3, x: CX, baseline: 566, align: "center" });
 
     // Tag next to the lagrange5 icon, which it follows round the ring.
-    const tag = type.mono("NOW PLAYING · LAGRANGE 5TH", { parent: typeL, size: 14, weight: 600, color: "#7ee0a0", tracking: 0.16, x: 0, baseline: 0 });
+    const tag = type.mono("NOW PLAYING · LAGRANGE 5TH", { parent: typeL, size: 18, weight: 600, color: "#7ee0a0", tracking: 0.14, x: 0, baseline: 0 });
 
     const bottom = type.body("The ten cores inside the prebuilt engines, plus seven more.", {
       parent: typeL,

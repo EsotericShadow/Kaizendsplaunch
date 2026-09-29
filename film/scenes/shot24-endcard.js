@@ -5,15 +5,21 @@
 // cut at 76.00; footer and hairline 76.50; legal 77.00. The primary button gets one slow lavender
 // ring pulse at 78.00 (the final chord), then everything holds; only the tagline's ChorusType
 // (shot 23 module) and the plate drift move.
-// Left column, re-spaced for the CTA row: buttons y 540-604, URL baseline 664, availability 714,
-// facts 756; the format row stays at y 800-930 in the top layer, above grain and glow, untouched.
+// Left column, re-spaced so the CTA row is the first thing after the tagline (which shrinks to
+// 88 px, baselines 250 / 344 / 439, in the shot 23 module): buttons y 488-564 (76 px tall, the
+// primary's label 30 px), URL baseline 642, availability 692, facts 736; the format row stays at
+// y 800-930 in the top layer, above grain and glow, untouched. Footer band: hairline 956, footer
+// (26 px) baseline 1000 on the left, the legal small print (14 px) as two right-aligned lines
+// beside it, so it stays inside the 1800 px margin at the bigger size.
 
 import { inFrames, fadeIn, setAlpha } from "./kit-late.js";
 
 const T0 = 74.0;
 const T1 = 86.0;
-const BTN_SCALE = 64 / 48; // 64 px tall site buttons
-const BTN_Y = 540;
+const BTN = { y: 488, h: 76, gap: 16, radius: 14, padX: 32, primary: 30, secondary: 28 };
+const COL = { url: 642, avail: 692, facts: 736 };
+const FOOT = { hair: 956, footer: 1000, legal: [990, 1012] };
+const PULSE = { t: 78.0, len: 1.3, grow: 11 }; // stays inside the 16 px gap to the trial button
 
 export default {
   id: "shot24-endcard",
@@ -32,16 +38,17 @@ export default {
     plate.requireRender(cues, "R01", T0, T1);
 
     const lockup = type.lockup({ parent: typeL, x: 120, y: 70, size: 44 });
-    const topRight = type.eyebrow("CHOROBOROS · CHORUS PLUGIN", { parent: typeL, size: 16, x: 1800, baseline: 96, align: "right" });
+    const topRight = type.eyebrow("CHOROBOROS · CHORUS PLUGIN", { parent: typeL, size: 18, x: 1800, baseline: 96, align: "right" });
 
-    // CTA row, the site's own buttons and labels.
+    // CTA row, the site's own buttons and labels: "Buy Choroboros" is the dominant action (cream
+    // primary, 30 px label, arrow); the outline trial button shares its height.
     const row = el("div", {
       parent: typeL,
-      style: { position: "absolute", left: "120px", top: px(BTN_Y), display: "flex", gap: "16px", alignItems: "center" },
+      style: { position: "absolute", left: "120px", top: px(BTN.y), display: "flex", gap: px(BTN.gap), alignItems: "center" },
     });
     const mkBtn = (label, primary) => {
-      const b = type.siteButton(label, { parent: row, primary, scale: BTN_SCALE });
-      Object.assign(b.style, { position: "relative", left: "0px", top: "0px", height: px(48 * BTN_SCALE) });
+      const b = type.siteButton(label, { parent: row, primary, height: BTN.h, fontSize: primary ? BTN.primary : BTN.secondary, padX: BTN.padX, radius: BTN.radius });
+      Object.assign(b.style, { position: "relative", left: "0px", top: "0px" });
       return b;
     };
     const buy = mkBtn("Buy Choroboros", true);
@@ -64,8 +71,8 @@ export default {
         textUnderlineOffset: "10px",
       },
     });
-    type.placeText(url, { x: 120, baseline: 664 });
-    const avail = type.body("Available now for macOS · Apple Silicon + Intel", { parent: typeL, size: 26, weight: 400, color: type.C.muted, x: 120, baseline: 714 });
+    type.placeText(url, { x: 120, baseline: COL.url });
+    const avail = type.body("Available now for macOS · Apple Silicon + Intel", { parent: typeL, size: 26, weight: 400, color: type.C.muted, x: 120, baseline: COL.avail });
     const facts = type.mono("GREEN AND PURPLE FREE · 30-DAY TRIAL · $49.99 USD ONE-TIME", {
       parent: typeL,
       size: 18,
@@ -73,15 +80,18 @@ export default {
       color: "rgba(246,244,239,0.8)",
       tracking: 0.12,
       x: 120,
-      baseline: 756,
+      baseline: COL.facts,
     });
 
-    const hair = el("div", { parent: typeL, style: { position: "absolute", left: "120px", top: "960px", width: "1680px", height: "1px", background: "rgba(255,255,255,0.1)" } });
-    const footer = type.body("Five prebuilt engines · 17 sound cores · Version 1.0.5", { parent: typeL, size: 22, weight: 400, color: type.C.muted, x: 120, baseline: 1000 });
+    const hair = el("div", { parent: typeL, style: { position: "absolute", left: "120px", top: px(FOOT.hair), width: "1680px", height: "1px", background: "rgba(255,255,255,0.1)" } });
+    const footer = type.body("Five prebuilt engines · 17 sound cores · Version 1.0.5", { parent: typeL, size: 26, weight: 400, color: type.C.muted, x: 120, baseline: FOOT.footer });
+    // One text block set in two lines (a line break between sentences; the words are verbatim).
     const legal = type.body(
-      "VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe and other countries. AAX is a trademark of Avid Technology, Inc. macOS and Audio Units are trademarks of Apple Inc. © 2026 Kaizen Strategic AI Inc. All rights reserved. Made in Canada.",
-      { parent: typeL, size: 13, weight: 400, color: "rgba(246,244,239,0.45)", x: 120, baseline: 1046 },
+      "VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe and other countries. AAX is a trademark of Avid Technology, Inc.\nmacOS and Audio Units are trademarks of Apple Inc. © 2026 Kaizen Strategic AI Inc. All rights reserved. Made in Canada.",
+      { parent: typeL, size: 14, weight: 400, color: "rgba(246,244,239,0.5)" },
     );
+    legal.style.textAlign = "right";
+    type.placeText(legal, { x: 1800, baseline: FOOT.legal[0], align: "right", lineHeight: (FOOT.legal[1] - FOOT.legal[0]) / 14 });
 
     // Format row: its own top layer, placed by hard cut, never faded, drifted or transformed.
     type.formatRow({ parent: topL, x0: 120, y: 800, gap: 20 });
@@ -117,17 +127,18 @@ export default {
         setAlpha(hair, fa);
         setAlpha(legal, fadeIn(t, 77.0));
 
-        // One slow 1 px ring pulse from the primary button at 78.00.
-        const u = (t - 78.0) / 1.4;
+        // One slow 1 px lavender ring pulse from the primary button at 78.00 (the final chord),
+        // easing out from the button's edge and fading; then everything holds still.
+        const u = (t - PULSE.t) / PULSE.len;
         if (u >= 0 && u < 1 && buyBox) {
-          const grow = 10 * (1 - (1 - u) * (1 - u));
+          const grow = 2 + PULSE.grow * (1 - (1 - u) * (1 - u));
           setStyle(pulse, "visibility", "");
           setStyle(pulse, "left", px(buyBox.x - grow));
           setStyle(pulse, "top", px(buyBox.y - grow));
           setStyle(pulse, "width", px(buyBox.w + 2 * grow));
           setStyle(pulse, "height", px(buyBox.h + 2 * grow));
-          setStyle(pulse, "borderRadius", px(0.45 * 16 * BTN_SCALE + grow));
-          setStyle(pulse, "opacity", String(+(0.9 * (1 - u)).toFixed(4)));
+          setStyle(pulse, "borderRadius", px(BTN.radius + grow));
+          setStyle(pulse, "opacity", String(+(0.95 * Math.min(1, u * 8) * (1 - u)).toFixed(4)));
         } else setStyle(pulse, "visibility", "hidden");
       },
     };

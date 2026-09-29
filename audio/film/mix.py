@@ -19,6 +19,17 @@ sidechain on pad and arp in the offer peak, a gentle glue compressor on the
 mix bus, then the master: gain to about -14 LUFS, true-peak limiter at
 -1.1 dBTP (<= 1 dB gain reduction), fade, hard silences.
 
+LOW END: a gentle low shelf (80 Hz, -3 dB) on the drum bus (before its
+transient shave, whose ceiling is unchanged) and on the bass bus takes the
+63 Hz octave band about 2 dB down against 125 Hz. It is linear and also runs
+on the tour loops, so the pasted tour backing stays sample-identical.
+
+PRODUCT CLIPS (main film): the clips stand alone. Every music stem and every
+return is muted under them with 60 ms raised-cosine fades that end on the clip
+start; under Fold (G major) and Echolalia (C major / A minor) only the bass
+whole note and the soft kick stay (still ducked 6 dB), and under Stovetop (its
+own key, 80 BPM) nothing stays until the digital silence at 69.50.
+
 Outputs (<build>/): mix/stem_<name>.wav as heard (every gain in the chain
 applied, so the stems and returns sum to the master), mix/mix.wav (float),
 master.wav (24-bit), mix/mix_info.json.
@@ -39,32 +50,36 @@ from common import SR, Film, db, dual, hard_silence, jdump, lufs, read, sine_ino
 from instruments import tape
 from synth import meter
 from synth.effects import Reverb, StereoDelay, _forward_min, _release, compressor, duck
+from synth.filters import eq
 
 # ----------------------------------------------------------------- main film plan
 
 PLAN_MAIN = {
     "honesty": [(0.0, 8.0), (16.0, 36.0)],
     "tour": {"blocks": [16.0, 20.0, 24.0, 28.0], "stop_block": 32.0, "end": 36.0},
-    "faders": {   # (t, dB) steps; each change ramps over the 20 ms ending at t
-        "gtr": [(0.0, 3.0), (8.0, 3.6), (16.0, 4.6), (36.0, 4.6), (42.0, 2.2), (50.0, 5.0), (54.0, 4.8), (58.0, 4.4),
-                (62.0, 4.4), (70.0, 3.0)],
+    "faders": {   # (t, dB) steps; each change ramps over the 20 ms ending at t ((t, dB, s): over s seconds)
+        "gtr": [(0.0, 3.0), (8.0, 3.6), (16.0, 4.6), (36.0, 4.6), (42.0, 2.2), (50.0, 4.5), (54.0, 4.8), (58.0, 4.4),
+                (62.0, 4.4), (70.0, 3.0), (78.0, 0.5), (78.6, 3.0, 0.6), (81.5, 9.0)],
+        # 78.00: the strum's attack sits 2.5 dB down and the ringing chord rides back up over 0.6 s (the zone's peak is
+        # the strum attack, so this buys the whole final chord level); 81.5: the lone F#4 at 82.00 (the gtr is silent
+        # from 81 to 82)
         "gtr_oct": [(0.0, 1.0)],
-        "pad": [(0.0, 0.0), (36.0, -5.0), (46.0, -4.5), (48.0, -3.0), (50.0, 2.0), (54.0, 1.5), (58.0, 0.5),
-                (62.0, -10.0), (70.0, -10.0), (74.0, -16.0), (78.0, -7.0)],
+        "pad": [(0.0, 0.0), (36.0, -5.0), (46.0, -4.5), (48.0, -3.0), (50.0, 5.5), (54.0, 3.0), (58.0, 0.5),
+                (62.0, -10.0), (70.0, -10.0), (74.0, -16.0), (78.0, -2.0), (81.0, -7.0, 2.0)],
         "ep": [(0.0, 0.5)],
         "lead": [(0.0, 9.0)],
         "pluck": [(0.0, -1.0)],
-        "arp": [(0.0, 1.0), (40.0, 0.0), (48.0, 2.0), (50.0, 1.5), (58.0, -1.0)],
+        "arp": [(0.0, 1.0), (40.0, 0.0), (48.0, 2.0), (50.0, 3.5), (58.0, -1.0)],
         "bells": [(0.0, 0.0)],
-        "bass": [(0.0, -9.5), (8.0, -11.0), (16.0, -11.0), (36.0, -15.0), (46.0, -14.0), (48.0, -12.0), (50.0, -10.0),
-                 (62.0, -15.0), (74.0, -18.0), (78.0, -15.5)],
+        "bass": [(0.0, -9.5), (8.0, -11.0), (16.0, -11.0), (36.0, -15.0), (46.0, -14.0), (48.0, -12.0), (50.0, -9.0),
+                 (62.0, -15.0), (74.0, -18.0), (78.0, -8.0), (81.0, -14.0, 2.0)],
         "drums": [(0.0, 0.0), (8.0, 1.0), (16.0, 1.0), (36.0, -2.0), (48.0, 0.5), (50.0, 2.0), (58.0, 1.5),
-                  (62.0, -2.0), (74.0, -4.0)],
-        "fx": [(0.0, 0.0)],
+                  (62.0, -2.0), (74.0, -4.0), (78.0, 3.0)],
+        "fx": [(0.0, 0.0), (6.0, -1.5), (8.0, 0.0), (46.0, -3.0), (50.0, 0.0)],   # the risers sit under the hits
         "clips": [(0.0, 0.0)],
     },
     "sends": {    # stem -> bus -> [(t, dB)] (post-fader); gated to silence inside the honesty zones
-        "gtr": {"plate": [(0.0, -19.0)], "hall": [(0.0, -24.0)]},
+        "gtr": {"plate": [(0.0, -19.0)], "hall": [(0.0, -24.0), (78.0, -18.0), (81.5, -24.0)]},
         "gtr_oct": {"plate": [(0.0, -10.0)], "hall": [(0.0, -14.0)]},
         "ep": {"plate": [(0.0, -15.0)], "hall": [(0.0, -20.0)]},
         "lead": {"plate": [(0.0, -13.0)], "hall": [(0.0, -17.0)]},
@@ -83,16 +98,23 @@ PLAN_MAIN = {
     },
     "returns": {"plate": 0.0, "hall": 0.0, "delay": -3.0},
     "room": {"send_db": -15.0, "return_db": 0.0},
+    # the sub: a gentle low shelf on the drum and bass buses (63 Hz band about 2 dB down, 125 Hz untouched)
+    "low_end": {"shelf_hz": 80.0, "gain_db": -3.0, "q": 0.8},
+    # the product clips stand alone: every music stem and return is muted under them (60 ms fades ending at
+    # the clip start) except the ones kept per clip; Fold (G major) and Echolalia (C major / A minor) keep the
+    # bass whole note and the soft kick, Stovetop (its own key, 80 BPM) keeps nothing
+    "clip_bed": {"fade": 0.060, "bridge": 0.5, "keep": {"fold": ["bass", "drums"], "echolalia": ["bass", "drums"],
+                                                        "stovetop": []}},
     "sidechain": {"targets": ["pad", "arp"], "span": (50.0, 62.0), "depth_db": 3.5},
     "glue": {"target_mean_gr_db": 2.5, "target_span": (50.0, 62.0), "ratio": 2.0, "attack_ms": 20.0,
              "release_ms": 160.0,
              "threshold_offsets": [(0.0, 2.0), (36.0, 4.0), (46.0, 3.0), (50.0, 0.0), (62.0, 4.0), (70.0, 4.0)]},
     "zones": [(0.0, 8.0), (8.0, 16.0), (16.0, 36.0), (36.0, 40.0), (40.0, 46.0), (46.0, 50.0), (50.0, 54.0),
-              (54.0, 58.0), (58.0, 62.0), (62.0, 70.0), (70.0, 78.0), (78.0, 86.0)],
-    "zone_level": {(0.0, 8.0): -4.8, (8.0, 16.0): -4.6, (16.0, 36.0): -4.4, (36.0, 40.0): -3.8, (40.0, 46.0): -5.8,
-                   (46.0, 50.0): -6.0,
-                   (50.0, 54.0): 1.5, (54.0, 58.0): -3.6, (58.0, 62.0): -5.2, (70.0, 78.0): -3.2,
-                   (78.0, 86.0): -1.2},
+              (54.0, 58.0), (58.0, 62.0), (62.0, 70.0), (70.0, 74.0), (74.0, 78.0), (78.0, 86.0)],
+    "zone_level": {(0.0, 8.0): -5.8, (8.0, 16.0): -6.1, (16.0, 36.0): -4.4, (36.0, 40.0): -4.5, (40.0, 46.0): -6.6,
+                   (46.0, 50.0): -7.5,
+                   (50.0, 54.0): 1.5, (54.0, 58.0): -3.6, (58.0, 62.0): -7.9, (70.0, 74.0): -5.0, (74.0, 78.0): -5.8,
+                   (78.0, 86.0): -6.5},
     "fade": (84.50, 86.00),
 }
 
@@ -118,13 +140,15 @@ def use_plan(name):
 # ----------------------------------------------------------------- curves
 
 def fader_curve(n, plan, ramp=0.020):
+    """dB curve from (t, dB) steps; each change ramps (sine in-out) over `ramp`
+    s ending at t, or over its own ramp for a (t, dB, ramp_s) entry (a slow ride)."""
     g = np.zeros(n)
-    for (t0, v) in plan:
-        g[smp(t0):] = v
-    k = smp(ramp)
-    u = (np.arange(k) + 1) / k
+    for p in plan:
+        g[smp(p[0]):] = p[1]
     for i in range(1, len(plan)):
         s = smp(plan[i][0])
+        k = smp(plan[i][2] if len(plan[i]) > 2 else ramp)
+        u = (np.arange(k) + 1) / k
         g0, g1 = plan[i - 1][1], plan[i][1]
         if g0 != g1 and s - k >= 0:
             g[s - k:s] = g0 + (g1 - g0) * sine_inout(u)
@@ -178,6 +202,56 @@ def duck_curve(n, spans, depth_db=DUCK_DB, attack=0.040, release=0.150):
     return env * depth_db
 
 
+def clip_bed_curves(n, cues, stems):
+    """Linear gain per stem under the product clips (PLAN["clip_bed"]). Every
+    stem except the clips and the ones kept for that clip is muted over the
+    clip window: a raised-cosine fade of `fade` s ends exactly on the clip
+    start, then silence to the clip end. Windows closer than `bridge` s are
+    joined (the pad does not come back for the 0.25 s between two clips), and a
+    window that runs into a hard silence stays shut to the silence's end (the
+    next material starts hard there, as after any hard silence)."""
+    cb = PLAN.get("clip_bed")
+    if not cb:
+        return {}
+    wins = []
+    for sec in cues["sections"]:
+        if "clip_at" in sec:
+            a = float(sec["clip_at"])
+            wins.append((a, a + float(sec["clip_out"]) - float(sec["clip_in"]), set(cb["keep"].get(sec["name"], []))))
+    if not wins:
+        return {}
+    sil = edit.silences(cues)
+    k = smp(cb["fade"])
+    u = (np.arange(k) + 1) / k
+    out = {}
+    for name in stems:
+        if name == "clips":
+            continue
+        spans = sorted((a, b) for (a, b, keep) in wins if name not in keep)
+        merged = []
+        for a, b in spans:
+            if merged and a - merged[-1][1] <= cb["bridge"] + 1e-9:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], b))
+            else:
+                merged.append((a, b))
+        if not merged:
+            continue
+        g = np.ones(n)
+        for a, b in merged:
+            for (s0, s1) in sil:
+                if abs(s0 - b) < 1e-6:
+                    b = s1
+            sa, sb = smp(a), smp(b)
+            g[sa:sb] = 0.0
+            lo = max(0, sa - k)
+            g[lo:sa] = np.minimum(g[lo:sa], (0.5 + 0.5 * np.cos(np.pi * u))[k - (sa - lo):])
+            if not any(abs(s1 - b) < 1e-6 for (_, s1) in sil):
+                hi = min(n, sb + k)
+                g[sb:hi] = np.minimum(g[sb:hi], (0.5 - 0.5 * np.cos(np.pi * u))[:hi - sb])
+        out[name] = g
+    return out
+
+
 # ----------------------------------------------------------------- processors (no modulation anywhere)
 
 def plate():
@@ -215,13 +289,24 @@ def drum_bus(parts, ceiling_db=None, shave_db=6.0):
     bus = sat + 0.4 * c * db(8.0)
     roomin = 0.35 * parts["kick"] + 1.0 * parts["snare"] + 0.6 * parts["chh"] + 0.8 * parts["rim"]
     bus = bus + room_mono(roomin) * db(PLAN["room"]["send_db"] + PLAN["room"]["return_db"])
-    if ceiling_db is None:
+    if ceiling_db is None:     # measured before the sub shelf, so the shelf never raises the drum-bus peak
         ceiling_db = float(20 * np.log10(np.abs(bus).max() + 1e-12)) - shave_db
-    return ceiling_control(bus, ceiling_db, 1.5, 60.0), ceiling_db
+    return ceiling_control(low_end(bus), ceiling_db, 1.5, 60.0), ceiling_db
 
 
 def bass_bus(x):
-    return tape(x, drive_db=8.0, bias=0.06, hf_db=0.0)
+    return low_end(tape(x, drive_db=8.0, bias=0.06, hf_db=0.0))
+
+
+def low_end(x):
+    """The sub: a gentle low shelf (PLAN["low_end"]) on the drum bus (before its
+    transient shave) and at the end of the bass bus. Linear and time-invariant,
+    and it runs on the tour loops too, so the pasted backing stays
+    sample-identical in every pass."""
+    le = PLAN.get("low_end")
+    if not le:
+        return x
+    return eq(x, [("lowshelf", le["shelf_hz"], le["gain_db"], le["q"])], SR)
 
 
 def paste_tour(full, loopN, loopS, tour, n, fade=0.020):
@@ -294,6 +379,12 @@ def build(film, cues):
     for s in ("gtr_oct", "pad", "ep", "lead", "pluck", "arp", "bells", "clips"):
         if s in stems:
             stems[s] = stems[s] * gate[:, None]
+    bed = clip_bed_curves(n, cues, list(stems) + ["plate", "hall", "delay"])
+    for s, g in bed.items():
+        if s in stems:
+            stems[s] = stems[s] * g[:, None]
+    if "gtr" in bed:
+        P["_gtr_bed"] = bed["gtr"]
     sc = P.get("sidechain")
     if sc:
         a, b = smp(sc["span"][0]), smp(sc["span"][1])
@@ -316,6 +407,8 @@ def build(film, cues):
     rets = {"plate": plate()(buses["plate"]), "hall": hall()(buses["hall"]), "delay": delay_bus()(buses["delay"])}
     for k, r in rets.items():
         r = r * db(P["returns"][k]) * gate[:, None]
+        if k in bed:
+            r = r * bed[k][:, None]
         for (a, b) in edit.silences(cues):
             r = hard_silence(r, a, b)
         stems[k] = r
@@ -538,7 +631,8 @@ def main():
     chain = info.pop("_chain")
     g_lim = info.pop("_limiter_gain")
     # the featured guitar's whole post-plugin chain as one linear gain (QC proves gain-only)
-    np.save(film.p("mix", "gtr_total_gain.npy"), db(PLAN.pop("_gtr_pre_db")) * db(gdb) * chain)
+    np.save(film.p("mix", "gtr_total_gain.npy"),
+            db(PLAN.pop("_gtr_pre_db")) * PLAN.pop("_gtr_bed", 1.0) * db(gdb) * chain)
     np.save(film.p("mix", "limiter_gain.npy"), g_lim)
     info["glue"] = {"max_gain_reduction_db": round(float(-gdb.min()), 2),
                     "mean_gain_reduction_outside_zones_db": round(float(-gdb[gate > 0.999].mean()), 2),
@@ -558,7 +652,8 @@ def main():
     info["files"] = {"master": mp, "mix_float": film.p("mix", "mix.wav"),
                      "stems": {k: film.p("mix", f"stem_{k}.wav") for k in out}}
     info["plan"] = {"honesty_zones": PLAN["honesty"], "faders": PLAN["faders"], "sends": PLAN["sends"],
-                    "throws": PLAN.get("throws"), "sidechain": PLAN.get("sidechain"), "glue": PLAN["glue"]}
+                    "throws": PLAN.get("throws"), "sidechain": PLAN.get("sidechain"), "glue": PLAN["glue"],
+                    "low_end": PLAN.get("low_end"), "clip_bed": PLAN.get("clip_bed")}
     jdump(film.p("mix", "mix_info.json"), info)
     print(json.dumps({k: info[k] for k in ("master_gain_db", "limiter", "integrated_lufs", "glue")}))
     print("TP", rep["true_peak_dbtp"], "LRA", rep["loudness_range_lu"], "mono drop", rep["mono_fold"]["drop_lu"],

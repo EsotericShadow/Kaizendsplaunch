@@ -1,19 +1,34 @@
-// Shot 17, 54.00-58.00: Trial. Four plates at 0.30 scale at x 60, 520, 980, 1440, y 400: Blue (a)
-// (R03, Offset 90 by now), Red (b) (R10), Black (b) (R09, the Width gesture 100 -> 170% at
-// 54.00-55.00) and the white Create canvas. Mini scopes under Blue, Red and Black read GTR, EP and
-// PAD. The Width ring starts drawing at 53.90, so it is complete at the cut.
+// Shot 17, 54.00-58.00: Trial. Four plates at 0.40 scale (560x290) in a 2x2 grid: Blue (a) (R03,
+// Offset 90 by now) and Red (b) (R10) on top, Black (b) (R09, the Width gesture 100 -> 170% at
+// 54.00-55.00) and the white Create canvas below. Each heard plate has a 200 px scope on its outer
+// side (GTR, EP, PAD), with its label under the scope on the plate's bottom line; Create, which is
+// not heard, has its label in the same place and no scope. The Width ring starts drawing at 53.90,
+// so it is complete at the cut.
 
 import { inFrames, fadeIn, setAlpha, sceneGrain, stageBox, hairlineY, plateLabel } from "./kit-late.js";
 
 const T0 = 54.0;
 const T1 = 58.0;
-const SCALE = 0.3;
-const Y = 400;
+const SCALE = 0.4;
+const PW = 1400 * SCALE;
+const PH = 725 * SCALE;
+const SCOPE = 200; // scope diameter
+const SIDE = 28; // scope-to-plate gap
+const MID = 56; // gap between the two plate columns
+const X0 = (1920 - 2 * (SCOPE + SIDE + PW) - MID) / 2;
+const COLS = [
+  { x: X0 + SCOPE + SIDE, side: -1 }, // left column: scope on the left
+  { x: X0 + SCOPE + SIDE + PW + MID, side: 1 }, // right column: scope on the right
+];
+const ROWS = [244, 578];
+const HEAD_BASELINE = 168;
+const SUB_BASELINE = 952;
+const cell = (c, r) => ({ x: COLS[c].x, y: ROWS[r], side: COLS[c].side });
 const PLATES = [
-  { engine: "blue", render: "R03", x: 60, label: "BLUE", stem: "gtr" },
-  { engine: "red", render: "R10", x: 520, label: "RED", stem: "ep" },
-  { engine: "black", render: "R09", x: 980, label: "BLACK", stem: "pad" },
-  { engine: "white", render: null, x: 1440, label: "CREATE", stem: null },
+  { engine: "blue", render: "R03", ...cell(0, 0), label: "BLUE", stem: "gtr" },
+  { engine: "red", render: "R10", ...cell(1, 0), label: "RED", stem: "ep" },
+  { engine: "black", render: "R09", ...cell(0, 1), label: "BLACK", stem: "pad" },
+  { engine: "white", render: null, ...cell(1, 1), label: "CREATE", stem: null },
 ];
 // Create tile (treatment 8.3): white main knob frame 50 on all four, white mix at 12 o'clock,
 // switch lit, readout windows empty, no thumb.
@@ -35,23 +50,23 @@ export default {
     const { layer: grainL, grain } = sceneGrain(ctx, lib);
     const layers = [plateL, ringL, scopeL, typeL, grainL];
 
-    const W = 1400 * SCALE;
     const items = PLATES.map((d) => {
-      const cx = d.x + W / 2;
-      const plate = lib.createPlate(d.engine, { parent: plateL, scale: SCALE, x: d.x, y: Y });
+      const plate = lib.createPlate(d.engine, { parent: plateL, scale: SCALE, x: d.x, y: d.y });
       if (d.render) plate.requireRender(cues, d.render, T0, T1);
       else plate.require(CREATE).setState(CREATE);
       const hue = d.engine === "white" ? type.C.fg : type.HUE[d.engine];
-      const label = plateLabel(d.label, { parent: typeL, hue, x: cx, baseline: 660 });
-      const scope = d.stem ? lib.createScope(scopeL, { cx, cy: 750, size: 120, disc: null, color: type.HUE[d.engine], stem: d.stem }) : null;
+      // The outer column beside the plate: the scope, then the label on the plate's bottom line.
+      const sx = d.side < 0 ? d.x - SIDE - SCOPE / 2 : d.x + PW + SIDE + SCOPE / 2;
+      const label = plateLabel(d.label, { parent: typeL, hue, x: sx, baseline: d.y + PH - 2 });
+      const scope = d.stem ? lib.createScope(scopeL, { cx: sx, cy: d.y + 122, size: SCOPE, disc: null, color: type.HUE[d.engine], stem: d.stem }) : null;
       return { ...d, plate, label, scope };
     });
     const black = items.find((i) => i.engine === "black");
     const ring = lib.createRing(ringL);
     const widthGesture = cues.gesture("R09", "width");
 
-    const head = type.headline({ parent: typeL, text: "30-day free trial. ", accent: "No payment card.", size: 84, x: 960, baseline: 210, align: "center" });
-    const sub = type.body("Unlocks Blue, Red, Black and Create.", { parent: typeL, size: 30, weight: 400, color: type.C.muted, x: 960, baseline: 900, align: "center" });
+    const head = type.headline({ parent: typeL, text: "30-day free trial. ", accent: "No payment card.", size: 84, x: 960, baseline: HEAD_BASELINE, align: "center" });
+    const sub = type.body("Unlocks Blue, Red, Black and Create.", { parent: typeL, size: 30, weight: 400, color: type.C.muted, x: 960, baseline: SUB_BASELINE, align: "center" });
 
     let hair = null;
     return {
@@ -60,7 +75,7 @@ export default {
         hair = type.offerHairline({
           parent: typeL,
           x: b.x,
-          y: hairlineY(head.accent, 210),
+          y: hairlineY(head.accent, HEAD_BASELINE),
           width: b.w,
           strands: [{ engine: "blue" }, { engine: "red" }, { engine: "black" }],
         });

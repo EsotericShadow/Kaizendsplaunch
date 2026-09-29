@@ -2310,15 +2310,12 @@
  },
  "gate11_determinism": {
   "times": [
-   "t=0.250",
    "t=2.600",
    "t=20.100",
-   "t=26.200",
-   "t=41.500",
-   "t=50.100",
-   "t=63.300",
+   "t=51.000",
+   "t=55.500",
    "t=72.000",
-   "t=80.000"
+   "t=78.400"
   ],
   "result": "deterministic: all captures identical",
   "pass": true

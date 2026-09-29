@@ -226,7 +226,7 @@ export function pill(labels, { parent = null, x = 0, y = 0, w = 240, h = 44, siz
 }
 
 /** Small outlined tag (the FREE pill: mono 12 px, 1 px engine-hue border, radius 4). */
-export function tag(text, { parent = null, color = HUE.green, size = 12, x, baseline, align = "left" } = {}) {
+export function tag(text, { parent = null, color = HUE.green, size = 12, padY = 0.45, x, baseline, align = "left" } = {}) {
   const n = el("div", {
     parent,
     text,
@@ -237,7 +237,7 @@ export function tag(text, { parent = null, color = HUE.green, size = 12, x, base
       color,
       border: `1px solid ${color}`,
       borderRadius: "4px",
-      padding: `${px(size * 0.45)} ${px(size * 0.55)} ${px(size * 0.45)} ${px(size * 0.75)}`,
+      padding: `${px(size * padY)} ${px(size * 0.55)} ${px(size * padY)} ${px(size * 0.75)}`,
     },
   });
   if (baseline != null) placeText(n, { x, baseline, align });
@@ -358,10 +358,14 @@ export function lucide(name, { size = 24, stroke = 1.25, color = "currentColor" 
 
 /**
  * Site button (site.css .btn / .btn--primary): Inter 600, radius 0.45rem, 1 px border, ArrowRight
- * after the label on the primary. scale 1 = the site's 16 px rem.
+ * after the label on the primary. scale 1 = the site's 16 px rem. For the film's end card the
+ * size can be set directly: height (px), fontSize (label px), padX (px), radius (px).
  */
-export function siteButton(label, { parent = null, primary = false, scale = 1.6, x = 0, y = 0, arrow = primary } = {}) {
+export function siteButton(label, { parent = null, primary = false, scale = 1.6, x = 0, y = 0, arrow = primary, height = null, fontSize = null, padX = null, radius = null } = {}) {
   const rem = 16 * scale;
+  const fs = fontSize ?? 0.91 * rem;
+  const k = fs / 0.91 / 16; // the rem this label size implies
+  const h = height ?? 48 * scale;
   const b = el("div", {
     parent,
     cls: primary ? "t-btn t-btn--primary" : "t-btn",
@@ -372,20 +376,22 @@ export function siteButton(label, { parent = null, primary = false, scale = 1.6,
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
-      gap: px(0.6 * rem),
-      minHeight: px(48 * scale),
+      gap: px(0.6 * 16 * k),
+      height: height != null ? px(h) : "",
+      minHeight: px(h),
       boxSizing: "border-box",
-      padding: `${px(0.75 * rem)} ${px(1.2 * rem)}`,
-      borderRadius: px(0.45 * rem),
+      padding: height != null ? `0px ${px(padX ?? 1.2 * 16 * k)}` : `${px(0.75 * rem)} ${px(1.2 * rem)}`,
+      borderRadius: px(radius ?? 0.45 * 16 * k),
       border: `1px solid ${primary ? C.primaryBtn : "rgba(255,255,255,0.32)"}`,
       background: primary ? C.primaryBtn : "transparent",
       color: primary ? C.primaryBtnText : C.fg,
-      font: `600 ${px(0.91 * rem)} ${FONT.body}`,
+      font: `600 ${px(fs)} ${FONT.body}`,
+      lineHeight: "1",
       whiteSpace: "nowrap",
     },
   });
   el("span", { parent: b, text: label });
-  if (arrow) b.appendChild(lucide("arrowRight", { size: Math.round(1.05 * rem), stroke: 2 }));
+  if (arrow) b.appendChild(lucide("arrowRight", { size: Math.round(1.05 * 16 * k), stroke: 2 }));
   return b;
 }
 
@@ -421,9 +427,9 @@ export function formatRow({ parent = null, x0 = 120, y = 800, gap = 20, tileW = 
         width: "100%",
         top: px(top),
         textAlign: "center",
-        font: `500 17px ${FONT.body}`,
+        font: `500 19px ${FONT.body}`,
         color: C.muted,
-        lineHeight: "20px",
+        lineHeight: "22px",
       },
     });
   const typeset = (parent, text) =>

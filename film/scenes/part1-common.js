@@ -5,11 +5,14 @@
 export const MIX_TURN = 2.25;
 
 // Shots 1-3: bottom-left scope group and the bottom-right footnote.
+// The LEVEL MATCHED footnote sits bottom-centre: with the shot 2 plate filling the frame, the MIX
+// knob and its readout own the bottom-right corner.
 export const OPEN = {
-  scope: { cx: 200, cy: 872, size: 160 },
-  label: { x: 200, baseline: 975 },
-  pill: { x: 80, y: 1000, w: 240, h: 44 },
-  footnote: { x: 1824, baseline: 1036 },
+  scope: { cx: 200, cy: 868, size: 160 },
+  label: { x: 200, baseline: 977 },
+  pill: { x: 70, y: 1000, w: 260, h: 46, size: 18 },
+  footnote: { x: 960, baseline: 1030 },
+  textSize: 18,
 };
 
 export const TAGLINE = { text: "Great sound ", accent: "doesn’t sit still.", size: 96, x: 960, baseline: 200 };
@@ -29,10 +32,10 @@ export const TOUR_LAYOUT = {
   headline: { x: 96, size: 104, baseline: 214 },
   best: { baseline: 290 },
   col: { x0: 1440, x1: 1824, cx: 1632 },
-  scope: { cx: 1632, cy: 520, size: 300 },
+  scope: { cx: 1632, cy: 520, size: 340 },
   caption: { size: 72, baseline: 790 },
   pill: { y: 850, w: 384, h: 56 },
-  lines: [950, 978],
+  lines: [950, 984],
   dots: { x0: 1560, x1: 1800, cy: 100, size: 14 },
   footnote: { x: 96, baseline: 1040 },
 };
@@ -40,13 +43,14 @@ export const TOUR_LAYOUT = {
 // JetBrains Mono advances 0.6 em, so mono widths are exact without measuring.
 export const monoWidth = (text, size, tracking) => text.length * 0.6 * size + Math.max(0, text.length - 1) * tracking * size;
 
-export const BEST_FOR = { text: "BEST FOR", size: 14, tracking: 0.2 };
+export const BEST_FOR = { text: "BEST FOR", size: 18, tracking: 0.2 };
+export const FOOT_SIZE = 18; // tour and opening footnotes (phone-readable minimum)
 export const BEST_LINE_X = TOUR_LAYOUT.headline.x + monoWidth(BEST_FOR.text, BEST_FOR.size, BEST_FOR.tracking) + 18;
 
-// FREE pill: mono 12 px, 0.2em tracking, padding from type.tag().
-const TAG = { size: 12, tracking: 0.2 };
+// FREE pill: mono 18 px, 0.2em tracking, compact padding from type.tag().
+const TAG = { size: 18, tracking: 0.2, padY: 0.3 };
 const tagWidth = (text) => text.length * (0.6 + TAG.tracking) * TAG.size + 0.75 * TAG.size + 0.55 * TAG.size + 2;
-const tagBaselineShift = 0.45 * TAG.size + 1; // padding-top + border above the text line
+const tagBaselineShift = TAG.padY * TAG.size + 1; // padding-top + border above the text line
 
 export const TOUR = [
   { engine: "green", t0: 16, t1: 20, render: "R02", free: true, eyebrow: "LAGRANGE 3RD CORE", head: "Green. ", accent: "Sways.", law: "SINE", bestFor: "Warm acoustic and synth sends", caption: "Depth.", ring: "depth", gesture: "depth" },
@@ -64,7 +68,7 @@ export const tourAt = (t) => TOUR.find((s) => t >= s.t0 && t < s.t1) || null;
  * repaint rect cut across it (the shot 2 plate's filter, Red's pushed-in plate): a seek-history
  * dependence of up to 10/255. A canvas bitmap does not change with the repaint rect.
  */
-export function scopeBackdrop(lib, parent, { cx, cy, size, fill = "rgba(5,5,6,0.6)", stroke = "rgba(246,244,239,0.14)" }) {
+export function scopeBackdrop(lib, parent, { cx, cy, size, fill = "rgba(5,5,6,0.6)", stroke = null }) {
   const { el, px } = lib.util;
   const c = el("canvas", { parent });
   Object.assign(c.style, { position: "absolute", left: px(cx - size / 2), top: px(cy - size / 2), width: px(size), height: px(size) });
@@ -77,11 +81,13 @@ export function scopeBackdrop(lib, parent, { cx, cy, size, fill = "rgba(5,5,6,0.
   g.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
   g.fillStyle = fill;
   g.fill();
-  g.beginPath();
-  g.arc(size / 2, size / 2, size / 2 - 0.5, 0, 2 * Math.PI);
-  g.lineWidth = 1;
-  g.strokeStyle = stroke;
-  g.stroke();
+  if (stroke) {
+    g.beginPath();
+    g.arc(size / 2, size / 2, size / 2 - 0.5, 0, 2 * Math.PI);
+    g.lineWidth = 1;
+    g.strokeStyle = stroke;
+    g.stroke();
+  }
   return c;
 }
 
@@ -102,7 +108,7 @@ export function tourTypeCopy(lib, parent, spec, { gestureT0 = null, extras = nul
   const root = box(lib, parent);
   let x = L.headline.x;
   if (spec.free) {
-    type.tag("FREE", { parent: root, color: hue, size: TAG.size, x, baseline: L.row - tagBaselineShift });
+    type.tag("FREE", { parent: root, color: hue, size: TAG.size, padY: TAG.padY, x, baseline: L.row - tagBaselineShift });
     x += tagWidth("FREE") + 16;
   }
   if (spec.eyebrow) type.eyebrow(spec.eyebrow, { parent: root, color: hue, x, baseline: L.row });

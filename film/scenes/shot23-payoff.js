@@ -1,20 +1,23 @@
-// Shot 23, 70.00-74.00: payoff. The dot opens into the moving ellipse of the guitar (scope 360 px at
-// (1390, 470), #f6f4ef, R01 at Mix 45%), fading out 74.00-74.50 as the end card's plate fades in.
+// Shot 23, 70.00-74.00: payoff. The dot opens into the moving ellipse of the guitar (scope 560 px at
+// (1390, 470), #f6f4ef, R01 at Mix 45%; bigger than the treatment's 360 px so the payoff reads as
+// the film's biggest trace), fading out 74.00-74.50 as the end card's plate fades in. The scope's
+// graticule fades up round the dot over 70.00-70.60, so the cut from the silence stays one dot.
 // Share-card tagline at x 120, Fraunces 112 px, baselines 300 / 420 / 540: "Great sound" fades in at
 // 70.00 (0.25 s); the italic "doesn't" / "sit still." cut in at 70.50 and move by ChorusType SINE
 // (Green, R01) to the last frame. A 1400 px purple glow fades in behind the type, breathing +-15% at
 // 0.60 Hz until the end-card hold, where it settles.
 // The tagline and glow run on through the end card (declared overlap to 86.00). At 74.00-74.75 the
-// tagline moves up and shrinks to 100 px (baselines 262 / 369 / 476) to make room for the CTA row.
+// tagline moves up and shrinks to 88 px (baselines 250 / 344 / 439) to make room for the CTA row.
 
 import { inFrames, fadeIn, setAlpha, radialGlow } from "./kit-late.js";
 
 const T0 = 70.0;
 const T1 = 74.0;
 const END = 86.0;
-const SCOPE = { cx: 1390, cy: 470, size: 360 };
+const SCOPE = { cx: 1390, cy: 470, size: 560 };
 const BASE = [300, 420, 540];
-const SHRINK = { t0: 74.0, t1: 74.75, scale: 100 / 112, dy: 262 - 300 };
+const SHRINK = { t0: 74.0, t1: 74.75, scale: 88 / 112, dy: 250 - 300 };
+const GRAT_IN = [70.0, 0.6];
 
 export default {
   id: "shot23-payoff",
@@ -31,7 +34,7 @@ export default {
 
     const glow = radialGlow(glowL, { cx: 430, cy: 400, w: 1400 });
 
-    const scope = lib.createScope(scopeL, { cx: SCOPE.cx, cy: SCOPE.cy, size: SCOPE.size, disc: null, frame: false, color: "#f6f4ef", stem: "gtr" });
+    const scope = lib.createScope(scopeL, { cx: SCOPE.cx, cy: SCOPE.cy, size: SCOPE.size, disc: null, color: "#f6f4ef", stem: "gtr" });
     const dot = el("div", {
       parent: scopeL,
       style: { position: "absolute", left: "1388.5px", top: "468.5px", width: "3px", height: "3px", borderRadius: "50%", background: "#f6f4ef" },
@@ -62,7 +65,8 @@ export default {
 
         if (scopeOn) {
           const a = t < T1 ? 1 : clamp(1 - (t - T1) / 0.5);
-          scope.draw(t, { alpha: a, render: "R01" });
+          const g = util.ease("sine.inOut", clamp((t - GRAT_IN[0]) / GRAT_IN[1]));
+          scope.draw(t, { alpha: a, gratAlpha: g, render: "R01" });
           setAlpha(dot, a);
         }
 

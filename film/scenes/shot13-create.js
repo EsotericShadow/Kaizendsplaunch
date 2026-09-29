@@ -54,12 +54,12 @@ export default {
 
     const caption = type.mono("INTERFACE CAPTURE FROM CHOROBOROS 1.0.5", {
       parent: typeL,
-      size: 13,
+      size: 18,
       weight: 600,
-      color: "rgba(246,244,239,0.45)",
-      tracking: 0.14,
+      color: "rgba(246,244,239,0.5)",
+      tracking: 0.12,
       x: WIN.x + WIN.w / 2,
-      baseline: 920,
+      baseline: 944, // clear of the window's pushed-in bottom edge at 18 px
       align: "center",
     });
 
@@ -69,7 +69,7 @@ export default {
     );
 
     const foot = ["INCLUDED WITH AN ACTIVE 30-DAY TRIAL", "OR A PAID LICENCE."].map((line, i) =>
-      type.mono(line, { parent: typeL, size: 15, weight: 600, color: type.C.muted, tracking: 0.12, x: 96, baseline: 712 + 24 * i }),
+      type.mono(line, { parent: typeL, size: 18, weight: 600, color: type.C.muted, tracking: 0.1, x: 96, baseline: 712 + 30 * i }),
     );
 
     return {

@@ -88,6 +88,7 @@ PLAN_VERTICAL = {
     },
     "returns": {"plate": 0.0, "hall": 0.0, "delay": -3.0},
     "room": {"send_db": -15.0, "return_db": 0.0},
+    "low_end": {"shelf_hz": 80.0, "gain_db": -3.0, "q": 0.8},      # the same sub shelf as the main film
     "sidechain": {"targets": ["pad", "arp"], "span": (14.0, 22.0), "depth_db": 3.5},
     "glue": {"target_mean_gr_db": 2.5, "target_span": (14.0, 22.0), "ratio": 2.0, "attack_ms": 20.0,
              "release_ms": 160.0, "threshold_offsets": [(0.0, 2.0), (14.0, 0.0), (22.0, 4.0)]},

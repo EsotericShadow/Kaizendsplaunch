@@ -1,7 +1,7 @@
 // Shots 7-11, 16.00-36.00: what persists across the tour and never smears (G4): the BEST FOR
 // label, the footnote, the dot row with the current engine ringed, and the scope in the right
 // column. The ring and the scope hue switch on the bar line.
-import { TOUR, TOUR_T0, TOUR_T1, TOUR_LAYOUT, BEST_FOR, tourAt, scopeBackdrop } from "./part1-common.js";
+import { TOUR, TOUR_T0, TOUR_T1, TOUR_LAYOUT, BEST_FOR, FOOT_SIZE, tourAt, scopeBackdrop } from "./part1-common.js";
 
 export default {
   id: "shot07-11-tour-frame",
@@ -15,7 +15,9 @@ export default {
     const layer = ctx.layer("frame", 40);
 
     type.mono(BEST_FOR.text, { parent: layer, size: BEST_FOR.size, tracking: BEST_FOR.tracking, x: L.headline.x, baseline: L.best.baseline });
-    type.mono(cues.footnote("tour"), { parent: layer, size: 14, x: L.footnote.x, baseline: L.footnote.baseline });
+    // The footnote reads over Red's pushed-in plate, so it carries a soft dark shadow.
+    const foot = type.mono(cues.footnote("tour"), { parent: layer, size: FOOT_SIZE, color: "rgba(246,244,239,0.55)", x: L.footnote.x, baseline: L.footnote.baseline });
+    foot.style.textShadow = "0 1px 3px rgba(5,5,6,0.9), 0 0 12px rgba(5,5,6,0.75)";
 
     // The dot row sits in its own compositing layer: the smearing type's repaint rect reaches the
     // last dot, and a CSS circle cut by a repaint rect rasterises differently from frame to frame.
@@ -41,7 +43,7 @@ export default {
 
     const S = L.scope;
     scopeBackdrop(lib, layer, S);
-    const scope = lib.createScope(layer, { cx: S.cx, cy: S.cy, size: S.size, disc: null, frame: false });
+    const scope = lib.createScope(layer, { cx: S.cx, cy: S.cy, size: S.size, disc: null });
 
     return {
       render(t) {

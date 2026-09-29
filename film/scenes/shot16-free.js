@@ -1,16 +1,23 @@
 // Shot 16, 50.00-54.00: Free. Hard cut on the impact with the second and last bloom (20%). Green
-// (HQ unlit, Green (a), render R01) and Purple (HQ lit, Purple (a), render R08) at 0.55 scale, each
-// on a 14% glow in its hue and drifting per G2. Mini scopes under each plate read that plate's own
-// stem. "free." is static; the G3b hairline under it carries one strand per audible engine.
+// (HQ unlit, Green (a), render R01) and Purple (HQ lit, Purple (a), render R08) at 0.62 scale
+// (868x449.5, even 61 px gaps at the frame edges and between), each on a 14% glow in its hue and
+// drifting per G2. A 180 px scope under each plate reads that plate's own stem. "free." is static;
+// the G3b hairline under it carries one strand per audible engine. The header sits a little higher
+// than the treatment's (eyebrow 90, headline 188, sub 256) to give the bigger plates room.
 
 import { inFrames, fadeIn, setAlpha, radialGlow, sceneGrain, stageBox, hairlineY, plateLabel } from "./kit-late.js";
 
 const T0 = 50.0;
 const T1 = 54.0;
-const SCALE = 0.55;
+const SCALE = 0.62;
+const PLATE_Y = 306;
+const LABEL_BASELINE = 798;
+const SCOPE = { cy: 910, size: 180 };
+const HEAD = { eyebrow: 90, headline: 188, sub: 256 };
+const GAP = (1920 - 2 * 1400 * SCALE) / 3;
 const PLATES = [
-  { engine: "green", render: "R01", x: 145, y: 380, label: "GREEN", stem: "gtr", rgb: [126, 224, 160] },
-  { engine: "purple", render: "R08", x: 1005, y: 380, label: "PURPLE", stem: "pad", rgb: [201, 177, 255] },
+  { engine: "green", render: "R01", x: GAP, y: PLATE_Y, label: "GREEN", stem: "gtr", rgb: [126, 224, 160] },
+  { engine: "purple", render: "R08", x: 2 * GAP + 1400 * SCALE, y: PLATE_Y, label: "PURPLE", stem: "pad", rgb: [201, 177, 255] },
 ];
 
 export default {
@@ -35,17 +42,17 @@ export default {
     const items = PLATES.map((d) => {
       const cx = d.x + W / 2;
       const cy = d.y + H / 2;
-      radialGlow(glowL, { cx, cy, w: W * 1.45, h: H * 1.9, color: d.rgb, a: [0.14, 0.04] });
+      radialGlow(glowL, { cx, cy, w: W * 1.35, h: H * 1.8, color: d.rgb, a: [0.14, 0.04] });
       const plate = lib.createPlate(d.engine, { parent: plateL, scale: SCALE, x: d.x, y: d.y });
       plate.requireRender(cues, d.render, T0, T1);
-      const label = plateLabel(d.label, { parent: typeL, hue: type.HUE[d.engine], x: cx, baseline: 820 });
-      const scope = lib.createScope(scopeL, { cx, cy: 920, size: 140, disc: null, color: type.HUE[d.engine], stem: d.stem });
+      const label = plateLabel(d.label, { parent: typeL, hue: type.HUE[d.engine], x: cx, baseline: LABEL_BASELINE });
+      const scope = lib.createScope(scopeL, { cx, cy: SCOPE.cy, size: SCOPE.size, disc: null, color: type.HUE[d.engine], stem: d.stem });
       return { ...d, plate, label, scope };
     });
 
-    const brow = type.eyebrow("FREE MODE", { parent: typeL, x: 960, baseline: 100, align: "center" });
-    const head = type.headline({ parent: typeL, text: "Green and Purple are ", accent: "free.", size: 92, x: 960, baseline: 200, align: "center" });
-    const sub = type.body("No card or licence key needed.", { parent: typeL, size: 30, weight: 400, color: type.C.muted, x: 960, baseline: 275, align: "center" });
+    const brow = type.eyebrow("FREE MODE", { parent: typeL, x: 960, baseline: HEAD.eyebrow, align: "center" });
+    const head = type.headline({ parent: typeL, text: "Green and Purple are ", accent: "free.", size: 92, x: 960, baseline: HEAD.headline, align: "center" });
+    const sub = type.body("No card or licence key needed.", { parent: typeL, size: 30, weight: 400, color: type.C.muted, x: 960, baseline: HEAD.sub, align: "center" });
 
     // Bloom: radial #eaffe9 at 20%, decaying over 0.4 s from the cut.
     const bloom = el("div", {
@@ -65,7 +72,7 @@ export default {
         hair = type.offerHairline({
           parent: typeL,
           x: b.x,
-          y: hairlineY(head.accent, 200),
+          y: hairlineY(head.accent, HEAD.headline),
           width: b.w,
           strands: [{ engine: "green" }, { engine: "purple" }],
         });

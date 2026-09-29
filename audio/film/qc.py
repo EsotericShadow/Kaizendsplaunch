@@ -55,6 +55,56 @@ def click_score(x, t, kind="join", win=0.002, ctx=0.1, guard=0.004):
             "abs_dbfs": round(float(10 * np.log10(peak / k)), 1)}
 
 
+PC = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+
+
+def chroma(x, fmin=55.0, fmax=2000.0, nfft=8192):
+    """12-bin pitch-class energy of a (mono-summed) excerpt, normalised to sum 1.
+    STFT bins between fmin and fmax are folded to the nearest semitone and
+    weighted by cos^2 of their distance from it."""
+    from scipy import signal
+    m = dual(x).mean(axis=1)
+    f, _, Z = signal.stft(m, SR, nperseg=nfft, noverlap=nfft - smp(0.01))
+    P = (np.abs(Z) ** 2).mean(axis=1)
+    sel = (f >= fmin) & (f <= fmax)
+    midi = 69 + 12 * np.log2(f[sel] / 440.0)
+    c = np.zeros(12)
+    np.add.at(c, np.round(midi).astype(int) % 12, P[sel] * np.cos(np.pi * (midi - np.round(midi))) ** 2)
+    return c / max(c.sum(), 1e-30)
+
+
+def clip_bed_check(film, cues, keep):
+    """Under each product clip: which stems sound (max |x| > 0), whether only the
+    kept ones do, and the chroma clash between the bed and the clip (semitone =
+    energy a minor second or major seventh away; a flat chroma would read 2/12 =
+    0.167 semitone and 1/12 = 0.083 unison)."""
+    names = [k for k in ("gtr", "gtr_oct", "pad", "ep", "lead", "pluck", "arp", "bells", "bass", "drums", "fx",
+                         "plate", "hall", "delay") if os.path.exists(film.p("mix", f"stem_{k}.wav"))]
+    st = {k: read(film.p("mix", f"stem_{k}.wav")) for k in names}
+    clips = read(film.p("mix", "stem_clips.wav"))
+    out = {}
+    for sec in cues["sections"]:
+        if "clip_at" not in sec:
+            continue
+        a = float(sec["clip_at"])
+        b = a + float(sec["clip_out"]) - float(sec["clip_in"])
+        s0, s1 = smp(a), smp(b)
+        sounding = [k for k in names if np.abs(st[k][s0:s1]).max() > 0.0]
+        bed = sum(st[k][s0:s1] for k in names)
+        row = {"window": [a, b], "keep": keep.get(sec["name"], []), "sounding": sounding,
+               "pass": set(sounding) <= set(keep.get(sec["name"], []))}
+        cc = chroma(clips[s0:s1])
+        row["clip_chroma_top"] = [PC[i] for i in np.argsort(cc)[::-1][:4]]
+        if sounding:
+            bc = chroma(bed)
+            row["bed_lufs"] = round(lufs(bed), 1)
+            row["bed_chroma_top"] = [PC[i] for i in np.argsort(bc)[::-1][:4]]
+            row["clash_semitone"] = round(float(cc @ (np.roll(bc, 1) + np.roll(bc, -1))), 3)
+            row["unison"] = round(float(cc @ bc), 3)
+        out[sec["name"]] = row
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--film", default="main")
@@ -238,6 +288,13 @@ def main():
     hon["pass"] = all(v.get("pass", True) for v in hon.values() if isinstance(v, dict))
     qc["gates"]["honesty_zones"] = hon
 
+    # the product clips stand alone (mix revision): only the kept bed stems sound under each clip
+    cb = (mix_info.get("plan") or {}).get("clip_bed")
+    if cb and any("clip_at" in sec for sec in cues["sections"]):
+        rows = clip_bed_check(film, cues, cb["keep"])
+        qc["checks"]["clip_bed"] = {"pass": all(r["pass"] for r in rows.values()), "clips": rows,
+                                    "method": clip_bed_check.__doc__.strip()}
+
     # arc: per-bar loudness, short-term, crest, onsets, mono drop (from the mix report)
     bars = mix_info["report"].get("bars")
     if bars:
@@ -253,7 +310,8 @@ def main():
     qc["checks"]["master_24bit_vs_float_max_diff"] = float(np.abs(fl - y).max())
 
     qc["pass"] = all(v.get("pass", True) for v in qc["gates"].values()) and \
-        qc["checks"]["digital_silences"]["pass"] and qc["checks"].get("p_block_identical", {}).get("pass", True)
+        qc["checks"]["digital_silences"]["pass"] and qc["checks"].get("p_block_identical", {}).get("pass", True) and \
+        qc["checks"].get("clip_bed", {}).get("pass", True)
     jdump(film.log_path("qc.json"), qc)
     for k, v in qc["gates"].items():
         print(f"{k:40s} {'PASS' if v['pass'] else 'FAIL'}")
@@ -264,6 +322,10 @@ def main():
     for r in clicks:
         print("  ", r["t"], r["kind"], "master", r["master"], " ".join(f"{k}:{v['rel_db']}" for k, v in r.items()
                                                                  if k not in ("t", "kind", "master")))
+    if "clip_bed" in qc["checks"]:
+        for k, r in qc["checks"]["clip_bed"]["clips"].items():
+            print(f"clip bed {k:10s} sounding {r['sounding']} pass {r['pass']} semitone clash {r.get('clash_semitone')}"
+                  f" unison {r.get('unison')}")
     print("stems sum diff", qc["checks"]["stems_sum_to_mix"]["max_abs_diff"],
           "master 24-bit vs float", qc["checks"]["master_24bit_vs_float_max_diff"])
     print("OVERALL", "PASS" if qc["pass"] else "FAIL")
