@@ -62,7 +62,7 @@ def main():
     peak_in, peak_out = float(np.max(np.abs(g))), float(np.max(np.abs(y)))
     sf.write(os.path.join(C.OUT, "master_src.wav"), y.astype(np.float32), C.SR, subtype="FLOAT")
     meta = {
-        "source": os.path.basename(C.MASTER_MP3),
+        "source": "master mp3",
         "mp3_tag": {"encoder": "LAME3.100", "enc_delay": 576, "padding": 1036, "frames": 6473},
         "decoder": "ffmpeg mp3float, gapless (LAME tag honoured)",
         "gapless_trim_start_samples_44k1": shift,

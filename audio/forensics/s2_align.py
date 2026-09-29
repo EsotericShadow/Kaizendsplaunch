@@ -1,11 +1,12 @@
-"""Step 2: align every drum stem and the second mp3 ("thisone", called "other" here) to master time.
+"""Step 2: align every drum stem to master time (the second mp3 is handled by s2b_other.py).
 
 Method: band-limited GCC-PHAT between the master (mono sum) and each stem in 6 s windows spread over the
 song, searched +-60 ms around a blind envelope estimate, peak refined to a fraction of a sample by
 parabolic interpolation. A straight-line fit of lag against time gives the speed (slope, ppm) and the
 offset; the residual shows any drift. Aligned copies (master length, 48 kHz, float) are written to
-/home/user/build/v5/stems/{kick,snare,hihat,racktom,floortom,ohl,ohr,other}.wav with
-aligned[n] = source[n + lag], lag rounded to the nearest sample (the fractional part is reported).
+/home/user/build/v5/stems/{kick,snare,hihat,racktom,floortom,ohl,ohr}.wav with aligned[n] = source[n + lag],
+one common lag for the kit (the stems share one session timeline: their first non-zero samples agree to
+one sample), each stem's own measured lag reported against it.
 """
 import os
 import sys
@@ -88,55 +89,65 @@ def active_centers(x, lag0, n, top=24):
     return sorted(picked)
 
 
+def fit_line(t, L):
+    keep = np.abs(L - np.median(L)) < 2.0          # robust: anchor on the median, drop stray windows
+    p = np.polyfit(t[keep], L[keep], 1)
+    res = L[keep] - np.polyval(p, t[keep])
+    return p, keep, res
+
+
 def main():
+    """Drum stems only (the second mp3 does not hold a constant offset: see s2b_other.py)."""
     m2 = C.master()
     m = m2.mean(axis=1)
     grid_centers = np.arange(4.0, 166.0, 6.0)
-    report = {}
     srcs = {k: sf.read(os.path.join(C.UP, f), dtype="float64")[0] for k, f in C.STEMS.items()}
-    o, sro = sf.read(os.path.join(C.OUT, "work", "other48_gapless.wav"), dtype="float64", always_2d=True)
-    assert sro == C.SR
-    srcs["other"] = o.mean(axis=1)
+    first = {k: int(np.argmax(np.abs(x) > 1e-5)) for k, x in srcs.items()}
+    kit = np.zeros(max(len(x) for x in srcs.values()))
+    for x in srcs.values():
+        kit[:len(x)] += x
+    lag_kit = coarse(kit, m)
+    report = {"_kit": {"coarse_lag": lag_kit, "coarse_lag_s": lag_kit / C.SR,
+                       "first_nonzero_sample": first, "lengths": {k: len(x) for k, x in srcs.items()}}}
+    fine = []
     for name, x in srcs.items():
         lo, hi = BANDS[name]
-        lag0 = coarse(x, m)
-        centers = active_centers(x, lag0, len(m)) if name in ("racktom", "floortom") else grid_centers
-        rows = measure(x, m, lo, hi, lag0, centers)
-        good = rows[rows[:, 3] > 1.3]                          # clear single peak
-        t, L = good[:, 0], good[:, 1]
-        # robust line fit (two passes, drop > 2 samples from the first fit)
-        p = np.polyfit(t, L, 1)
-        keep = np.abs(L - np.polyval(p, t)) < 2.0
-        p = np.polyfit(t[keep], L[keep], 1)
-        res = L[keep] - np.polyval(p, t[keep])
-        med = float(np.median(L[keep]))
-        report[name] = dict(coarse_lag=lag0, windows=len(rows), clear=int(len(good)), used=int(keep.sum()),
-                            median_lag=med, median_lag_s=med / C.SR, slope_ppm=p[0] / C.SR * 1e6,
-                            fit_rms=float(np.sqrt(np.mean(res ** 2))), spread=float(np.ptp(L[keep])),
-                            min_lag=float(L[keep].min()), max_lag=float(L[keep].max()),
+        ref = {"ohl": m2[:, 0], "ohr": m2[:, 1]}.get(name, m)     # overheads: the channel they are panned to
+        centers = active_centers(x, lag_kit, len(m)) if name in ("racktom", "floortom") else grid_centers
+        rows = measure(x, ref, lo, hi, lag_kit, centers)
+        good = rows[rows[:, 3] > 1.3]
+        p, keep, res = fit_line(good[:, 0], good[:, 1])
+        L = good[keep, 1]
+        med = float(np.median(L))
+        fine.append(med)
+        report[name] = dict(band_hz=[lo, hi], reference="master " + {"ohl": "L", "ohr": "R"}.get(name, "mono"),
+                            windows=len(rows), clear=int(len(good)), used=int(keep.sum()),
+                            median_lag=round(med, 3), median_lag_s=med / C.SR, slope_ppm=round(p[0] / C.SR * 1e6, 3),
+                            fit_rms_samples=round(float(np.sqrt(np.mean(res ** 2))), 3),
+                            spread_samples=round(float(np.ptp(L)), 3),
                             per_window=[[round(float(a), 1), round(float(b), 2), round(float(r), 2)]
                                         for a, b, _, r in rows])
-        print(f"{name:8s} lag {med:10.2f} smp = {med / C.SR:+.5f} s  slope {p[0] / C.SR * 1e6:+7.2f} ppm  "
-              f"rms {report[name]['fit_rms']:.2f}  spread {report[name]['spread']:.2f}  used {keep.sum()}/{len(rows)}")
-    C.write_json(os.path.join(C.OUT, "align.json"), report, indent=1)
+        print(f"{name:8s} lag {med:10.2f} smp = {med / C.SR:+.6f} s  slope {p[0] / C.SR * 1e6:+7.3f} ppm  "
+              f"rms {report[name]['fit_rms_samples']:.2f}  spread {report[name]['spread_samples']:.2f}  "
+              f"used {keep.sum()}/{len(rows)}")
+    common = int(round(float(np.median(fine))))
+    report["_kit"]["common_lag_samples"] = common
+    report["_kit"]["common_lag_s"] = common / C.SR
+    report["_kit"]["per_stem_minus_common"] = {k: round(v - common, 2) for k, v in zip(srcs, fine)}
+    print("common lag", common, common / C.SR, "s; master_t = stem_t -", common / C.SR)
     return report, srcs, len(m)
 
 
 def write_aligned(report, srcs, n):
+    """One session lag for the whole kit, so the mics keep their relative timing."""
     os.makedirs(os.path.join(C.OUT, "stems"), exist_ok=True)
+    lag = report["_kit"]["common_lag_samples"]
     for name, x in srcs.items():
-        lag = int(round(report[name]["median_lag"]))
-        if name == "other":
-            x, _ = sf.read(os.path.join(C.OUT, "work", "other48_gapless.wav"), dtype="float64", always_2d=True)
-        else:
-            x = x[:, None]
-        y = np.zeros((n, x.shape[1]))
+        y = np.zeros(n)
         s0, s1 = max(0, lag), min(len(x), n + lag)
         y[s0 - lag:s1 - lag] = x[s0:s1]
         sf.write(os.path.join(C.OUT, "stems", f"{name}.wav"), y.astype(np.float32), C.SR, subtype="FLOAT")
-        report[name]["applied_lag_samples"] = lag
-        report[name]["frac_residual"] = report[name]["median_lag"] - lag
-        report[name]["covered_master_s"] = [round((s0 - lag) / C.SR, 4), round((s1 - lag) / C.SR, 4)]
+        report[name]["covered_master_s"] = [round((s0 - lag) / C.SR, 5), round((s1 - lag) / C.SR, 5)]
     C.write_json(os.path.join(C.OUT, "align.json"), report, indent=1)
 
 

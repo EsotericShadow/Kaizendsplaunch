@@ -1,5 +1,5 @@
 // The Choroboros editor window rebuilt for the film, for the five engines and the white Create
-// canvas: the top bar (film/lib/topbar.js) over the 1400x725 body plate drawn from the plugin's own
+// canvas: the top bar (film/lib/topbar.js) over the body plate drawn from the plugin's own
 // bitmaps. Geometry, readouts and chrome follow the release-candidate editor (f984c9a); see
 // film/UI_FIDELITY.md for the sources and every measured difference.
 //
@@ -7,31 +7,45 @@
 //   p.requireRender(cues, "R02", 16, 20);          // in build(): prepare the frames it will show
 //   p.setState(cues.plateStateAt("R02", t));      // in render(t)
 //   p.place({ x, y, scale, dx });                 // camera / drift, any time
+//   p.focus({ on: "rate", zoom: 2, at: [540, 900] }); // close-up: a control (or body point) at a
+//                                                  // screen point; hi-res art above scale 1
 //
-// Plate px: the body is 1400 x 725 (the backpanel), origin at the body's top-left. With the top
-// bar (default) the window is 1400 x 847.9 and the body sits 122.9 px lower; place() and
+// Plate px = editor px x K (K = 1400 / 638, one scale for x and y, as the editor draws). The body
+// is 1400 x 724.14 (the 638 x 330 editor body; the backpanel bitmap is stretched into it exactly
+// as the editor stretches it), origin at the body's top-left. With the top bar (default) the
+// window is 1400 x 847.02 (638 x 386 editor px) and the body sits 122.88 px lower; place() and
 // width/height refer to the whole window, toScreen()/controlScreenRect() take body coordinates.
 // Values are display units (rate Hz, offset degrees, the rest percent) and map to filmstrip
 // frames, thumb x and readout text exactly as the plugin does. Filmstrip frames are per-frame
 // images (film/tools/prep_gui.py) shown by visibility; the plate is plain DOM and inline SVG,
-// never a canvas, so it may be scaled by a CSS transform deterministically.
+// never a canvas, so it may be scaled by a CSS transform deterministically (every bitmap is
+// resampled once, from its source pixels to the screen; text and the top bar stay vector).
 
-import { PLATE_W, PLATE_H, READOUT_COLOR, artFor } from "./layout.js";
-import { pFromValue, knobFrameMain, knobFrameMix, knobFrameWhiteMix, formatReadout, SWITCH_OFF, SWITCH_ON } from "./cues.js";
+import { PLATE_W, READOUT_COLOR, artFor } from "./layout.js";
+import { pFromValue, knobFrameMain, knobFrameMix, formatReadout, SWITCH_OFF, SWITCH_ON } from "./cues.js";
 import { el, setStyle, px, clamp, rgba, TAU } from "./util.js";
-import { TopBar, HEADER_EDITOR_H, PLATE_FONTS, advance } from "./topbar.js";
+import { TopBar, HEADER_EDITOR_H, PLATE_FONTS, advance, roundToInt, toNearestInt } from "./topbar.js";
 
 const KNOBS = ["rate", "depth", "offset", "width"];
 const READOUTS = ["rate", "depth", "offset", "width", "color", "mix"];
 
-// Editor px -> plate px. The editor draws the 2800 x 1450 backpanel into its 638 x 330 body; the
-// plate draws it into 1400 x 725, so body x and y scale slightly differently (0.1 %).
+// Editor px -> plate px. The editor lays out and paints everything at one scale and stretches the
+// 1400 x 725 backpanel bitmap into its 638 x 330 body (PluginEditor::paint, drawImage into the
+// canvas bounds), so the plate uses one factor K for x and y and stretches the bitmap the same way.
 const EDITOR_W = 638;
 const BODY_H = 330;
-export const KX = PLATE_W / EDITOR_W;
-export const KY = PLATE_H / BODY_H;
+export const K = PLATE_W / EDITOR_W;
+export const KX = K;
+export const KY = K;
+/** Body height in plate px (330 editor px = 724.14). */
+export const BODY_PX_H = BODY_H * K;
 /** Height of the top bar in plate px (56 editor px). */
-export const HEADER_PX = HEADER_EDITOR_H * KX;
+export const HEADER_PX = HEADER_EDITOR_H * K;
+/**
+ * Plate scale above which a knob frame (300 px source for a 127 editor px knob, 278.7 plate px)
+ * is magnified: 300 / 278.7. The backpanel's hi-res art (see layout.js) takes over above 1.0.
+ */
+export const KNOB_NATIVE_SCALE = 300 / (127 * K);
 const bx = (x) => x * KX;
 const by = (y) => (y - HEADER_EDITOR_H) * KY; // editor y (window) -> body plate y
 
@@ -61,8 +75,8 @@ export function plateGeometry(engine) {
 // Readout text ---------------------------------------------------------------------------------
 
 const isDigit = (c) => c >= "0" && c <= "9";
-const jround = (v) => Math.floor(v + 0.5); // juce::roundToInt for the magnitudes used here
-const intRect = (x, y, w, h) => [jround(x), jround(y), jround(w), jround(h)]; // Rectangle::toNearestInt
+const jround = roundToInt; // juce::roundToInt (half to even)
+const intRect = (x, y, w, h) => toNearestInt([x, y, w, h]); // Rectangle<float>::toNearestInt
 
 // Every readout, so the stage can lay them out again once the fonts have loaded.
 const allReadouts = new Set();
@@ -374,7 +388,7 @@ function svgEl(tag, attrs, parent) {
  * (#d7d2c6 @ 0.34, 0.75 px). Drawn in editor px inside the body.
  */
 function drawCorner(parent) {
-  const svg = svgEl("svg", { width: bx(EDITOR_W), height: PLATE_H, viewBox: `0 ${HEADER_EDITOR_H} ${EDITOR_W} ${BODY_H}`, preserveAspectRatio: "none" });
+  const svg = svgEl("svg", { width: bx(EDITOR_W), height: BODY_PX_H, viewBox: `0 ${HEADER_EDITOR_H} ${EDITOR_W} ${BODY_H}` });
   Object.assign(svg.style, { position: "absolute", left: "0px", top: "0px", overflow: "hidden", pointerEvents: "none" });
   parent.appendChild(svg);
   const [cx, cy, cw, ch] = [620, 368, 18, 18];
@@ -412,20 +426,22 @@ export class Plate {
   /**
    * engine: green | blue | red | purple | black | white (Create).
    * opts: { parent, scale, x, y (window top-left) or cx, cy (window centre), header (default true:
-   * the top bar), hiRes (2800 px plates; default when scale > 1.05), thumb, readouts,
-   * state (initial state; its frames are prepared) }.
+   * the top bar), hiRes ("auto" (default): the prepared 2x backpanel whenever the plate is drawn
+   * above scale 1, the shipped 1400 px bitmap otherwise; true: always 2x; false: never), thumb,
+   * readouts, state (initial state; its frames are prepared) }.
    */
-  constructor(engine, { parent = null, scale = 1, x = 0, y = 0, cx = null, cy = null, header = true, hiRes = null, thumb = null, readouts = null, className = "", state = null } = {}) {
+  constructor(engine, { parent = null, scale = 1, x = 0, y = 0, cx = null, cy = null, header = true, hiRes = "auto", thumb = null, readouts = null, className = "", state = null } = {}) {
     if (!RC[engine]) throw new Error(`plate: unknown engine ${engine}`);
     this.engine = engine;
     this.G = RC[engine];
     this.white = engine === "white";
-    this.art = artFor(engine, { hiRes: hiRes ?? scale > 1.05 });
+    this.art = artFor(engine);
+    this.hiRes = this.art.plate2x ? hiRes : false;
     this.showThumb = thumb ?? !this.white;
     this.showReadouts = readouts ?? !this.white;
     this.headerH = header ? HEADER_PX : 0;
     this.width = PLATE_W;
-    this.height = PLATE_H + this.headerH;
+    this.height = BODY_PX_H + this.headerH;
 
     this.el = el("div", { cls: `cb-plate cb-${engine} ${className}`.trim(), parent });
     Object.assign(this.el.style, { position: "absolute", left: "0px", top: "0px", transformOrigin: "0 0" });
@@ -439,34 +455,46 @@ export class Plate {
         placeholder: this.white,
       });
     }
-    this.body = el("div", { parent: this.inner, style: { position: "absolute", left: "0px", top: px(this.headerH), width: px(PLATE_W), height: px(PLATE_H), overflow: "hidden" } });
+    this.body = el("div", { parent: this.inner, style: { position: "absolute", left: "0px", top: px(this.headerH), width: px(PLATE_W), height: px(BODY_PX_H), overflow: "hidden" } });
 
-    const plateBg = (url) =>
+    // Backpanel: the shipped bitmap stretched into the body (plus the 2x art for close-ups), the lit
+    // plate over it at the lever's lit amount (HQLitOverlay).
+    const plateBg = (url, parent) =>
       el("div", {
-        parent: this.body,
+        parent,
         style: {
           position: "absolute",
           left: "0px",
           top: "0px",
-          width: `${PLATE_W}px`,
-          height: `${PLATE_H}px`,
+          width: px(PLATE_W),
+          height: px(BODY_PX_H),
           backgroundImage: `url("${url}")`,
-          backgroundSize: `${PLATE_W}px ${PLATE_H}px`,
+          backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
         },
       });
-    this.plateOff = plateBg(this.art.plateOff);
-    this.plateOn = plateBg(this.art.plateOn);
-    Object.assign(this.plateOn.style, { opacity: "0", visibility: "hidden" });
+    const panel = (key) => {
+      const wrap = el("div", { parent: this.body, style: { position: "absolute", left: "0px", top: "0px", width: px(PLATE_W), height: px(BODY_PX_H) } });
+      const lo = plateBg(this.art[key], wrap);
+      const hi = this.art.plate2x ? plateBg(this.art.plate2x[key], wrap) : null;
+      return { wrap, lo, hi };
+    };
+    this.plateOff = panel("plateOff");
+    this.plateOn = panel("plateOn");
+    Object.assign(this.plateOn.wrap.style, { opacity: "0", visibility: "hidden" });
 
     const rect = ([x0, y0, w, h]) => [bx(x0), by(y0), w * KX, h * KY];
-    // Knobs: the _off frames, with the _on frames over them for the HQ cross-fade.
+    // Knobs: the _off and _on frames in an isolated group, the _on stack added with plus-lighter,
+    // so the group is (1 - t) off + t on in premultiplied colour, which is what the editor's
+    // drawCrossfadedFilmstripPair computes pixel by pixel while the HQ lever moves.
     this.knobs = {};
     for (const k of KNOBS) {
       const [kx, ky, w, h] = rect(this.G[k]);
-      const mk = (on) => new FrameStack(this.body, (f) => this.art.knobFrame(k, on, f), kx, ky, w, h, `${engine} ${k}${on ? " on" : " off"}`);
+      const group = el("div", { parent: this.body, style: { position: "absolute", left: px(kx), top: px(ky), width: px(w), height: px(h), isolation: "isolate" } });
+      const mk = (on) => new FrameStack(group, (f) => this.art.knobFrame(k, on, f), 0, 0, w, h, `${engine} ${k}${on ? " on" : " off"}`);
       const off = mk(false);
       const on = this.white ? null : mk(true);
+      if (on) setStyle(on.node, "mixBlendMode", "plus-lighter");
       this.knobs[k] = { off, on };
     }
     {
@@ -500,8 +528,11 @@ export class Plate {
     }
     {
       const [x0, y0, w, h] = rect(this.G.hq);
-      // Two stacks: the lever frame under the fractional position and the next one over it.
-      this.sw = [0, 1].map(() => new FrameStack(this.body, (f) => this.art.switchFrame(f), x0, y0, w, h, `${engine} switch`));
+      // Two stacks, the lever frame under the fractional position and the next one, blended like
+      // AnimatedToggleButton::paint ((1 - a) base + a next) in an isolated plus-lighter group.
+      const group = el("div", { parent: this.body, style: { position: "absolute", left: px(x0), top: px(y0), width: px(w), height: px(h), isolation: "isolate" } });
+      this.sw = [0, 1].map(() => new FrameStack(group, (f) => this.art.switchFrame(f), 0, 0, w, h, `${engine} switch`));
+      setStyle(this.sw[1].node, "mixBlendMode", "plus-lighter");
     }
     this.readouts = {};
     if (this.showReadouts) {
@@ -523,14 +554,16 @@ export class Plate {
   }
 
   // Frames this state shows: { knobs: {rate: f,...}, mix: f, switch: [i0, i1], on, off }.
+  // Main knobs (every engine and the white sheet): 10 x 10 frames read forward; factory mix: 13 x 12
+  // read in reverse; the white mix (1632 px sheet): 10 x 10 read forward (drawRotarySlider).
   _framesOf(state) {
     const out = { knobs: {}, mix: null, sw: [], on: false, off: false };
     for (const k of KNOBS) {
       if (state.frames && state.frames[k] != null) out.knobs[k] = state.frames[k];
-      else if (state[k] != null) out.knobs[k] = this.white ? 50 : knobFrameMain(pFromValue(k, state[k]));
+      else if (state[k] != null) out.knobs[k] = knobFrameMain(pFromValue(k, state[k]));
     }
     if (state.frames && state.frames.mix != null) out.mix = state.frames.mix;
-    else if (state.mix != null) out.mix = this.white ? knobFrameWhiteMix(0.5) : knobFrameMix(pFromValue("mix", state.mix));
+    else if (state.mix != null) out.mix = this.white ? knobFrameMain(pFromValue("mix", state.mix)) : knobFrameMix(pFromValue("mix", state.mix));
     let sf = state.switchFrame;
     if (sf == null && state.hq != null) sf = state.hq ? SWITCH_ON : SWITCH_OFF;
     if (sf == null && this.white) sf = SWITCH_ON;
@@ -596,6 +629,7 @@ export class Plate {
   /** The image URLs this plate draws (for preloading). */
   urls() {
     const u = [this.art.plateOff, this.art.plateOn];
+    if (this.art.plate2x && this.hiRes) u.push(this.art.plate2x.plateOff, this.art.plate2x.plateOn);
     if (this.art.thumb && this.showThumb) u.push(this.art.thumb);
     for (const k of KNOBS) {
       u.push(...this.knobs[k].off.urls());
@@ -625,7 +659,55 @@ export class Plate {
     setStyle(this.el, "height", px(this.height * P.scale));
     setStyle(this.el, "transform", P.dx || P.dy ? `translate(${px(P.dx)}, ${px(P.dy)})` : "");
     setStyle(this.inner, "transform", P.scale === 1 ? "" : `scale(${+P.scale.toFixed(6)})`);
+    this._pickArt();
     return this;
+  }
+
+  // Shipped 1400 px backpanel up to scale 1 (what the product draws), the 2x art above it.
+  _pickArt() {
+    if (!this.art.plate2x) return;
+    const s = this.placement.scale * (this.outerScale || 1);
+    const hi = this.hiRes === true || (this.hiRes === "auto" && s > 1.0001);
+    if (hi === this._hi) return;
+    this._hi = hi;
+    for (const p of [this.plateOff, this.plateOn]) {
+      setStyle(p.lo, "visibility", hi ? "hidden" : "");
+      setStyle(p.hi, "visibility", hi ? "" : "hidden");
+    }
+  }
+
+  /**
+   * If the plate's parent is itself scaled (a camera group), tell the plate the extra factor so
+   * that hiRes "auto" picks the art for the true on-screen scale.
+   */
+  setOuterScale(s) {
+    this.outerScale = s;
+    this._pickArt();
+    return this;
+  }
+
+  /**
+   * Close-up camera: place the plate at `zoom` (plate scale) with a control ("rate", "mix", "hq",
+   * "color", "rateValue", ...) or a body point [x, y] (plate px) at the screen point `at` (parent
+   * coordinates; default: where that point is now). Returns the placement. Knob frames are native
+   * up to KNOB_NATIVE_SCALE (1.08) and magnified above it; the mix knob (512 px frames), readouts,
+   * top bar and HQ lever stay sharp far beyond 2x; the backpanel switches to its 2x art above 1.
+   */
+  focus({ on, zoom, at = null, dx = 0, dy = 0 }) {
+    let bxy;
+    if (Array.isArray(on)) bxy = on;
+    else if (typeof on === "string" && on.endsWith("Value")) {
+      const [x, y, w, h] = this.G.values[on.slice(0, -5)];
+      bxy = [bx(x + w / 2), by(y + h / 2)];
+    } else {
+      const r = this.controlRect(on);
+      bxy = [r.cx, r.cy];
+    }
+    const target = at ?? this.toScreen(bxy[0], bxy[1]);
+    const s = zoom ?? this.placement.scale;
+    const x = target[0] - bxy[0] * s;
+    const y = target[1] - (this.headerH + bxy[1]) * s;
+    return this.place({ x, y, scale: s, dx, dy });
   }
 
   /** Body plate px -> screen px in the parent's coordinates, with the current placement. */
@@ -676,21 +758,21 @@ export class Plate {
         c.lit = fr.lit;
         this.sw[0].show(fr.sw[0]);
         const a = fr.frac > 1e-4 ? fr.frac : 0;
+        this.sw[0].setOpacity(1 - a);
         this.sw[1].show(a > 0 ? fr.sw[1] : null);
         this.sw[1].setOpacity(a);
-        // Lit plate follows the lever: 1 - frame / 17 (AnimatedToggleButton::getLitAmount).
-        setStyle(this.plateOn, "opacity", String(+fr.lit.toFixed(4)));
-        setStyle(this.plateOn, "visibility", fr.lit > 1e-4 ? "" : "hidden");
+        // Lit plate follows the lever: 1 - frame / 17 (AnimatedToggleButton::getAnimationProgress).
+        setStyle(this.plateOn.wrap, "opacity", String(+fr.lit.toFixed(4)));
+        setStyle(this.plateOn.wrap, "visibility", fr.lit > 1e-4 ? "" : "hidden");
       }
     }
     const lit = c.lit ?? 0;
     for (const k of KNOBS) {
       const f = fr.knobs[k];
       const kn = this.knobs[k];
+      // (1 - lit) off + lit on, premultiplied (see the constructor): lit 0 and 1 show one sheet.
       const onA = kn.on ? lit : 0;
-      // _on over _off at the lever's opacity; _off fades out over the last fifth so the soft knob
-      // shadow is not doubled once the lever is fully up.
-      const offA = kn.on ? clamp((1 - lit) * 5) : 1;
+      const offA = kn.on ? 1 - lit : 1;
       if (f != null) {
         if (offA > 0) kn.off.show(f);
         if (kn.on && onA > 0) kn.on.show(f);

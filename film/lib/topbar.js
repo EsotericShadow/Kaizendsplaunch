@@ -33,14 +33,21 @@ const TEXT_PRIMARY = [0xf0, 0xf0, 0xf2];
 const TEXT_SECONDARY = [0x88, 0x88, 0x90];
 const rgba = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${+a.toFixed(4)})`;
 
-// Product fonts (the editor's BinaryData copies). Families are private to the film plate.
+// Product fonts. Families are private to the film plate. emPerHeight: JUCE font height is
+// ascent + descent (hhea), so CSS px = JUCE height x em / (ascent + descent).
+//   cond: IBM Plex Sans Condensed SemiBold, the editor's own BinaryData copy (OFL).
+//   mono: the value readouts. ProductTypography::valueTextFont maps the layout's "technology" font
+//         id to JetBrains Mono SemiBold (the editor never loads Technology.ttf). The film loads
+//         the npm @fontsource/jetbrains-mono 600 face (OFL, v2.211): same metrics as the editor's
+//         v2.305 copy (600 advance, 1020 / -300 hhea) and outlines that differ only by a few
+//         redundant points (film/UI_FIDELITY.md).
 export const PLATE_FONTS = {
-  cond: { family: "CB Plex Condensed", weight: 600, url: `${ART}/fonts/ui/IBMPlexSansCondensed-SemiBold.ttf`, emPerHeight: 1 / 1.3 },
-  mono: { family: "CB JetBrains Mono", weight: 600, url: `${ART}/fonts/ui/JetBrainsMono-SemiBold.ttf`, emPerHeight: 1 / 1.32 },
+  cond: { family: "CB Plex Condensed", weight: 600, url: `${ART}/fonts/ui/IBMPlexSansCondensed-SemiBold.ttf`, format: "truetype", emPerHeight: 1 / 1.3 },
+  mono: { family: "CB JetBrains Mono", weight: 600, url: "/__node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2", format: "woff2", emPerHeight: 1 / 1.32 },
 };
 
 async function loadFonts() {
-  const faces = Object.values(PLATE_FONTS).map((f) => new FontFace(f.family, `url("${f.url}") format("truetype")`, { weight: String(f.weight) }));
+  const faces = Object.values(PLATE_FONTS).map((f) => new FontFace(f.family, `url("${f.url}") format("${f.format}")`, { weight: String(f.weight) }));
   for (const f of faces) document.fonts.add(f);
   await Promise.all(faces.map((f) => f.load()));
 }
@@ -90,7 +97,21 @@ export function advance(text, font, h) {
   return (measureCtx.measureText(text).width * h * font.emPerHeight) / size;
 }
 
-const jround = (v) => Math.floor(v + 0.5);
+/**
+ * juce::roundToInt: the double "magic number" trick, i.e. round half to EVEN (216.5 -> 216,
+ * 23.5 -> 24). Geometry that lands on exact halves (centred 9 px icons, 7.25 px chevrons) rounds
+ * the way the editor does only with this, not with Math.round.
+ */
+export function roundToInt(v) {
+  const f = Math.floor(v);
+  const d = v - f;
+  if (d > 0.5) return f + 1;
+  if (d < 0.5) return f;
+  return f % 2 === 0 ? f : f + 1;
+}
+/** juce::Rectangle<float>::toNearestInt: each of x, y, w, h rounded on its own. */
+export const toNearestInt = ([x, y, w, h]) => [roundToInt(x), roundToInt(y), roundToInt(w), roundToInt(h)];
+const jround = roundToInt;
 const svgNS = "http://www.w3.org/2000/svg";
 function sv(tag, attrs, parent) {
   const n = document.createElementNS(svgNS, tag);
@@ -166,9 +187,13 @@ export class TopBar {
     // TopHeaderBar::paint: bottom hairline over the bar.
     sv("rect", { x: 0, y: HEADER_EDITOR_H - 0.5, width: HEADER_EDITOR_W, height: 0.5, fill: rgba(BORDER, 0.78) }, svg);
 
-    // Combo texts (HeaderLookAndFeel, drawn by the combo labels, under the drawer).
-    this._comboText(B.presetLabel, presetName ?? "Preset", presetName == null, presetName == null ? 3 : 0);
-    this.engineText = this._comboText(B.engineLabel, engineName, placeholder, 0);
+    // Combo texts (HeaderLookAndFeel, under the drawer). A selected item is drawn by the combo's
+    // label (drawLabel) inside the label's bounds. The text-when-nothing-selected ("Preset", a
+    // Create draft's name) is drawn by drawComboBoxTextWhenNothingSelected into the COMBO's
+    // graphics with the label's LOCAL bounds, so it starts at the combo's left edge, not the
+    // label's (plus headerNothingSelectedTextXOffset: 3 for the preset menu, 0 for the engine).
+    this._comboText(presetName == null ? B.preset : B.presetLabel, presetName ?? "Preset", presetName == null, presetName == null ? 3 : 0, B.presetLabel);
+    this.engineText = this._comboText(placeholder ? B.engine : B.engineLabel, engineName, placeholder, 0, B.engineLabel);
 
     this._drawer();
   }
@@ -194,8 +219,9 @@ export class TopBar {
 
   _icon(key, [x, y, w, h], colour, alpha) {
     const ic = ICONS[key];
-    // drawMonochromeSvg snaps the target to whole pixels, then fits the path extents inside.
-    const t = [jround(x), jround(y), jround(x + w) - jround(x), jround(y + h) - jround(y)];
+    // drawMonochromeSvg snaps the target with toNearestInt (x, y, w, h rounded separately), then
+    // fits the path extents inside (centred, only reduced).
+    const t = toNearestInt([x, y, w, h]);
     const node = sv("svg", { x: t[0], y: t[1], width: t[2], height: t[3], viewBox: ic.box.join(" "), preserveAspectRatio: "xMidYMid meet", overflow: "visible" }, this.svg);
     for (const p of ic.paths) sv("path", { d: p.d, "fill-rule": p.rule, fill: colour, "fill-opacity": alpha }, node);
     return node;
@@ -232,7 +258,7 @@ export class TopBar {
     let gx = x;
     for (const ch of "TRIM") {
       const a = advance(ch, cond, 12.5);
-      const r = [jround(gx), jround(y), jround(gx + a + 1) - jround(gx), 12];
+      const r = toNearestInt([gx, y, a + 1, 12]);
       this._text(ch, r, cond, 12.5, rgba(TEXT_SECONDARY), "center");
       gx += a + 0.65;
     }
@@ -269,15 +295,23 @@ export class TopBar {
     });
   }
 
-  // Combo label: border (0, 4, 0, 2), centred-left; placeholder at half alpha with its x offset.
-  _comboText([x, y, w, h], text, placeholder, dx) {
+  // Combo text: origin (x, y) of the label (selected) or of the combo (placeholder), the label's
+  // size, border (0, 4, 0, 2), centred-left; the placeholder at half alpha with its x offset.
+  _comboText([x, y], text, placeholder, dx, [, , w, h]) {
     const colour = rgba(TEXT_PRIMARY, placeholder ? 0.5 : 1);
     return this._text(text, [x + 4 + dx, y, w - 6, h], PLATE_FONTS.cond, 12.5, colour, "left");
   }
 
   setEngineName(name, placeholder = false) {
+    const [x, y] = placeholder ? B.engine : B.engineLabel;
+    const [, , w, h] = B.engineLabel;
+    const k = this.k;
     this.engineText.textContent = name;
     this.engineText.style.color = rgba(TEXT_PRIMARY, placeholder ? 0.5 : 1);
+    this.engineText.style.left = px((x + 4) * k);
+    this.engineText.style.top = px(y * k);
+    this.engineText.style.width = px((w - 6) * k);
+    this.engineText.style.height = px(h * k);
   }
 
   // TopBarDrawer, collapsed (slide progress 0), no hover.
